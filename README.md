@@ -17,5 +17,5 @@
     <img alt="文件预览" src="./eg1.png" width="480px" height="233px"></li>
 </ul>
 <blockquote>（“你一定是坚坚的学生吧”<br>
-<a href="https://www.zhihu.com/question/554569818/answer/2683685957?utm_psn=1756798166148907008" target="_blank">——YouKnowWho from zhihu</a>
+<a href="https://www.zhihu.com/question/554569818/answer/2683685957" target="_blank">——YouKnowWho from zhihu</a>
 </blockquote>  
