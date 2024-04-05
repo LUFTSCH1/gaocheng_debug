@@ -14,7 +14,7 @@
 <ul>
   <li>程序主界面预览<br>
     <img alt="预览图片" src="./img/main.png" width="640px" height="354px"></li>
-  <li>单次比对生成的所有文件预览<br>
+  <li>完成一次校对生成的所有文件预览<br>
     <img alt="生成文件预览" src="./img/files.png" width="480px" height="230px"></li>
 </ul>
 <blockquote>（“你一定是坚坚的学生吧”<br>
