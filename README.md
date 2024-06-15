@@ -11,7 +11,7 @@
 ## 界面预览  
 <ul>
   <li>程序主界面预览<br>
-    <img alt="预览图片" src="./img/main.jpg" width="640px" height="354px"></li>
+    <img alt="预览图片" src="./img/main.jpg" width="640px" height="355px"></li>
   <li>单次比对生成的所有文件预览<br>
     <img alt="生成文件预览" src="./img/files.jpg" width="480px" height="175px"></li>
 </ul>
