@@ -210,7 +210,7 @@ namespace gaocheng_debug
         {
             bool isNotRunning;
             string process_name = Process.GetCurrentProcess().ProcessName;
-            Mutex mutex = new Mutex(true, process_name, out isNotRunning);
+            new Mutex(true, process_name, out isNotRunning);
             if (!isNotRunning)
             {
                 MutSync.HandleRunningInstance(process_name);
@@ -313,7 +313,7 @@ namespace gaocheng_debug
             }
             else
             {
-                Form3 fm3 = new Form3(absolute_dir_path, textBox1.Text, textBox2.Text);
+                Form3 fm3 = new Form3(absolute_dir_path, textBox1.Text, textBox2.Text, GB18030);
                 fm3.ShowDialog(this);
                 if (is_data_changed)
                 {

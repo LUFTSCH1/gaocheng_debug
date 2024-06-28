@@ -11,13 +11,12 @@ namespace gaocheng_debug
         private string project_dir_path, demo, exe;
         private Encoding GB18030;
 
-        public Form3(in string absolute_dir_path, in string demo_path, in string exe_path)
+        public Form3(in string absolute_dir_path, in string demo_path, in string exe_path, in Encoding encoding)
         {
             project_dir_path = absolute_dir_path;
             demo = demo_path;
             exe = exe_path;
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            GB18030 = Encoding.GetEncoding("GB18030");
+            GB18030 = encoding;
             InitializeComponent();
         }
 
