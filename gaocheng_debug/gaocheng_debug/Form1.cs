@@ -10,11 +10,11 @@ namespace gaocheng_debug
 {
     public partial class Form1 : Form
     {
+        private bool is_data_changed = false, is_mode_changed = false, is_path_changed = false;
+        private readonly Encoding GB18030;
         private string absolute_dir_path, absolute_test_log_path, project_dir_name;
         private string project_demo_path, project_exe_path;
         private string default_demo_path, default_exe_path;
-        private bool is_data_changed = false, is_mode_changed = false, is_path_changed = false;
-        private Encoding GB18030;
 
         public string default_dp
         {
@@ -210,7 +210,7 @@ namespace gaocheng_debug
         {
             bool isNotRunning;
             string process_name = Process.GetCurrentProcess().ProcessName;
-            new Mutex(true, process_name, out isNotRunning);
+            Mutex mutex = new Mutex(true, process_name, out isNotRunning);
             if (!isNotRunning)
             {
                 MutSync.HandleRunningInstance(process_name);
@@ -224,7 +224,7 @@ namespace gaocheng_debug
             button6.BackColor = Color.FromArgb(249, 114, 61);
             button7.BackColor = Color.FromArgb(222, 28, 49);
 
-            string[] form1_names = { "校对工具", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "田野打架1 MTFC队招人，全称Muelsyse", "让我康康你的小红车" };
+            string[] form1_names = { "校对工具", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
             Random rnd = new Random();
             Text = form1_names[rnd.Next(0, form1_names.Length)];
 

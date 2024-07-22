@@ -8,8 +8,8 @@ namespace gaocheng_debug
 {
     public partial class Form3 : Form
     {
-        private string project_dir_path, demo, exe;
-        private Encoding GB18030;
+        private readonly Encoding GB18030;
+        private readonly string project_dir_path, demo, exe;
 
         public Form3(in string absolute_dir_path, in string demo_path, in string exe_path, in Encoding encoding)
         {

@@ -47,9 +47,9 @@ namespace gaocheng_debug
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string path = openFileDialog1.FileName;
-                string txt = "文件所在目录：" + Path.GetDirectoryName(path) + Environment.NewLine;
+                string txt = "目录  ：" + Path.GetDirectoryName(path) + Environment.NewLine;
                 txt += "文件名：" + Path.GetFileName(path) + Environment.NewLine;
-                txt += "MD5：" + GetMD5HashFromFile(path);
+                txt += "MD5   ：" + GetMD5HashFromFile(path);
                 textBox1.Text = txt;
             }
         }
