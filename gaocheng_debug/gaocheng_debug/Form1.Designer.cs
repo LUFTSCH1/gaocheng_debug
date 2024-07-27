@@ -33,9 +33,9 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.计算文件MD5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.使用说明ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MD5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.HelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -84,35 +84,35 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.设置ToolStripMenuItem,
-            this.计算文件MD5ToolStripMenuItem,
-            this.使用说明ToolStripMenuItem});
+            this.SettingsToolStripMenuItem,
+            this.MD5ToolStripMenuItem,
+            this.HelpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(917, 28);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // 设置ToolStripMenuItem
+            // SettingsToolStripMenuItem
             // 
-            this.设置ToolStripMenuItem.Name = "设置ToolStripMenuItem";
-            this.设置ToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.设置ToolStripMenuItem.Text = "设置";
-            this.设置ToolStripMenuItem.Click += new System.EventHandler(this.设置ToolStripMenuItem_Click);
+            this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.SettingsToolStripMenuItem.Text = "设置";
+            this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
-            // 计算文件MD5ToolStripMenuItem
+            // MD5ToolStripMenuItem
             // 
-            this.计算文件MD5ToolStripMenuItem.Name = "计算文件MD5ToolStripMenuItem";
-            this.计算文件MD5ToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
-            this.计算文件MD5ToolStripMenuItem.Text = "计算文件MD5";
-            this.计算文件MD5ToolStripMenuItem.Click += new System.EventHandler(this.计算文件MD5ToolStripMenuItem_Click);
+            this.MD5ToolStripMenuItem.Name = "MD5ToolStripMenuItem";
+            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
+            this.MD5ToolStripMenuItem.Text = "计算文件MD5";
+            this.MD5ToolStripMenuItem.Click += new System.EventHandler(this.MD5ToolStripMenuItem_Click);
             // 
-            // 使用说明ToolStripMenuItem
+            // HelpToolStripMenuItem
             // 
-            this.使用说明ToolStripMenuItem.Name = "使用说明ToolStripMenuItem";
-            this.使用说明ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
-            this.使用说明ToolStripMenuItem.Text = "使用说明";
-            this.使用说明ToolStripMenuItem.Click += new System.EventHandler(this.使用说明ToolStripMenuItem_Click);
+            this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.HelpToolStripMenuItem.Text = "使用说明";
+            this.HelpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // button1
             // 
@@ -348,8 +348,8 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem 设置ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 使用说明ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem HelpToolStripMenuItem;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
@@ -366,7 +366,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.ToolStripMenuItem 计算文件MD5ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem MD5ToolStripMenuItem;
     }
 }
 

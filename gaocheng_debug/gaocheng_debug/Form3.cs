@@ -8,33 +8,44 @@ namespace gaocheng_debug
 {
     public partial class Form3 : Form
     {
+        private readonly string newLine = Environment.NewLine;
         private readonly Encoding GB18030;
-        private readonly string project_dir_path, demo, exe;
+        
+        private string project_dir_path, demo, exe;
 
-        public Form3(in string absolute_dir_path, in string demo_path, in string exe_path, in Encoding encoding)
+        public Form3(in Encoding encoding)
+        {
+            GB18030 = encoding;
+
+            InitializeComponent();
+
+            BackColor = Color.FromArgb(234, 234, 239);
+            button1.BackColor = Color.FromArgb(85, 187, 138);
+        }
+
+        public void SetPath(in string absolute_dir_path, in string demo_path, in string exe_path)
         {
             project_dir_path = absolute_dir_path;
             demo = demo_path;
             exe = exe_path;
-            GB18030 = encoding;
-            InitializeComponent();
+
+            return;
         }
 
         private void Form3_Load(object sender, EventArgs e)
         {
-            BackColor = Color.FromArgb(234, 234, 239);
-            button1.BackColor = Color.FromArgb(85, 187, 138);
-
             StreamReader sr = new StreamReader(project_dir_path + @"\__test_data.txt", GB18030);
             textBox1.Text = sr.ReadToEnd();
             sr.Close();
+
+            textBox1.SelectAll();
 
             return;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string data_content = textBox1.Text, newLine = Environment.NewLine;
+            string data_content = textBox1.Text;
             int cnt = 0, len = data_content.Length;
             if (data_content == "" || data_content[len - 1] != '\n')
             {
@@ -89,7 +100,7 @@ namespace gaocheng_debug
             test_batSW.Close();
 
             Form1 fm1 = Owner as Form1;
-            fm1.is_dc = true;
+            fm1.IsDataChanged = true;
 
             Close();
         }

@@ -79,7 +79,7 @@
             this.MaximizeBox = false;
             this.Name = "Form4";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "查看文件MD5";
+            this.Text = "计算文件MD5";
             this.Load += new System.EventHandler(this.Form4_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

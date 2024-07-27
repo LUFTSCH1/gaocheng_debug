@@ -7,18 +7,19 @@ namespace gaocheng_debug
 {
     public partial class Form2 : Form
     {
-        public Form2(in string default_demo_path, in string default_exe_path)
+        public Form2()
         {
             InitializeComponent();
-            textBox1.Text = default_demo_path;
-            textBox2.Text = default_exe_path;
-        }
 
-        private void Form2_Load(object sender, EventArgs e)
-        {
             BackColor = Color.FromArgb(234, 234, 239);
             button1.BackColor = button2.BackColor = Color.FromArgb(99, 187, 208);
             button3.BackColor = Color.FromArgb(85, 187, 138);
+        }
+
+        public void SetPath(in string default_demo_path, in string default_exe_path)
+        {
+            textBox1.Text = default_demo_path;
+            textBox2.Text = default_exe_path;
 
             return;
         }
@@ -52,8 +53,8 @@ namespace gaocheng_debug
             sw.Close();
 
             Form1 f1 = Owner as Form1;
-            f1.default_dp = textBox1.Text;
-            f1.default_ep = textBox2.Text;
+            f1.DefaultDemoPath = textBox1.Text;
+            f1.DefaultExePath = textBox2.Text;
 
             Close();
         }

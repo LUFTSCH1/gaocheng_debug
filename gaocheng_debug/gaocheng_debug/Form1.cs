@@ -10,23 +10,30 @@ namespace gaocheng_debug
 {
     public partial class Form1 : Form
     {
-        private bool is_data_changed = false, is_mode_changed = false, is_path_changed = false;
         private readonly Encoding GB18030;
-        private string absolute_dir_path, absolute_test_log_path, project_dir_name;
-        private string project_demo_path, project_exe_path;
+        private readonly string absolute_test_log_path;
+
+        private readonly Form2 fm2 = new Form2();
+        private readonly Form3 fm3;
+        private readonly Form4 fm4 = new Form4();
+
         private string default_demo_path, default_exe_path;
 
-        public string default_dp
+        private bool is_data_changed = false, is_mode_changed = false, is_path_changed = false;
+        private string absolute_dir_path, project_dir_name;
+        private string project_demo_path, project_exe_path;
+
+        public string DefaultDemoPath
         {
             set { default_demo_path = value; }
         }
 
-        public string default_ep
+        public string DefaultExePath
         {
             set { default_exe_path = value; }
         }
 
-        public bool is_dc
+        public bool IsDataChanged
         {
             set { is_data_changed = value; }
         }
@@ -35,7 +42,33 @@ namespace gaocheng_debug
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             GB18030 = Encoding.GetEncoding("GB18030");
+
+            fm3 = new Form3(GB18030);
+
+            absolute_test_log_path = Directory.GetCurrentDirectory() + @"\test_log\";
+
             InitializeComponent();
+
+            BackColor = Color.FromArgb(234, 234, 239);
+            button1.BackColor = button5.BackColor = Color.FromArgb(93, 190, 138);
+            button2.BackColor = button3.BackColor = Color.FromArgb(99, 187, 208);
+            button4.BackColor = Color.FromArgb(255, 255, 255);
+            button6.BackColor = Color.FromArgb(249, 114, 61);
+            button7.BackColor = Color.FromArgb(222, 28, 49);
+
+            string[] form1_names = { "校对工具", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
+            Random rnd = new Random();
+            Text = form1_names[rnd.Next(0, form1_names.Length)];
+
+            StreamReader sr = new StreamReader(@".\rsc\initial_dirs.config");
+            string temp = sr.ReadToEnd();
+            sr.Close();
+            string[] paths = temp.Split('\n');
+            default_demo_path = paths[0];
+            default_exe_path = paths[1];
+
+            rfFiles();
+            comboBox1.SelectedIndex = 0;
         }
 
         private bool exe_error_filter(in string demo_path, in string your_exe_path)
@@ -208,44 +241,20 @@ namespace gaocheng_debug
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            bool isNotRunning;
             string process_name = Process.GetCurrentProcess().ProcessName;
-            Mutex mutex = new Mutex(true, process_name, out isNotRunning);
+            new Mutex(true, process_name, out bool isNotRunning);
             if (!isNotRunning)
             {
                 MutSync.HandleRunningInstance(process_name);
                 Environment.Exit(1);
             }
 
-            BackColor = Color.FromArgb(234, 234, 239);
-            button1.BackColor = button5.BackColor = Color.FromArgb(93, 190, 138);
-            button2.BackColor = button3.BackColor = Color.FromArgb(99, 187, 208);
-            button4.BackColor = Color.FromArgb(255, 255, 255);
-            button6.BackColor = Color.FromArgb(249, 114, 61);
-            button7.BackColor = Color.FromArgb(222, 28, 49);
-
-            string[] form1_names = { "校对工具", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
-            Random rnd = new Random();
-            Text = form1_names[rnd.Next(0, form1_names.Length)];
-
-            absolute_test_log_path = Directory.GetCurrentDirectory() + @"\test_log\";
-
-            StreamReader sr = new StreamReader(@".\rsc\initial_dirs.config");
-            string temp = sr.ReadToEnd();
-            sr.Close();
-            string[] paths = temp.Split('\n');
-            default_demo_path = paths[0];
-            default_exe_path = paths[1];
-
-            rfFiles();
-            comboBox1.SelectedIndex = 0;
-
             return;
         }
 
-        private void 设置ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form2 fm2 = new Form2(default_demo_path, default_exe_path);
+            fm2.SetPath(default_demo_path, default_exe_path);
             fm2.ShowDialog(this);
 
             return;
@@ -313,7 +322,7 @@ namespace gaocheng_debug
             }
             else
             {
-                Form3 fm3 = new Form3(absolute_dir_path, textBox1.Text, textBox2.Text, GB18030);
+                fm3.SetPath(absolute_dir_path, textBox1.Text, textBox2.Text);
                 fm3.ShowDialog(this);
                 if (is_data_changed)
                 {
@@ -339,9 +348,8 @@ namespace gaocheng_debug
             return;
         }
 
-        private void 计算文件MD5ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MD5ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form4 fm4 = new Form4();
             fm4.ShowDialog(this);
         }
 
@@ -399,7 +407,7 @@ namespace gaocheng_debug
             return;
         }
 
-        private void 使用说明ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start(@".\README.html");
 
