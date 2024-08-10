@@ -50,7 +50,7 @@ namespace gaocheng_debug
             if (data_content == "" || data_content[len - 1] != '\n')
             {
                 data_content += newLine;
-                len += Environment.NewLine.Length;
+                len += newLine.Length;
             }
 
             for (int i = 0; i < len; ++i)
