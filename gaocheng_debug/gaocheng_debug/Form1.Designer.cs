@@ -91,35 +91,35 @@
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(951, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(951, 28);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // SettingsToolStripMenuItem
             // 
             this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(53, 26);
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.SettingsToolStripMenuItem.Text = "设置";
             this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // MD5ToolStripMenuItem
             // 
             this.MD5ToolStripMenuItem.Name = "MD5ToolStripMenuItem";
-            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(118, 26);
+            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
             this.MD5ToolStripMenuItem.Text = "计算文件MD5";
             this.MD5ToolStripMenuItem.Click += new System.EventHandler(this.MD5ToolStripMenuItem_Click);
             // 
             // HelpToolStripMenuItem
             // 
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
-            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(83, 26);
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
             this.HelpToolStripMenuItem.Text = "使用说明";
             this.HelpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(501, 31);
+            this.button1.Location = new System.Drawing.Point(432, 31);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(63, 36);
             this.button1.TabIndex = 3;
@@ -297,7 +297,7 @@
             // 
             this.button7.Enabled = false;
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Location = new System.Drawing.Point(432, 31);
+            this.button7.Location = new System.Drawing.Point(501, 31);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(63, 36);
             this.button7.TabIndex = 16;

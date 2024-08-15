@@ -47,7 +47,7 @@ namespace gaocheng_debug
         {
             string data_content = textBox1.Text;
             int cnt = 0, len = data_content.Length;
-            if (data_content == "" || data_content[len - 1] != '\n')
+            if (data_content == string.Empty || data_content[len - 1] != '\n')
             {
                 data_content += newLine;
                 len += newLine.Length;

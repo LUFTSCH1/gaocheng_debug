@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
+using System.Linq;
 
 namespace gaocheng_debug
 {
@@ -22,6 +23,7 @@ namespace gaocheng_debug
         private bool is_data_changed = false, is_mode_changed = false, is_path_changed = false;
         private string absolute_dir_path, project_dir_name;
         private string project_demo_path, project_exe_path;
+        private string recorded_app_path;
 
         public string DefaultDemoPath
         {
@@ -107,9 +109,9 @@ namespace gaocheng_debug
             button5.Enabled = false;
             button6.Enabled = false;
             button7.Enabled = false;
-            textBox1.Text = "";
-            textBox2.Text = "";
-            richTextBox1.Text = "";
+            textBox1.Text = string.Empty;
+            textBox2.Text = string.Empty;
+            richTextBox1.Text = string.Empty;
             comboBox2.SelectedIndex = 0;
             comboBox3.SelectedIndex = 0;
             comboBox2.Enabled = false;
@@ -316,7 +318,7 @@ namespace gaocheng_debug
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text == "" || textBox2.Text == "")
+            if (textBox1.Text == string.Empty || textBox2.Text == string.Empty)
             {
                 MessageBox.Show("官方demo路径或测试exe路径为空", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -326,6 +328,7 @@ namespace gaocheng_debug
                 fm3.ShowDialog(this);
                 if (is_data_changed)
                 {
+                    recorded_app_path = absolute_dir_path;
                     generateAndCompare();
                     is_data_changed = false;
                 }
@@ -355,7 +358,7 @@ namespace gaocheng_debug
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text == "" || textBox2.Text == "")
+            if (textBox1.Text == string.Empty || textBox2.Text == string.Empty)
             {
                 MessageBox.Show("官方demo路径或测试exe路径为空", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -370,6 +373,10 @@ namespace gaocheng_debug
             else if (is_path_changed)
             {
                 MessageBox.Show("官方demo路径或测试exe路径已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (recorded_app_path != absolute_dir_path)
+            {
+                MessageBox.Show("本应用位置已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -434,12 +441,31 @@ namespace gaocheng_debug
 
                 if (pathInfo[0] != "generated")
                 {
-                    textBox1.Text = textBox2.Text = richTextBox1.Text = richTextBox1.Text = "";
+                    textBox1.Text = string.Empty;
+                    textBox2.Text = string.Empty;
+                    richTextBox1.Text = string.Empty;
+                    richTextBox1.Text = string.Empty;
                 }
                 else
                 {
                     textBox1.Text = project_demo_path = pathInfo[1];
                     textBox2.Text = project_exe_path = pathInfo[2];
+
+                    {
+                        sr = new StreamReader(absolute_dir_path + @"\test.bat", GB18030);
+                        string temp = sr.ReadLine();
+                        sr.Close();
+                        recorded_app_path = string.Empty;
+                        int i = 0, len = temp.Length;
+                        while (i < len && temp[i] != '\"')
+                        {
+                            ++i;
+                        }
+                        for (++i; i < len && temp[i] != '\"'; ++i)
+                        {
+                            recorded_app_path += temp[i];
+                        }
+                    }
 
                     sr = new StreamReader(absolute_dir_path + @"\_compare_result.txt", GB18030);
                     richTextBox1.Text = sr.ReadToEnd();
