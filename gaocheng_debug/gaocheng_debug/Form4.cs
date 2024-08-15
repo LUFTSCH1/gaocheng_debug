@@ -8,6 +8,8 @@ namespace gaocheng_debug
 {
     public partial class Form4 : Form
     {
+        private readonly string NewLine = Environment.NewLine;
+
         public Form4()
         {
             InitializeComponent();
@@ -23,7 +25,7 @@ namespace gaocheng_debug
                 file.Close();
  
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < retVal.Length; i++)
+                for (int i = 0, len = retVal.Length; i < len; ++i)
                 {
                     sb.Append(retVal[i].ToString("x2"));
                 }
@@ -32,7 +34,7 @@ namespace gaocheng_debug
             }
             catch (Exception ex)
             {
-                throw new Exception("GetMD5HashFromFile() fail,error:" + ex.Message);
+                throw new Exception("获取文件MD5失败：" + ex.Message);
             }
         }
 
@@ -47,10 +49,14 @@ namespace gaocheng_debug
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string path = openFileDialog1.FileName;
-                string txt = "目录  ：" + Path.GetDirectoryName(path) + Environment.NewLine;
-                txt += "文件名：" + Path.GetFileName(path) + Environment.NewLine;
-                txt += "MD5   ：" + GetMD5HashFromFile(path);
-                textBox1.Text = txt;
+
+                textBox1.Text = string.Format("文件：{0}{1}计算中...", path, NewLine);
+                Application.DoEvents();
+
+                string content = "目录  ：" + Path.GetDirectoryName(path) + NewLine;
+                content += "文件名：" + Path.GetFileName(path) + NewLine;
+                content += "MD5   ：" + GetMD5HashFromFile(path);
+                textBox1.Text = content;
             }
         }
     }
