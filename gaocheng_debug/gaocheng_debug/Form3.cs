@@ -8,7 +8,10 @@ namespace gaocheng_debug
 {
     public partial class Form3 : Form
     {
+        private const int MAX_DATA_GROUP_NUM = 99;
+
         private readonly string newLine = Environment.NewLine;
+        private readonly string dataGroupTruncationWarning = string.Format("数据组数大于{0}，将舍弃第{1}组及之后的数据", MAX_DATA_GROUP_NUM, MAX_DATA_GROUP_NUM + 1);
         private readonly Encoding GB18030;
         
         private string project_dir_path, demo, exe;
@@ -47,23 +50,39 @@ namespace gaocheng_debug
         {
             string data_content = textBox1.Text;
             int cnt = 0, len = data_content.Length;
-            if (data_content == string.Empty || data_content[len - 1] != '\n')
+
+            if (data_content != string.Empty)
+            {
+                for (int i = 0; i < len; ++i)
+                {
+                    if (data_content[i] == '[')
+                    {
+                        ++cnt;
+                    }
+                }
+                
+                if (cnt < 1)
+                {
+                    data_content = "[" + newLine + data_content;
+                    len = data_content.Length;
+                    cnt = 1;
+                }
+            }
+            else
+            {
+                data_content = string.Format("[{0}", newLine);
+                len = data_content.Length;
+            }
+
+            if (data_content[len - 1] != '\n')
             {
                 data_content += newLine;
                 len += newLine.Length;
             }
 
-            for (int i = 0; i < len; ++i)
+            if (cnt > MAX_DATA_GROUP_NUM)
             {
-                if (data_content[i] == '[')
-                {
-                    ++cnt;
-                }
-            }
-
-            if (cnt > 99)
-            {
-                MessageBox.Show("数据组数大于99，将舍弃第100组及之后的数据", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(dataGroupTruncationWarning, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             cnt = 0;
@@ -73,9 +92,9 @@ namespace gaocheng_debug
                 if (data_content[i] == '[')
                 {
                     ++cnt;
-                    if (cnt > 99)
+                    if (cnt > MAX_DATA_GROUP_NUM)
                     {
-                        cnt = 99;
+                        cnt = MAX_DATA_GROUP_NUM;
                         break;
                     }
                     dataSW.Write(string.Format("[{0}]{1}", cnt, newLine));

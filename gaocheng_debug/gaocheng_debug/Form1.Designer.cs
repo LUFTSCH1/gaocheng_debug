@@ -64,9 +64,9 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "blank"});
-            this.comboBox1.Location = new System.Drawing.Point(100, 36);
+            this.comboBox1.Location = new System.Drawing.Point(116, 36);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(326, 26);
+            this.comboBox1.Size = new System.Drawing.Size(326, 30);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.TabStop = false;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -76,13 +76,14 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 37);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 20);
+            this.label1.Size = new System.Drawing.Size(82, 24);
             this.label1.TabIndex = 1;
             this.label1.Text = "测试项目";
             // 
             // menuStrip1
             // 
             this.menuStrip1.BackColor = System.Drawing.Color.Transparent;
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SettingsToolStripMenuItem,
@@ -91,35 +92,35 @@
             this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(951, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1125, 36);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // SettingsToolStripMenuItem
             // 
             this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(62, 30);
             this.SettingsToolStripMenuItem.Text = "设置";
             this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // MD5ToolStripMenuItem
             // 
             this.MD5ToolStripMenuItem.Name = "MD5ToolStripMenuItem";
-            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
+            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(141, 30);
             this.MD5ToolStripMenuItem.Text = "计算文件MD5";
             this.MD5ToolStripMenuItem.Click += new System.EventHandler(this.MD5ToolStripMenuItem_Click);
             // 
             // HelpToolStripMenuItem
             // 
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
-            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(98, 30);
             this.HelpToolStripMenuItem.Text = "使用说明";
             this.HelpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // button1
             // 
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(432, 31);
+            this.button1.Location = new System.Drawing.Point(448, 31);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(63, 36);
             this.button1.TabIndex = 3;
@@ -132,10 +133,10 @@
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(100, 79);
+            this.textBox1.Location = new System.Drawing.Point(116, 79);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(509, 25);
+            this.textBox1.Size = new System.Drawing.Size(544, 29);
             this.textBox1.TabIndex = 4;
             this.textBox1.TabStop = false;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_textBox2_TextChanged);
@@ -145,7 +146,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 81);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 20);
+            this.label2.Size = new System.Drawing.Size(96, 24);
             this.label2.TabIndex = 5;
             this.label2.Text = "官方demo";
             // 
@@ -153,7 +154,7 @@
             // 
             this.button2.Enabled = false;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(620, 73);
+            this.button2.Location = new System.Drawing.Point(666, 73);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(63, 36);
             this.button2.TabIndex = 6;
@@ -166,7 +167,7 @@
             // 
             this.button3.Enabled = false;
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Location = new System.Drawing.Point(620, 118);
+            this.button3.Location = new System.Drawing.Point(666, 118);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(63, 36);
             this.button3.TabIndex = 7;
@@ -179,10 +180,10 @@
             // 
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox2.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(100, 123);
+            this.textBox2.Location = new System.Drawing.Point(116, 124);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(509, 25);
+            this.textBox2.Size = new System.Drawing.Size(544, 29);
             this.textBox2.TabIndex = 8;
             this.textBox2.TabStop = false;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox1_textBox2_TextChanged);
@@ -192,7 +193,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 126);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 20);
+            this.label3.Size = new System.Drawing.Size(75, 24);
             this.label3.TabIndex = 9;
             this.label3.Text = "测试exe";
             // 
@@ -200,12 +201,12 @@
             // 
             this.button4.Enabled = false;
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Location = new System.Drawing.Point(763, 118);
+            this.button4.Location = new System.Drawing.Point(873, 118);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(100, 36);
+            this.button4.Size = new System.Drawing.Size(122, 36);
             this.button4.TabIndex = 0;
             this.button4.TabStop = false;
-            this.button4.Text = "开始校对";
+            this.button4.Text = "重复测试";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -216,11 +217,11 @@
             this.comboBox3.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Items.AddRange(new object[] {
-            "常规显示",
-            "详细显示"});
-            this.comboBox3.Location = new System.Drawing.Point(816, 34);
+            "--display normal",
+            "--display detailed"});
+            this.comboBox3.Location = new System.Drawing.Point(906, 34);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(111, 28);
+            this.comboBox3.Size = new System.Drawing.Size(207, 32);
             this.comboBox3.TabIndex = 11;
             this.comboBox3.TabStop = false;
             this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox2_comboBox3_SelectedIndexChanged);
@@ -232,12 +233,12 @@
             this.comboBox2.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Items.AddRange(new object[] {
-            "不忽略空格",
-            "忽略行尾空格",
-            "忽略行首空格"});
-            this.comboBox2.Location = new System.Drawing.Point(699, 34);
+            "--trim none",
+            "--trim right",
+            "--trim left"});
+            this.comboBox2.Location = new System.Drawing.Point(745, 34);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(111, 28);
+            this.comboBox2.Size = new System.Drawing.Size(151, 32);
             this.comboBox2.TabIndex = 0;
             this.comboBox2.TabStop = false;
             this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_comboBox3_SelectedIndexChanged);
@@ -246,9 +247,9 @@
             // 
             this.button5.Enabled = false;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Location = new System.Drawing.Point(735, 73);
+            this.button5.Location = new System.Drawing.Point(830, 73);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(153, 36);
+            this.button5.Size = new System.Drawing.Size(201, 36);
             this.button5.TabIndex = 12;
             this.button5.TabStop = false;
             this.button5.Text = "创建/修改测试数据";
@@ -260,11 +261,11 @@
             this.richTextBox1.BackColor = System.Drawing.SystemColors.HotTrack;
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.richTextBox1.ForeColor = System.Drawing.SystemColors.Window;
-            this.richTextBox1.Location = new System.Drawing.Point(55, 185);
+            this.richTextBox1.ForeColor = System.Drawing.Color.White;
+            this.richTextBox1.Location = new System.Drawing.Point(12, 179);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(851, 284);
+            this.richTextBox1.Size = new System.Drawing.Size(1101, 382);
             this.richTextBox1.TabIndex = 14;
             this.richTextBox1.TabStop = false;
             this.richTextBox1.Text = "";
@@ -284,9 +285,9 @@
             // 
             this.button6.Enabled = false;
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Location = new System.Drawing.Point(570, 31);
+            this.button6.Location = new System.Drawing.Point(586, 31);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(113, 36);
+            this.button6.Size = new System.Drawing.Size(143, 36);
             this.button6.TabIndex = 15;
             this.button6.TabStop = false;
             this.button6.Text = "打开项目目录";
@@ -297,7 +298,7 @@
             // 
             this.button7.Enabled = false;
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Location = new System.Drawing.Point(501, 31);
+            this.button7.Location = new System.Drawing.Point(517, 31);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(63, 36);
             this.button7.TabIndex = 16;
@@ -308,9 +309,8 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(951, 506);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(1125, 573);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.comboBox2);

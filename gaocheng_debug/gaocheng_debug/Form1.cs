@@ -5,7 +5,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
-using System.Linq;
 
 namespace gaocheng_debug
 {
@@ -58,7 +57,7 @@ namespace gaocheng_debug
             button6.BackColor = Color.FromArgb(249, 114, 61);
             button7.BackColor = Color.FromArgb(222, 28, 49);
 
-            string[] form1_names = { "校对工具", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
+            string[] form1_names = { "校对工具", "oop，启动！", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
             Random rnd = new Random();
             Text = form1_names[rnd.Next(0, form1_names.Length)];
 
@@ -451,6 +450,7 @@ namespace gaocheng_debug
                     textBox1.Text = project_demo_path = pathInfo[1];
                     textBox2.Text = project_exe_path = pathInfo[2];
 
+                    try
                     {
                         sr = new StreamReader(absolute_dir_path + @"\test.bat", GB18030);
                         string temp = sr.ReadLine();
@@ -465,6 +465,10 @@ namespace gaocheng_debug
                         {
                             recorded_app_path += temp[i];
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("test.bat异常，您可能删除了该文件：\n" + ex.Message);
                     }
 
                     sr = new StreamReader(absolute_dir_path + @"\_compare_result.txt", GB18030);
