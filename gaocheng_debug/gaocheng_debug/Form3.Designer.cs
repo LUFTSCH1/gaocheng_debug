@@ -50,7 +50,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 20);
+            this.label1.Size = new System.Drawing.Size(100, 24);
             this.label1.TabIndex = 1;
             this.label1.Text = "输入数据：";
             // 
@@ -62,14 +62,14 @@
             this.button1.Size = new System.Drawing.Size(206, 40);
             this.button1.TabIndex = 2;
             this.button1.TabStop = false;
-            this.button1.Text = "生成/修改并开始测试";
+            this.button1.Text = "生成/修改并开始校对";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form3
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(780, 775);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);

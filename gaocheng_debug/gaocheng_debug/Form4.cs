@@ -19,8 +19,8 @@ namespace gaocheng_debug
         {
             try
             {
-                FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 byte[] retVal = md5.ComputeHash(file);
                 file.Close();
  

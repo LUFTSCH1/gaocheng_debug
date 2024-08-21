@@ -99,21 +99,21 @@
             // SettingsToolStripMenuItem
             // 
             this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(62, 30);
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(62, 32);
             this.SettingsToolStripMenuItem.Text = "设置";
             this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // MD5ToolStripMenuItem
             // 
             this.MD5ToolStripMenuItem.Name = "MD5ToolStripMenuItem";
-            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(141, 30);
+            this.MD5ToolStripMenuItem.Size = new System.Drawing.Size(141, 32);
             this.MD5ToolStripMenuItem.Text = "计算文件MD5";
             this.MD5ToolStripMenuItem.Click += new System.EventHandler(this.MD5ToolStripMenuItem_Click);
             // 
             // HelpToolStripMenuItem
             // 
             this.HelpToolStripMenuItem.Name = "HelpToolStripMenuItem";
-            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(98, 30);
+            this.HelpToolStripMenuItem.Size = new System.Drawing.Size(98, 32);
             this.HelpToolStripMenuItem.Text = "使用说明";
             this.HelpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
@@ -309,7 +309,8 @@
             // 
             // Form1
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1125, 573);
             this.Controls.Add(this.comboBox3);
             this.Controls.Add(this.button7);
@@ -337,7 +338,6 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "战地小薯条";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

@@ -4,7 +4,6 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
-using System.Threading;
 
 namespace gaocheng_debug
 {
@@ -47,6 +46,11 @@ namespace gaocheng_debug
             fm3 = new Form3(GB18030);
 
             absolute_test_log_path = Directory.GetCurrentDirectory() + @"\test_log\";
+
+            if (!Directory.Exists(absolute_test_log_path))
+            {
+                Directory.CreateDirectory(absolute_test_log_path);
+            }
 
             InitializeComponent();
 
@@ -237,19 +241,6 @@ namespace gaocheng_debug
             richTextBox1.Text = bat_resultSR.ReadToEnd();
             bat_resultSR.Close();
             
-            return;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            string process_name = Process.GetCurrentProcess().ProcessName;
-            new Mutex(true, process_name, out bool isNotRunning);
-            if (!isNotRunning)
-            {
-                MutSync.HandleRunningInstance(process_name);
-                Environment.Exit(1);
-            }
-
             return;
         }
 

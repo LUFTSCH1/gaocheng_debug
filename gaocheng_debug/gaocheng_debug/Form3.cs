@@ -8,10 +8,7 @@ namespace gaocheng_debug
 {
     public partial class Form3 : Form
     {
-        private const int MAX_DATA_GROUP_NUM = 99;
-
         private readonly string newLine = Environment.NewLine;
-        private readonly string dataGroupTruncationWarning = string.Format("数据组数大于{0}，将舍弃第{1}组及之后的数据", MAX_DATA_GROUP_NUM, MAX_DATA_GROUP_NUM + 1);
         private readonly Encoding GB18030;
         
         private string project_dir_path, demo, exe;
@@ -80,9 +77,9 @@ namespace gaocheng_debug
                 len += newLine.Length;
             }
 
-            if (cnt > MAX_DATA_GROUP_NUM)
+            if (cnt > 99)
             {
-                MessageBox.Show(dataGroupTruncationWarning, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("数据组数大于99，将舍弃第100组及之后的数据", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             cnt = 0;
@@ -92,9 +89,9 @@ namespace gaocheng_debug
                 if (data_content[i] == '[')
                 {
                     ++cnt;
-                    if (cnt > MAX_DATA_GROUP_NUM)
+                    if (cnt > 99)
                     {
-                        cnt = MAX_DATA_GROUP_NUM;
+                        cnt = 99;
                         break;
                     }
                     dataSW.Write(string.Format("[{0}]{1}", cnt, newLine));
