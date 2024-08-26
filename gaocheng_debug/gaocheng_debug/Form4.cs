@@ -8,10 +8,12 @@ namespace gaocheng_debug
 {
     public partial class Form4 : Form
     {
-        private readonly string NewLine = Environment.NewLine;
+        private readonly string NewLine;
 
         public Form4()
         {
+            NewLine = Environment.NewLine;
+
             InitializeComponent();
         }
 
@@ -50,13 +52,10 @@ namespace gaocheng_debug
             {
                 string path = openFileDialog1.FileName;
 
-                textBox1.Text = string.Format("文件：{0}{1}计算中...", path, NewLine);
+                textBox1.Text = $"文件：{path}{NewLine}计算中...";
                 Application.DoEvents();
 
-                string content = "目录  ：" + Path.GetDirectoryName(path) + NewLine;
-                content += "文件名：" + Path.GetFileName(path) + NewLine;
-                content += "MD5   ：" + GetMD5HashFromFile(path);
-                textBox1.Text = content;
+                textBox1.Text = $"目录  ：{Path.GetDirectoryName(path)}{NewLine}文件名：{Path.GetFileName(path)}{NewLine}MD5   ：{GetMD5HashFromFile(path)}";
             }
         }
     }

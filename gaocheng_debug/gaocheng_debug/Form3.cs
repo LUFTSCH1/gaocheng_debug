@@ -8,13 +8,18 @@ namespace gaocheng_debug
 {
     public partial class Form3 : Form
     {
-        private readonly string newLine = Environment.NewLine;
+        private const int MAX_DATA_GROUP_NUM = 256;
+
+        private readonly string NewLine;
+        private readonly string DataGroupTruncationWarning;
         private readonly Encoding GB18030;
         
         private string project_dir_path, demo, exe;
 
         public Form3(in Encoding encoding)
         {
+            NewLine = Environment.NewLine;
+            DataGroupTruncationWarning = $"数据组数大于{MAX_DATA_GROUP_NUM}，将舍弃第{MAX_DATA_GROUP_NUM + 1}组及之后的数据";
             GB18030 = encoding;
 
             InitializeComponent();
@@ -48,72 +53,68 @@ namespace gaocheng_debug
             string data_content = textBox1.Text;
             int cnt = 0, len = data_content.Length;
 
-            if (data_content != string.Empty)
+            if (data_content == string.Empty)
+            {
+                data_content = $"[{NewLine}";
+                len = data_content.Length;
+            }
+            else
             {
                 for (int i = 0; i < len; ++i)
                 {
-                    if (data_content[i] == '[')
+                    if (data_content[i] == '[' && ++cnt > MAX_DATA_GROUP_NUM)
                     {
-                        ++cnt;
+                        MessageBox.Show(DataGroupTruncationWarning, ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
                     }
                 }
                 
                 if (cnt < 1)
                 {
-                    data_content = "[" + newLine + data_content;
+                    data_content = "[" + NewLine + data_content;
                     len = data_content.Length;
                     cnt = 1;
                 }
             }
-            else
-            {
-                data_content = string.Format("[{0}", newLine);
-                len = data_content.Length;
-            }
 
             if (data_content[len - 1] != '\n')
             {
-                data_content += newLine;
-                len += newLine.Length;
-            }
-
-            if (cnt > 99)
-            {
-                MessageBox.Show("数据组数大于99，将舍弃第100组及之后的数据", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                data_content += NewLine;
+                len += NewLine.Length;
             }
 
             cnt = 0;
-            StreamWriter dataSW = new StreamWriter(project_dir_path + @"\__test_data.txt", false, GB18030);
+            StreamWriter data_and_test_bat_SW = new StreamWriter(project_dir_path + @"\__test_data.txt", false, GB18030);
             for (int i = 0; i < len; ++i)
             {
                 if (data_content[i] == '[')
                 {
                     ++cnt;
-                    if (cnt > 99)
+                    if (cnt > MAX_DATA_GROUP_NUM)
                     {
-                        cnt = 99;
+                        cnt = MAX_DATA_GROUP_NUM;
                         break;
                     }
-                    dataSW.Write(string.Format("[{0}]{1}", cnt, newLine));
+                    data_and_test_bat_SW.Write($"[{cnt}]{NewLine}");
                     while (i < len && data_content[i++] != '\n')
                         ;
                 }
 
                 if (i < len)
                 {
-                    dataSW.Write(data_content[i]);
+                    data_and_test_bat_SW.Write(data_content[i]);
                 }
             }
-            dataSW.Close();
+            data_and_test_bat_SW.Close();
 
-            StreamWriter test_batSW = new StreamWriter(project_dir_path + @"\test.bat", false, GB18030);
-            test_batSW.Write(string.Format("cd /d \"{0}\"\n", project_dir_path));
-            test_batSW.Write(string.Format("..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{0}\" >_demo_result.txt\n", demo));
-            test_batSW.Write(string.Format("..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{0}\" >_your_exe_result.txt\n", exe));
-            test_batSW.Write(string.Format("for /l %%v in (2, 1, {0}) do (\n", cnt));
-            test_batSW.Write(string.Format("..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{0}\" >>_demo_result.txt\n", demo));
-            test_batSW.Write(string.Format("..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{0}\" >>_your_exe_result.txt\n)\nmode", exe));
-            test_batSW.Close();
+            data_and_test_bat_SW = new StreamWriter(project_dir_path + @"\test.bat", false, GB18030);
+            data_and_test_bat_SW.Write($"cd /d \"{project_dir_path}\"\n");
+            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" >_demo_result.txt\n");
+            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" >_your_exe_result.txt\n");
+            data_and_test_bat_SW.Write($"for /l %%v in (2, 1, {cnt}) do (\n");
+            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" >>_demo_result.txt\n");
+            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" >>_your_exe_result.txt\n)\nmode");
+            data_and_test_bat_SW.Close();
 
             Form1 fm1 = Owner as Form1;
             fm1.IsDataChanged = true;

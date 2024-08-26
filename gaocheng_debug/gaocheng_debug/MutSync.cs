@@ -26,8 +26,7 @@ namespace gaocheng_debug
             Process[] Processes = Process.GetProcessesByName(process_name);
             foreach (Process proc in Processes)
             {
-                if (proc.Id != crproc.Id && 
-                    Assembly.GetExecutingAssembly().Location.Replace("/", "\\") == crproc.MainModule.FileName)
+                if (proc.Id != crproc.Id && Assembly.GetExecutingAssembly().Location.Replace("/", "\\") == crproc.MainModule.FileName)
                 {
                     crproc = proc;
                     break;
