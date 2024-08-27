@@ -8,20 +8,10 @@ namespace gaocheng_debug
 {
     public partial class Form3 : Form
     {
-        private const int MAX_DATA_GROUP_NUM = 256;
-
-        private readonly string NewLine;
-        private readonly string DataGroupTruncationWarning;
-        private readonly Encoding GB18030;
-        
         private string project_dir_path, demo, exe;
 
-        public Form3(in Encoding encoding)
+        public Form3()
         {
-            NewLine = Environment.NewLine;
-            DataGroupTruncationWarning = $"数据组数大于{MAX_DATA_GROUP_NUM}，将舍弃第{MAX_DATA_GROUP_NUM + 1}组及之后的数据";
-            GB18030 = encoding;
-
             InitializeComponent();
 
             BackColor = Color.FromArgb(234, 234, 239);
@@ -39,9 +29,7 @@ namespace gaocheng_debug
 
         private void Form3_Load(object sender, EventArgs e)
         {
-            StreamReader sr = new StreamReader(project_dir_path + @"\__test_data.txt", GB18030);
-            textBox1.Text = sr.ReadToEnd();
-            sr.Close();
+            textBox1.Text = File.ReadAllText(project_dir_path + @"\__test_data.txt", ConstValues.GB18030);
 
             textBox1.SelectAll();
 
@@ -55,69 +43,67 @@ namespace gaocheng_debug
 
             if (data_content == string.Empty)
             {
-                data_content = $"[{NewLine}";
+                data_content = $"[{ConstValues.NewLine}";
                 len = data_content.Length;
             }
             else
             {
                 for (int i = 0; i < len; ++i)
                 {
-                    if (data_content[i] == '[' && ++cnt > MAX_DATA_GROUP_NUM)
+                    if (data_content[i] == '[' && ++cnt > ConstValues.MAX_DATA_GROUP_NUM)
                     {
-                        MessageBox.Show(DataGroupTruncationWarning, ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show(ConstValues.DataGroupTruncationWarning, ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         break;
                     }
                 }
                 
                 if (cnt < 1)
                 {
-                    data_content = "[" + NewLine + data_content;
+                    data_content = "[" + ConstValues.NewLine + data_content;
                     len = data_content.Length;
-                    cnt = 1;
                 }
             }
 
             if (data_content[len - 1] != '\n')
             {
-                data_content += NewLine;
-                len += NewLine.Length;
+                data_content += ConstValues.NewLine;
+                len += ConstValues.NewLine.Length;
             }
 
             cnt = 0;
-            StreamWriter data_and_test_bat_SW = new StreamWriter(project_dir_path + @"\__test_data.txt", false, GB18030);
+            StringBuilder str = new StringBuilder();
             for (int i = 0; i < len; ++i)
             {
                 if (data_content[i] == '[')
                 {
                     ++cnt;
-                    if (cnt > MAX_DATA_GROUP_NUM)
+                    if (cnt > ConstValues.MAX_DATA_GROUP_NUM)
                     {
-                        cnt = MAX_DATA_GROUP_NUM;
+                        cnt = ConstValues.MAX_DATA_GROUP_NUM;
                         break;
                     }
-                    data_and_test_bat_SW.Write($"[{cnt}]{NewLine}");
+                    str.Append($"[{cnt}]{ConstValues.NewLine}");
                     while (i < len && data_content[i++] != '\n')
                         ;
                 }
 
                 if (i < len)
                 {
-                    data_and_test_bat_SW.Write(data_content[i]);
+                    str.Append(data_content[i]);
                 }
             }
-            data_and_test_bat_SW.Close();
+            File.WriteAllText(project_dir_path + @"\__test_data.txt", str.ToString(), ConstValues.GB18030);
 
-            data_and_test_bat_SW = new StreamWriter(project_dir_path + @"\test.bat", false, GB18030);
-            data_and_test_bat_SW.Write($"cd /d \"{project_dir_path}\"\n");
-            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" >_demo_result.txt\n");
-            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" >_your_exe_result.txt\n");
-            data_and_test_bat_SW.Write($"for /l %%v in (2, 1, {cnt}) do (\n");
-            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" >>_demo_result.txt\n");
-            data_and_test_bat_SW.Write($"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" >>_your_exe_result.txt\n)\nmode");
-            data_and_test_bat_SW.Close();
+            string content = $"cd /d \"{project_dir_path}\"{ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" >_demo_result.txt{ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" >_your_exe_result.txt{ConstValues.NewLine}";
+            content += $"for /l %%v in (2, 1, {cnt}) do ({ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" >>_demo_result.txt{ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" >>_your_exe_result.txt{ConstValues.NewLine}){ConstValues.NewLine}mode";
+            File.WriteAllText(project_dir_path + @"\test.bat", content, ConstValues.GB18030);
 
-            Form1 fm1 = Owner as Form1;
-            fm1.IsDataChanged = true;
+            Form1 Master = Owner as Form1;
+            Master.IsDataChanged = true;
 
             Close();
         }

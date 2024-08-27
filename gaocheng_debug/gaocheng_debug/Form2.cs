@@ -48,13 +48,11 @@ namespace gaocheng_debug
 
         private void button3_Click(object sender, EventArgs e)
         {
-            StreamWriter sw = new StreamWriter(@".\rsc\initial_dirs.config");
-            sw.Write(textBox1.Text + "\n" + textBox2.Text);
-            sw.Close();
+            File.WriteAllText(@".\rsc\initial_dirs.config", textBox1.Text + "\n" + textBox2.Text);
 
-            Form1 f1 = Owner as Form1;
-            f1.DefaultDemoPath = textBox1.Text;
-            f1.DefaultExePath = textBox2.Text;
+            Form1 Master = Owner as Form1;
+            Master.DefaultDemoPath = textBox1.Text;
+            Master.DefaultExePath = textBox2.Text;
 
             Close();
         }

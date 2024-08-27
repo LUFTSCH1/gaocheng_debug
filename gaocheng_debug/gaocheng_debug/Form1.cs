@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -9,8 +8,6 @@ namespace gaocheng_debug
 {
     public partial class Form1 : Form
     {
-        private readonly Encoding GB18030;
-
         private readonly string AbsoluteTestLogPath;
 
         private readonly Form2 FM2;
@@ -40,14 +37,11 @@ namespace gaocheng_debug
         }
 
         public Form1()
-        {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            GB18030 = Encoding.GetEncoding("GB18030");
-            
+        { 
             AbsoluteTestLogPath = Directory.GetCurrentDirectory() + @"\test_log\";
 
             FM2 = new Form2();
-            FM3 = new Form3(GB18030);
+            FM3 = new Form3();
             FM4 = new Form4();
 
             if (!Directory.Exists(AbsoluteTestLogPath))
@@ -71,10 +65,7 @@ namespace gaocheng_debug
             }
 
             {
-                StreamReader sr = new StreamReader(@".\rsc\initial_dirs.config");
-                string temp = sr.ReadToEnd();
-                sr.Close();
-                string[] paths = temp.Split('\n');
+                string[] paths = File.ReadAllLines(@".\rsc\initial_dirs.config");
                 default_demo_path = paths[0];
                 default_exe_path = paths[1];
             }
@@ -96,15 +87,15 @@ namespace gaocheng_debug
             {
                 if (!isDemoExist && !isYourExeExist)
                 {
-                    MessageBox.Show("demo和作业exe文件均不存在", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("demo和作业exe文件均不存在", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else if (!isDemoExist)
                 {
-                    MessageBox.Show("demo不存在", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("demo不存在", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
-                    MessageBox.Show("作业exe文件不存在", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("作业exe文件不存在", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 return false;
@@ -203,32 +194,18 @@ namespace gaocheng_debug
                 return;
             }
 
-            StreamReader bat_resultSR;
-            StreamWriter log_batSW;
-
             if (is_mode_changed || is_path_changed)
             {
                 is_path_changed = false;
-                log_batSW = new StreamWriter(absolute_dir_path + @"\__path.log");
-                log_batSW.Write($"generated\n{project_demo_path}\n{project_exe_path}\n{comboBox2.SelectedIndex}\n{comboBox3.SelectedIndex}");
-                log_batSW.Close();
+                File.WriteAllText(absolute_dir_path + @"\__path.log", $"generated\n{project_demo_path}\n{project_exe_path}\n{comboBox2.SelectedIndex}\n{comboBox3.SelectedIndex}");
             }
 
             if (is_mode_changed || is_data_changed)
             {
                 is_mode_changed = false;
-                bat_resultSR = new StreamReader(absolute_dir_path + @"\test.bat", GB18030);
-                string test_content = bat_resultSR.ReadToEnd();
-                bat_resultSR.Close();
-
-                string[] test_command = test_content.Split('\n');
-                log_batSW = new StreamWriter(absolute_dir_path + @"\test.bat", false, GB18030);
-                for (int i = 0, len = test_command.Length - 1; i < len; ++i)
-                {
-                    log_batSW.WriteLine(test_command[i].Trim('\r'));
-                }
-                log_batSW.Write(CompareCommandConstruct());
-                log_batSW.Close();
+                string[] bat_content = File.ReadAllLines(absolute_dir_path + @"\test.bat", ConstValues.GB18030);
+                bat_content[bat_content.Length - 1] = CompareCommandConstruct();
+                File.WriteAllLines(absolute_dir_path + @"\test.bat", bat_content, ConstValues.GB18030);
             }
 
             Process p = new Process();
@@ -244,9 +221,7 @@ namespace gaocheng_debug
             p.WaitForExit();
             p.Close();
 
-            bat_resultSR = new StreamReader(absolute_dir_path + @"\_compare_result.txt", GB18030);
-            richTextBox1.Text = bat_resultSR.ReadToEnd();
-            bat_resultSR.Close();
+            richTextBox1.Text = File.ReadAllText(absolute_dir_path + @"\_compare_result.txt", ConstValues.GB18030);
             
             return;
         }
@@ -268,16 +243,16 @@ namespace gaocheng_debug
             sw.Write("new\nno_data\nno_data\n0\n0");
             sw.Close();
 
-            sw = new StreamWriter(NewPath + @"\__test_data.txt", false, GB18030);
+            sw = new StreamWriter(NewPath + @"\__test_data.txt", false, ConstValues.GB18030);
             sw.Close();
 
-            sw = new StreamWriter(NewPath + @"\_compare_result.txt", false, GB18030);
+            sw = new StreamWriter(NewPath + @"\_compare_result.txt", false, ConstValues.GB18030);
             sw.Close();
 
-            sw = new StreamWriter(NewPath + @"\_demo_result.txt", false, GB18030);
+            sw = new StreamWriter(NewPath + @"\_demo_result.txt", false, ConstValues.GB18030);
             sw.Close();
 
-            sw = new StreamWriter(NewPath + @"\_your_exe_result.txt", false, GB18030);
+            sw = new StreamWriter(NewPath + @"\_your_exe_result.txt", false, ConstValues.GB18030);
             sw.Close();
 
             RefreshFileList();
@@ -297,8 +272,8 @@ namespace gaocheng_debug
             }
             else
             {
-                MessageBox.Show($"原demo默认浏览目录：\n{default_demo_path}\n不存在，建议点击“设置”进行更改", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                openFileDialog1.InitialDirectory = ConstStrings.DEFAULT_DIRECTORY;
+                MessageBox.Show($"原demo默认浏览目录：\n{default_demo_path}\n不存在，建议点击“设置”进行更改", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                openFileDialog1.InitialDirectory = ConstValues.DEFAULT_DIRECTORY;
             }
             openFileDialog1.Title = "选择demo文件";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -317,8 +292,8 @@ namespace gaocheng_debug
             }
             else
             {
-                MessageBox.Show($"原exe默认浏览目录：\n{default_exe_path}\n不存在，建议点击“设置”进行更改", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                openFileDialog1.InitialDirectory = ConstStrings.DEFAULT_DIRECTORY;
+                MessageBox.Show($"原exe默认浏览目录：\n{default_exe_path}\n不存在，建议点击“设置”进行更改", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                openFileDialog1.InitialDirectory = ConstValues.DEFAULT_DIRECTORY;
             }
             openFileDialog1.Title = "选择作业exe文件";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -333,7 +308,7 @@ namespace gaocheng_debug
         {
             if (textBox1.Text == string.Empty || textBox2.Text == string.Empty)
             {
-                MessageBox.Show("官方demo路径或测试exe路径为空", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("官方demo路径或测试exe路径为空", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -373,7 +348,7 @@ namespace gaocheng_debug
         {
             if (textBox1.Text == string.Empty || textBox2.Text == string.Empty)
             {
-                MessageBox.Show("官方demo路径或测试exe路径为空", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("官方demo路径或测试exe路径为空", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else if (!ExeErrorFilter(textBox1.Text, textBox2.Text))
             {
@@ -381,15 +356,15 @@ namespace gaocheng_debug
             }
             else if (!File.Exists(absolute_dir_path + @"\test.bat"))
             {
-                MessageBox.Show("批处理测试文件未生成\n请先完成创建/修改测试数据", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("批处理测试文件未生成\n请先完成创建/修改测试数据", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else if (is_path_changed)
             {
-                MessageBox.Show("官方demo路径或测试exe路径已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("官方demo路径或测试exe路径已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else if (recorded_app_path != absolute_dir_path)
             {
-                MessageBox.Show("本应用位置已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", ConstStrings.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("本应用位置已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -418,7 +393,10 @@ namespace gaocheng_debug
         {
             if (MessageBox.Show("注意：本操作为永久删除，无法撤销\n是否要删除项目：" + project_dir_name, "确认", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                Directory.Delete(absolute_dir_path, true);
+                if (Directory.Exists(absolute_dir_path))
+                {
+                    Directory.Delete(absolute_dir_path, true);
+                }
 
                 RefreshFileList();
                 comboBox1.SelectedIndex = 0;
@@ -444,10 +422,7 @@ namespace gaocheng_debug
             {
                 absolute_dir_path = AbsoluteTestLogPath + project_dir_name;
 
-                StreamReader sr = new StreamReader(absolute_dir_path + @"\__path.log");
-                string pathI = sr.ReadToEnd();
-                sr.Close();
-                string[] pathInfo = pathI.Split('\n');
+                string[] pathInfo = File.ReadAllLines(absolute_dir_path + @"\__path.log");
 
                 comboBox2.SelectedIndex = Convert.ToInt32(pathInfo[3]);
                 comboBox3.SelectedIndex = Convert.ToInt32(pathInfo[4]);
@@ -457,7 +432,6 @@ namespace gaocheng_debug
                     textBox1.Text = string.Empty;
                     textBox2.Text = string.Empty;
                     richTextBox1.Text = string.Empty;
-                    richTextBox1.Text = string.Empty;
                 }
                 else
                 {
@@ -466,9 +440,7 @@ namespace gaocheng_debug
 
                     try
                     {
-                        sr = new StreamReader(absolute_dir_path + @"\test.bat", GB18030);
-                        string temp = sr.ReadLine();
-                        sr.Close();
+                        string temp = File.ReadAllText(absolute_dir_path + @"\test.bat", ConstValues.GB18030);
                         recorded_app_path = string.Empty;
                         int i = 0, len = temp.Length;
                         while (i < len && temp[i] != '\"')
@@ -485,12 +457,13 @@ namespace gaocheng_debug
                         throw new Exception("test.bat异常，您可能删除了该文件：\n" + ex.Message);
                     }
 
-                    sr = new StreamReader(absolute_dir_path + @"\_compare_result.txt", GB18030);
-                    richTextBox1.Text = sr.ReadToEnd();
-                    sr.Close();
+                    richTextBox1.Text = File.ReadAllText(absolute_dir_path + @"\_compare_result.txt", ConstValues.GB18030);
                 }
 
-                EnableComponent();
+                if (!button7.Enabled)
+                {
+                    EnableComponent();
+                }
             }
 
             return;

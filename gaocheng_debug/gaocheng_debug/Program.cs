@@ -7,8 +7,6 @@ namespace gaocheng_debug
 {
     internal static class Program
     {
-        private const int DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = -4;
-
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetProcessDpiAwarenessContext(int dpiFlag);
 
@@ -24,12 +22,13 @@ namespace gaocheng_debug
                 if (!isNotRunning)
                 {
                     MutSync.HandleRunningInstance(process_name);
-                    Environment.Exit(0);
+                    Environment.Exit(1);
                 }
             }
 
             if (Environment.OSVersion.Version.Major >= 6)
             {
+                const int DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = -4;
                 SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
             }
 
