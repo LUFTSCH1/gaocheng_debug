@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -10,10 +9,6 @@ namespace gaocheng_debug
         public Form2()
         {
             InitializeComponent();
-
-            BackColor = Color.FromArgb(234, 234, 239);
-            button1.BackColor = button2.BackColor = Color.FromArgb(99, 187, 208);
-            button3.BackColor = Color.FromArgb(85, 187, 138);
         }
 
         public void SetPath(in string default_demo_path, in string default_exe_path)

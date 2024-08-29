@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Drawing;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace gaocheng_debug
@@ -13,9 +12,6 @@ namespace gaocheng_debug
         public Form3()
         {
             InitializeComponent();
-
-            BackColor = Color.FromArgb(234, 234, 239);
-            button1.BackColor = Color.FromArgb(85, 187, 138);
         }
 
         public void SetPath(in string absolute_dir_path, in string demo_path, in string exe_path)
@@ -29,7 +25,15 @@ namespace gaocheng_debug
 
         private void Form3_Load(object sender, EventArgs e)
         {
-            textBox1.Text = File.ReadAllText(project_dir_path + @"\__test_data.txt", ConstValues.GB18030);
+            if (File.Exists(project_dir_path + @"\__test_data.txt"))
+            {
+                textBox1.Text = File.ReadAllText(project_dir_path + @"\__test_data.txt", ConstValues.GB18030);
+            }
+            else
+            {
+                MutSync.ShowMessageToWarn("虽然应用依旧能运行，但不建议手动删除__test_data.txt");
+                textBox1.Text = string.Empty;
+            }
 
             textBox1.SelectAll();
 
@@ -52,7 +56,7 @@ namespace gaocheng_debug
                 {
                     if (data_content[i] == '[' && ++cnt > ConstValues.MAX_DATA_GROUP_NUM)
                     {
-                        MessageBox.Show(ConstValues.DataGroupTruncationWarning, ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MutSync.ShowMessageToWarn(ConstValues.DataGroupTruncationWarning);
                         break;
                     }
                 }

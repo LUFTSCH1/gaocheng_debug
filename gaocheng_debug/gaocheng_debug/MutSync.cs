@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Diagnostics;
+using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace gaocheng_debug
 {
@@ -18,7 +19,7 @@ namespace gaocheng_debug
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        public static void OpenFolder(string fileFullName) => ShellExecute(IntPtr.Zero, "open", fileFullName);
+        public static void OpenFolder(in string fileFullName) => ShellExecute(IntPtr.Zero, "open", fileFullName);
 
         public static void HandleRunningInstance(in string process_name)
         {
@@ -38,5 +39,7 @@ namespace gaocheng_debug
 
             return ;
         }
+
+        public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 }

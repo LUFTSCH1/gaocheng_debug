@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace gaocheng_debug
 {
@@ -13,6 +12,8 @@ namespace gaocheng_debug
         private readonly Form2 FM2;
         private readonly Form3 FM3;
         private readonly Form4 FM4;
+
+        private readonly Process CMD;
 
         private string default_demo_path, default_exe_path;
 
@@ -44,19 +45,17 @@ namespace gaocheng_debug
             FM3 = new Form3();
             FM4 = new Form4();
 
+            CMD = new Process();
+            CMD.StartInfo.FileName = "cmd.exe";
+            CMD.StartInfo.UseShellExecute = false;
+            CMD.StartInfo.RedirectStandardInput = true;
+
             if (!Directory.Exists(AbsoluteTestLogPath))
             {
                 Directory.CreateDirectory(AbsoluteTestLogPath);
             }
 
             InitializeComponent();
-
-            BackColor = Color.FromArgb(234, 234, 239);
-            button1.BackColor = button5.BackColor = Color.FromArgb(93, 190, 138);
-            button2.BackColor = button3.BackColor = Color.FromArgb(99, 187, 208);
-            button4.BackColor = Color.FromArgb(255, 255, 255);
-            button6.BackColor = Color.FromArgb(249, 114, 61);
-            button7.BackColor = Color.FromArgb(222, 28, 49);
 
             {
                 string[] form1_names = { "校对工具", "oop，启动！", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
@@ -74,10 +73,10 @@ namespace gaocheng_debug
             comboBox1.SelectedIndex = 0;
         }
 
-        private bool ExeErrorFilter(in string demo_path, in string your_exe_path)
+        private bool ExeErrorFilter()
         {
-            bool isDemoExist = File.Exists(demo_path);
-            bool isYourExeExist = File.Exists(your_exe_path);
+            bool isDemoExist = File.Exists(textBox1.Text);
+            bool isYourExeExist = File.Exists(textBox2.Text);
             
             if (isDemoExist && isYourExeExist) 
             {
@@ -87,15 +86,15 @@ namespace gaocheng_debug
             {
                 if (!isDemoExist && !isYourExeExist)
                 {
-                    MessageBox.Show("demo和作业exe文件均不存在", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MutSync.ShowMessageToWarn("demo和作业exe文件均不存在");
                 }
                 else if (!isDemoExist)
                 {
-                    MessageBox.Show("demo不存在", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MutSync.ShowMessageToWarn("demo文件不存在");
                 }
                 else
                 {
-                    MessageBox.Show("作业exe文件不存在", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MutSync.ShowMessageToWarn("作业exe文件不存在");
                 }
 
                 return false;
@@ -135,6 +134,106 @@ namespace gaocheng_debug
             return;
         }
 
+        private void RefreshFileList()
+        {
+            comboBox1.Items.Clear();
+            comboBox1.Items.Add("blank");
+
+            string[] directories = Directory.GetDirectories(@".\test_log");
+            int len = directories.Length;
+            for (int i = 0; i < len; ++i)
+            {
+                directories[i] = Path.GetFileName(directories[i]);
+            }
+            Array.Sort(directories, delegate(string x, string y) { return y.CompareTo(x); });
+            for (int i = 0; i < len; ++i)
+            {
+                comboBox1.Items.Add(directories[i]);
+            }
+
+            return;
+        }
+
+        private void TryToGetRecordedAppPath()
+        {
+            if (File.Exists(absolute_dir_path + @"\test.bat"))
+            {
+                string temp = File.ReadAllText(absolute_dir_path + @"\test.bat", ConstValues.GB18030);
+                recorded_app_path = string.Empty;
+                int i = 0, len = temp.Length;
+                while (i < len && temp[i] != '\"')
+                {
+                    ++i;
+                }
+                for (++i; i < len && temp[i] != '\"'; ++i)
+                {
+                    recorded_app_path += temp[i];
+                }
+            }
+            else
+            {
+                MutSync.ShowMessageToWarn("test.bat异常，您可能删除了该文件");
+            }
+
+            return;
+        }
+
+        private void TryToGetCompareResult()
+        {
+            if (File.Exists(absolute_dir_path + @"\_compare_result.txt"))
+            {
+                richTextBox1.Text = File.ReadAllText(absolute_dir_path + @"\_compare_result.txt", ConstValues.GB18030);
+            }
+            else
+            {
+                MutSync.ShowMessageToWarn($"项目\n{project_dir_name}\n生成的\n_compare_result.txt\n文件不存在");
+                richTextBox1.Text = $"项目 {project_dir_name} 生成的_compare_result.txt文件不存在{ConstValues.NewLine}{ConstValues.NewLine}导致本异常的原因可能是：{ConstValues.NewLine}_compare_result.txt被删除{ConstValues.NewLine}__path.log第一个参数被非法修改为generated";
+            }
+
+            return;
+        }
+
+        private void TryToGetPathLogInfo()
+        {
+            if (File.Exists(absolute_dir_path + @"\__path.log"))
+            {
+                string[] pathInfo = File.ReadAllLines(absolute_dir_path + @"\__path.log");
+
+                comboBox2.SelectedIndex = Convert.ToInt32(pathInfo[3]);
+                comboBox3.SelectedIndex = Convert.ToInt32(pathInfo[4]);
+
+                if (pathInfo[0] != "generated")
+                {
+                    textBox1.Text = string.Empty;
+                    textBox2.Text = string.Empty;
+                    richTextBox1.Text = string.Empty;
+                }
+                else
+                {
+                    textBox1.Text = project_demo_path = pathInfo[1];
+                    textBox2.Text = project_exe_path = pathInfo[2];
+
+                    TryToGetRecordedAppPath();
+
+                    TryToGetCompareResult();
+                }
+
+                if (!button6.Enabled)
+                {
+                    EnableComponent();
+                }
+            }
+            else
+            {
+                DisableComponent();
+                MutSync.ShowMessageToWarn($"项目\n{project_dir_name}\n生成的\n__path.log\n文件不存在");
+                richTextBox1.Text = $"项目 {project_dir_name} 生成的__path.log文件不存在{ConstValues.NewLine}{ConstValues.NewLine}导致本异常的原因可能是：{ConstValues.NewLine}__path.log被删除{ConstValues.NewLine}{ConstValues.NewLine}解决方法：{ConstValues.NewLine}尝试在回收站中寻找本项目的__path.log文件并恢复{ConstValues.NewLine}删除本项目";
+                button7.Enabled = true;
+            }
+
+            return;
+        }
+
         private string CompareCommandConstruct()
         {
             string compare = @"..\..\rsc\txt_compare --file1 _demo_result.txt --file2 _your_exe_result.txt --trim ";
@@ -164,39 +263,21 @@ namespace gaocheng_debug
             return compare;
         }
 
-        private void RefreshFileList()
-        {
-            comboBox1.Items.Clear();
-            comboBox1.Items.Add("blank");
-
-            string[] directories = Directory.GetDirectories(@".\test_log");
-            int len = directories.Length;
-            for (int i = 0; i < len; ++i)
-            {
-                directories[i] = Path.GetFileName(directories[i]);
-            }
-            Array.Sort(directories, delegate(string x, string y) { return y.CompareTo(x); });
-            for (int i = 0; i < len; ++i)
-            {
-                comboBox1.Items.Add(directories[i]);
-            }
-
-            return;
-        }
-
         private void GenerateAndCompare()
         {
-            project_demo_path = textBox1.Text;
-            project_exe_path = textBox2.Text;
-
-            if (!ExeErrorFilter(project_demo_path, project_exe_path))
+            if (!ExeErrorFilter())
             {
                 return;
             }
 
             if (is_mode_changed || is_path_changed)
             {
-                is_path_changed = false;
+                if (is_path_changed)
+                {
+                    project_demo_path = textBox1.Text;
+                    project_exe_path = textBox2.Text;
+                    is_path_changed = false;
+                }
                 File.WriteAllText(absolute_dir_path + @"\__path.log", $"generated\n{project_demo_path}\n{project_exe_path}\n{comboBox2.SelectedIndex}\n{comboBox3.SelectedIndex}");
             }
 
@@ -208,20 +289,21 @@ namespace gaocheng_debug
                 File.WriteAllLines(absolute_dir_path + @"\test.bat", bat_content, ConstValues.GB18030);
             }
 
-            Process p = new Process();
-            p.StartInfo.FileName = "cmd.exe";
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.RedirectStandardInput = true;
-            p.StartInfo.RedirectStandardOutput = false;
-            p.StartInfo.RedirectStandardError = false;
-            p.StartInfo.CreateNoWindow = false;
+            CMD.Start();
+            CMD.StandardInput.WriteLine("\"" + absolute_dir_path + "\\test.bat\"");
+            CMD.StandardInput.WriteLine("cls&exit");
+            CMD.WaitForExit();
+            CMD.Close();
 
-            p.Start();
-            p.StandardInput.WriteLine("\"" + absolute_dir_path + "\\test.bat\"&exit");
-            p.WaitForExit();
-            p.Close();
-
-            richTextBox1.Text = File.ReadAllText(absolute_dir_path + @"\_compare_result.txt", ConstValues.GB18030);
+            if (File.Exists(absolute_dir_path + @"\_compare_result.txt"))
+            {
+                richTextBox1.Text = File.ReadAllText(absolute_dir_path + @"\_compare_result.txt", ConstValues.GB18030);
+            }
+            else
+            {
+                richTextBox1.Text = $"cmd运行过程发生错误，生成失败{ConstValues.NewLine}建议检查源文件逻辑问题 以及 每组测试数据是否合法";
+                MutSync.ShowMessageToWarn("cmd运行过程发生错误，生成失败");
+            }
             
             return;
         }
@@ -272,7 +354,7 @@ namespace gaocheng_debug
             }
             else
             {
-                MessageBox.Show($"原demo默认浏览目录：\n{default_demo_path}\n不存在，建议点击“设置”进行更改", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MutSync.ShowMessageToWarn($"原demo默认浏览目录：\n{default_demo_path}\n不存在，建议点击“设置”进行更改");
                 openFileDialog1.InitialDirectory = ConstValues.DEFAULT_DIRECTORY;
             }
             openFileDialog1.Title = "选择demo文件";
@@ -292,7 +374,7 @@ namespace gaocheng_debug
             }
             else
             {
-                MessageBox.Show($"原exe默认浏览目录：\n{default_exe_path}\n不存在，建议点击“设置”进行更改", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MutSync.ShowMessageToWarn($"原作业exe默认浏览目录：\n{default_exe_path}\n不存在，建议点击“设置”进行更改");
                 openFileDialog1.InitialDirectory = ConstValues.DEFAULT_DIRECTORY;
             }
             openFileDialog1.Title = "选择作业exe文件";
@@ -308,7 +390,11 @@ namespace gaocheng_debug
         {
             if (textBox1.Text == string.Empty || textBox2.Text == string.Empty)
             {
-                MessageBox.Show("官方demo路径或测试exe路径为空", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MutSync.ShowMessageToWarn("官方demo路径或作业exe路径为空");
+            }
+            else if (!ExeErrorFilter())
+            {
+                ;
             }
             else
             {
@@ -348,26 +434,31 @@ namespace gaocheng_debug
         {
             if (textBox1.Text == string.Empty || textBox2.Text == string.Empty)
             {
-                MessageBox.Show("官方demo路径或测试exe路径为空", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MutSync.ShowMessageToWarn("官方demo路径或作业exe路径为空");
             }
-            else if (!ExeErrorFilter(textBox1.Text, textBox2.Text))
+            else if (!ExeErrorFilter())
             {
                 ;
             }
             else if (!File.Exists(absolute_dir_path + @"\test.bat"))
             {
-                MessageBox.Show("批处理测试文件未生成\n请先完成创建/修改测试数据", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MutSync.ShowMessageToWarn("批处理测试文件未生成\n请先完成创建/修改测试数据");
             }
             else if (is_path_changed)
             {
-                MessageBox.Show("官方demo路径或测试exe路径已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else if (recorded_app_path != absolute_dir_path)
-            {
-                MessageBox.Show("本应用位置已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关", ConstValues.WARNING, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MutSync.ShowMessageToWarn("官方demo路径或作业exe路径已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关");
             }
             else
             {
+                if (recorded_app_path != absolute_dir_path)
+                {
+                    string[] bat_content = File.ReadAllLines(absolute_dir_path + @"\test.bat", ConstValues.GB18030);
+                    bat_content[0] = $"cd /d \"{absolute_dir_path}\"";
+                    File.WriteAllLines(absolute_dir_path + @"\test.bat", bat_content, ConstValues.GB18030);
+
+                    recorded_app_path = absolute_dir_path;
+                }
+
                 GenerateAndCompare();
             }
 
@@ -376,7 +467,16 @@ namespace gaocheng_debug
 
         private void button6_Click(object sender, EventArgs e)
         {
-            MutSync.OpenFolder(absolute_dir_path);
+            if (Directory.Exists(absolute_dir_path))
+            {
+                MutSync.OpenFolder(absolute_dir_path);
+            }
+            else
+            {
+                MutSync.ShowMessageToWarn($"项目\n{project_dir_name}\n不存在");
+                RefreshFileList();
+                comboBox1.SelectedIndex = 0;
+            }
 
             return;
         }
@@ -407,7 +507,14 @@ namespace gaocheng_debug
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@".\README.html");
+            if (File.Exists(@".\README.html"))
+            {
+                Process.Start(@".\README.html");
+            }
+            else
+            {
+                MutSync.ShowMessageToWarn("说明文件\nREADME.html\n已被删除");
+            }
 
             return;
         }
@@ -421,48 +528,15 @@ namespace gaocheng_debug
             else
             {
                 absolute_dir_path = AbsoluteTestLogPath + project_dir_name;
-
-                string[] pathInfo = File.ReadAllLines(absolute_dir_path + @"\__path.log");
-
-                comboBox2.SelectedIndex = Convert.ToInt32(pathInfo[3]);
-                comboBox3.SelectedIndex = Convert.ToInt32(pathInfo[4]);
-
-                if (pathInfo[0] != "generated")
+                if (Directory.Exists(absolute_dir_path))
                 {
-                    textBox1.Text = string.Empty;
-                    textBox2.Text = string.Empty;
-                    richTextBox1.Text = string.Empty;
+                    TryToGetPathLogInfo();
                 }
                 else
                 {
-                    textBox1.Text = project_demo_path = pathInfo[1];
-                    textBox2.Text = project_exe_path = pathInfo[2];
-
-                    try
-                    {
-                        string temp = File.ReadAllText(absolute_dir_path + @"\test.bat", ConstValues.GB18030);
-                        recorded_app_path = string.Empty;
-                        int i = 0, len = temp.Length;
-                        while (i < len && temp[i] != '\"')
-                        {
-                            ++i;
-                        }
-                        for (++i; i < len && temp[i] != '\"'; ++i)
-                        {
-                            recorded_app_path += temp[i];
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("test.bat异常，您可能删除了该文件：\n" + ex.Message);
-                    }
-
-                    richTextBox1.Text = File.ReadAllText(absolute_dir_path + @"\_compare_result.txt", ConstValues.GB18030);
-                }
-
-                if (!button7.Enabled)
-                {
-                    EnableComponent();
+                    MutSync.ShowMessageToWarn($"项目\n{project_dir_name}\n已被删除，即将刷新项目列表");
+                    RefreshFileList();
+                    comboBox1.SelectedIndex = 0;
                 }
             }
 
