@@ -5,44 +5,45 @@ using System.Windows.Forms;
 
 namespace gaocheng_debug
 {
-    public partial class Form3 : Form
+    public partial class NewOrEditTestDataForm : Form
     {
-        private string project_dir_path, demo, exe;
+        // 私有成员变量
+        private string projectDirPath, demo, exe;
 
-        public Form3()
+        // 构造函数
+        public NewOrEditTestDataForm()
         {
             InitializeComponent();
         }
 
-        public void SetPath(in string absolute_dir_path, in string demo_path, in string exe_path)
+        // 公共方法
+        public void SetPath(in string absoluteDirPath, in string demoPath, in string exePath)
         {
-            project_dir_path = absolute_dir_path;
-            demo = demo_path;
-            exe = exe_path;
-
-            return;
+            projectDirPath = absoluteDirPath;
+            demo = demoPath;
+            exe = exePath;
         }
 
-        private void Form3_Load(object sender, EventArgs e)
+        // 窗体事件处理
+        private void NewOrEditTestDataFormLoad(object sender, EventArgs e)
         {
-            if (File.Exists(project_dir_path + @"\__test_data.txt"))
+            if (File.Exists(projectDirPath + @"\__test_data.txt"))
             {
-                textBox1.Text = File.ReadAllText(project_dir_path + @"\__test_data.txt", ConstValues.GB18030);
+                txtTestData.Text = File.ReadAllText(projectDirPath + @"\__test_data.txt", ConstValues.GB18030);
             }
             else
             {
                 MutSync.ShowMessageToWarn("虽然应用依旧能运行，但不建议手动删除__test_data.txt");
-                textBox1.Text = string.Empty;
+                txtTestData.Text = string.Empty;
             }
 
-            textBox1.SelectAll();
-
-            return;
+            txtTestData.SelectAll();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        // Button事件处理
+        private void BtnGenerateOrModifyThenTestClick(object sender, EventArgs e)
         {
-            string data_content = textBox1.Text;
+            string data_content = txtTestData.Text;
             int cnt = 0, len = data_content.Length;
 
             if (data_content == string.Empty)
@@ -54,7 +55,7 @@ namespace gaocheng_debug
             {
                 for (int i = 0; i < len; ++i)
                 {
-                    if (data_content[i] == '[' && ++cnt > ConstValues.MAX_DATA_GROUP_NUM)
+                    if (data_content[i] == '[' && ++cnt > ConstValues.MaxDataGroupNum)
                     {
                         MutSync.ShowMessageToWarn(ConstValues.DataGroupTruncationWarning);
                         break;
@@ -81,9 +82,9 @@ namespace gaocheng_debug
                 if (data_content[i] == '[')
                 {
                     ++cnt;
-                    if (cnt > ConstValues.MAX_DATA_GROUP_NUM)
+                    if (cnt > ConstValues.MaxDataGroupNum)
                     {
-                        cnt = ConstValues.MAX_DATA_GROUP_NUM;
+                        cnt = ConstValues.MaxDataGroupNum;
                         break;
                     }
                     str.Append($"[{cnt}]{ConstValues.NewLine}");
@@ -96,18 +97,18 @@ namespace gaocheng_debug
                     str.Append(data_content[i]);
                 }
             }
-            File.WriteAllText(project_dir_path + @"\__test_data.txt", str.ToString(), ConstValues.GB18030);
+            File.WriteAllText(projectDirPath + @"\__test_data.txt", str.ToString(), ConstValues.GB18030);
 
-            string content = $"cd /d \"{project_dir_path}\"{ConstValues.NewLine}";
+            string content = $"cd /d \"{projectDirPath}\"{ConstValues.NewLine}";
             content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" >_demo_result.txt{ConstValues.NewLine}";
             content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" >_your_exe_result.txt{ConstValues.NewLine}";
             content += $"for /l %%v in (2, 1, {cnt}) do ({ConstValues.NewLine}";
             content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" >>_demo_result.txt{ConstValues.NewLine}";
             content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" >>_your_exe_result.txt{ConstValues.NewLine}){ConstValues.NewLine}mode";
-            File.WriteAllText(project_dir_path + @"\test.bat", content, ConstValues.GB18030);
+            File.WriteAllText(projectDirPath + @"\test.bat", content, ConstValues.GB18030);
 
-            Form1 Master = Owner as Form1;
-            Master.IsDataChanged = true;
+            MainForm Master = Owner as MainForm;
+            Master.DataChanged = true;
 
             Close();
         }
