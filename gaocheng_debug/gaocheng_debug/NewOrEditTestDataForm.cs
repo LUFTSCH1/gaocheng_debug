@@ -16,7 +16,7 @@ namespace gaocheng_debug
             InitializeComponent();
         }
 
-        // 公共方法
+        // 公有方法
         public void SetPath(in string absoluteDirPath, in string demoPath, in string exePath)
         {
             projectDirPath = absoluteDirPath;

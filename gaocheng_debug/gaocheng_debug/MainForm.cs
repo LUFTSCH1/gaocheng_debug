@@ -40,7 +40,7 @@ namespace gaocheng_debug
             set { isDataChanged = value; }
         }
 
-        //构造函数
+        // 构造函数
         public MainForm()
         { 
             AbsoluteTestLogPath = Directory.GetCurrentDirectory() + @"\test_log\";
