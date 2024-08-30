@@ -5,23 +5,12 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 
 namespace gaocheng_debug
 {
     internal static class MutSync
     {
-        //防止文件夹重复打开
-        [DllImport("shell32.dll")]
-        private static extern IntPtr ShellExecute(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters = "", string lpDirectory = "", int show_style = 1);
-
-        //防止应用重复打开
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
+        // 公有静态方法
         public static void OpenFolder(in string fileFullName) => ShellExecute(IntPtr.Zero, "open", fileFullName);
 
         public static void HandleRunningInstance(in string processName)
@@ -43,6 +32,7 @@ namespace gaocheng_debug
 
         public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, ConstValues.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
+        // 公有静态异步方法
         public static async Task<string> GetMD5HashFromFileAsync(string fileName)
         {
             return await Task.Run(() => { 
@@ -67,5 +57,15 @@ namespace gaocheng_debug
                 }
             }).ConfigureAwait(true);
         }
+
+        // 私有静态外部方法
+        [System.Runtime.InteropServices.DllImport("shell32.dll")]
+        private static extern IntPtr ShellExecute(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters = "", string lpDirectory = "", int show_style = 1);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
     }
 }

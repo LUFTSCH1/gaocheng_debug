@@ -24,7 +24,7 @@ namespace gaocheng_debug
             }
 
             // 完整性检查
-            IntegralityCheckerAsync.CheckIntegrality().ConfigureAwait(true);
+            IntegralityCheckerAsync.CheckIntegralityAsync().Wait();
 
             if (Environment.OSVersion.Version.Major >= 6)
             {
@@ -37,7 +37,7 @@ namespace gaocheng_debug
             Application.Run(new MainForm());
         }
 
-        // dpi设置
+        // 私有静态外部方法-dpi设置
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetProcessDpiAwarenessContext(int dpiFlag);
     }

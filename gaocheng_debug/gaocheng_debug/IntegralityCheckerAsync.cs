@@ -6,7 +6,8 @@ namespace gaocheng_debug
 {
     internal static class IntegralityCheckerAsync
     {
-        public static async Task CheckIntegrality()
+        // 公有静态异步方法
+        public static async Task CheckIntegralityAsync()
         {
             string path = ".\\";
             if (!File.Exists(path + "gaocheng_debug.exe.config"))
@@ -60,6 +61,7 @@ namespace gaocheng_debug
             }
         }
 
+        // 私有静态方法
         private static void ShowWarningThenExit(in string msg)
         {
             MutSync.ShowMessageToWarn(msg);
