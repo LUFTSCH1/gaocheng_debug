@@ -100,11 +100,11 @@ namespace gaocheng_debug
             File.WriteAllText(projectDirPath + @"\__test_data.txt", str.ToString(), ConstValues.GB18030);
 
             string content = $"cd /d \"{projectDirPath}\"{ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" >_demo_result.txt{ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" >_your_exe_result.txt{ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" 1>_demo_result.txt{ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" 1>_your_exe_result.txt{ConstValues.NewLine}";
             content += $"for /l %%v in (2, 1, {cnt}) do ({ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" >>_demo_result.txt{ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" >>_your_exe_result.txt{ConstValues.NewLine}){ConstValues.NewLine}mode";
+            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" 1>>_demo_result.txt{ConstValues.NewLine}";
+            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" 1>>_your_exe_result.txt{ConstValues.NewLine}){ConstValues.NewLine}mode";
             File.WriteAllText(projectDirPath + @"\test.bat", content, ConstValues.GB18030);
 
             MainForm Master = Owner as MainForm;

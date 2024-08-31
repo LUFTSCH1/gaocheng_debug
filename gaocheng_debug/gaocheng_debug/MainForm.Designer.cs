@@ -233,10 +233,10 @@
             this.cboDisplaySelector.Items.AddRange(new object[] {
             "--display normal",
             "--display detailed"});
-            this.cboDisplaySelector.Location = new System.Drawing.Point(741, 28);
+            this.cboDisplaySelector.Location = new System.Drawing.Point(753, 28);
             this.cboDisplaySelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboDisplaySelector.Name = "cboDisplaySelector";
-            this.cboDisplaySelector.Size = new System.Drawing.Size(173, 28);
+            this.cboDisplaySelector.Size = new System.Drawing.Size(163, 28);
             this.cboDisplaySelector.TabIndex = 11;
             this.cboDisplaySelector.TabStop = false;
             this.cboDisplaySelector.SelectedIndexChanged += new System.EventHandler(this.CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged);
@@ -251,10 +251,10 @@
             "--trim none",
             "--trim right",
             "--trim left"});
-            this.cboTrimSelector.Location = new System.Drawing.Point(611, 28);
+            this.cboTrimSelector.Location = new System.Drawing.Point(619, 28);
             this.cboTrimSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboTrimSelector.Name = "cboTrimSelector";
-            this.cboTrimSelector.Size = new System.Drawing.Size(126, 28);
+            this.cboTrimSelector.Size = new System.Drawing.Size(130, 28);
             this.cboTrimSelector.TabIndex = 0;
             this.cboTrimSelector.TabStop = false;
             this.cboTrimSelector.SelectedIndexChanged += new System.EventHandler(this.CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged);
@@ -330,7 +330,7 @@
             this.btnDeleteProject.UseVisualStyleBackColor = false;
             this.btnDeleteProject.Click += new System.EventHandler(this.BtnDeleteProjectClick);
             // 
-            // fmMainForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;

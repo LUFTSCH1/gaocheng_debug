@@ -269,7 +269,7 @@ namespace gaocheng_debug
             {
                 compare += "detailed ";
             }
-            compare += ">_compare_result.txt";
+            compare += "1>_compare_result.txt 2>&1";
 
             return compare;
         }
@@ -508,12 +508,17 @@ namespace gaocheng_debug
             }
             else
             {
+                string[] bat_content = File.ReadAllLines(absoluteDirPath + @"\test.bat", ConstValues.GB18030);
+                if (bat_content.Length != ConstValues.TestBatLines)
+                {
+                    MutSync.ShowMessageToWarn("test.bat文件不合法，请再次使用\n创建/修改测试数据");
+                    return;
+                }
+
                 if (recordedAppPath != absoluteDirPath)
                 {
-                    string[] bat_content = File.ReadAllLines(absoluteDirPath + @"\test.bat", ConstValues.GB18030);
                     bat_content[0] = $"cd /d \"{absoluteDirPath}\"";
                     File.WriteAllLines(absoluteDirPath + @"\test.bat", bat_content, ConstValues.GB18030);
-
                     recordedAppPath = absoluteDirPath;
                 }
 
