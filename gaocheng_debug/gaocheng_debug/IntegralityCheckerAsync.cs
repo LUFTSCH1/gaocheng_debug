@@ -9,13 +9,15 @@ namespace gaocheng_debug
         // 公有静态异步方法
         public static async Task CheckIntegralityAsync()
         {
+            const long MaxFileSize = 2 * 1024 * 1024;
+
             string path = ".\\";
             if (!File.Exists(path + "gaocheng_debug.exe.config"))
             {
                 ShowWarningThenExit("应用配置文件\ngaocheng_debug.exe.config\n缺失，请考虑重新下载应用");
             }
 
-            if ("98dbb4a9bc384dca6b79a47886c42891" != await MutSync.GetMD5HashFromFileAsync(path + "gaocheng_debug.exe.config"))
+            if (new FileInfo(path + "gaocheng_debug.exe.config").Length > MaxFileSize || "98dbb4a9bc384dca6b79a47886c42891" != await MutSync.GetMD5HashFromFileAsync(path + "gaocheng_debug.exe.config"))
             {
                 ShowWarningThenExit($"文件\ngaocheng_debug.exe.config\n被替换");
             }
@@ -28,7 +30,7 @@ namespace gaocheng_debug
                 {
                     ShowWarningThenExit($"必要动态链接库\n{necessary_files[i]}\n缺失，请考虑重新下载应用");
                 }
-                else if (file_hash[i] != await MutSync.GetMD5HashFromFileAsync(path + necessary_files[i]))
+                else if (new FileInfo(path + necessary_files[i]).Length > MaxFileSize || file_hash[i] != await MutSync.GetMD5HashFromFileAsync(path + necessary_files[i]))
                 {
                     ShowWarningThenExit($"文件\n{necessary_files[i]}\n被替换");
                 }
@@ -54,7 +56,7 @@ namespace gaocheng_debug
                 {
                     ShowWarningThenExit($"rsc文件夹中必要的\n{necessary_files[i]}\n文件缺失，请考虑重新下载应用");
                 }
-                else if (file_hash[i] != await MutSync.GetMD5HashFromFileAsync(path + necessary_files[i]))
+                else if (new FileInfo(path + necessary_files[i]).Length > MaxFileSize || file_hash[i] != await MutSync.GetMD5HashFromFileAsync(path + necessary_files[i]))
                 {
                     ShowWarningThenExit($"文件\n{necessary_files[i]}\n被替换");
                 }
