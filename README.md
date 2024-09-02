@@ -17,7 +17,7 @@
 </ul>
 
 ## 编译须知  
-首次编译后直接运行会报错，需要将resource文件夹的rsc目录、test_log目录以及README.html文件复制到exe同级目录下若还无法正常运行，则检查IntegralityCheckerAsync.cs文件代码中检查的文件存在性、检查的文件大小是否超过2MB，以及MD5是否正确
+首次编译后直接运行可能报错，需要将resource文件夹中的的rsc文件夹、test_log文件夹以及README.html文件复制到生成exe同级目录下。若还无法正常运行，则检查IntegralityCheckerAsync.cs文件代码中检查的文件存在性、检查的文件大小是否超过2MB，以及MD5是否正确
 
 <blockquote>（“你一定是坚坚的学生吧”<br>
 <a href="https://www.zhihu.com/question/554569818/answer/2683685957" target="_blank">——YouKnowWho from zhihu</a>
