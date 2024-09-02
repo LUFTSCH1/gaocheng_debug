@@ -67,7 +67,7 @@ namespace gaocheng_debug
             if (data_content[len - 1] != ConstValues.LineEndFlag)
             {
                 data_content += ConstValues.NewLine;
-                len += ConstValues.NewLine.Length;
+                len = data_content.Length;
             }
 
             cnt = 0;
@@ -76,35 +76,25 @@ namespace gaocheng_debug
             {
                 while (i < len && data_content[i] == ConstValues.DataIDFlag)
                 {
-                    ++cnt;
-                    if (cnt > ConstValues.MaxDataGroupNum)
+                    if (cnt >= ConstValues.MaxDataGroupNum)
                     {
-                        cnt = ConstValues.MaxDataGroupNum;
                         break;
                     }
-                    str.Append($"[{cnt}]{ConstValues.NewLine}");
+                    str.Append($"[{++cnt}]{ConstValues.NewLine}");
                     while (i < len && data_content[i++] != ConstValues.LineEndFlag)
                         ;
                 }
 
                 while (i < len && data_content[i] != ConstValues.DataIDFlag)
                 {
-                    str.Append(data_content[i]);
-                    ++i;
+                    str.Append(data_content[i++]);
                 }
             }
             File.WriteAllText(projectDirPath + ConstValues.TestDataFileName, str.ToString(), ConstValues.GB18030);
 
             MainForm Master = Owner as MainForm;
-            if (Master.DataGroupNum == cnt)
-            {
-                DialogResult = DialogResult.Ignore;
-            }
-            else
-            {
-                Master.DataGroupNum = cnt;
-                DialogResult = DialogResult.OK;
-            }
+            Master.DataGroupNum = cnt;
+            DialogResult = DialogResult.OK;
 
             Close();
         }

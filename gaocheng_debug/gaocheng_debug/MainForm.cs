@@ -23,7 +23,8 @@ namespace gaocheng_debug
 
         private int trimMode, displayMode;
 
-        private DateTime timeChecker;
+        private DateTime logAndBatTimeChecker;
+        private string dataHash;
 
         private string defaultDemoPath, defaultExePath;
 
@@ -46,7 +47,6 @@ namespace gaocheng_debug
 
         public int DataGroupNum
         {
-            get { return dataGroupNum; }
             set { dataGroupNum = value; }
         }
 
@@ -132,9 +132,9 @@ namespace gaocheng_debug
             string new_path = AbsoluteTestLogPath + DateTime.Now.ToString(ConstValues.ProjectNameFormatStr);
             Directory.CreateDirectory(new_path);
 
-            timeChecker = DateTime.Now;
-            File.WriteAllText(new_path + ConstValues.PathLogFileName, $"{timeChecker.ToString(ConstValues.ProjectCheckTimeFormat)}\nnew_project\ndemo_exe_path\nyour_exe_path\nlatest_absolute_path\n0\n0\n0");
-            File.SetLastWriteTime(new_path + ConstValues.PathLogFileName, timeChecker);
+            logAndBatTimeChecker = DateTime.Now;
+            File.WriteAllText(new_path + ConstValues.PathLogFileName, $"{logAndBatTimeChecker.ToString(ConstValues.ProjectCheckTimeFormat)}\nnew\nnull\nnull\nnull\nnull\n0\n0\n0");
+            File.SetLastWriteTime(new_path + ConstValues.PathLogFileName, logAndBatTimeChecker);
 
             RefreshFileList();
             cboProjectSelector.SelectedIndex = 1;
@@ -215,22 +215,10 @@ namespace gaocheng_debug
             }
 
             OwnNewOrEditTestDataForm.SetPath(absoluteDirPath);
-            DialogResult rs = OwnNewOrEditTestDataForm.ShowDialog(this);
-            if (rs == DialogResult.OK)
+            if (OwnNewOrEditTestDataForm.ShowDialog(this) == DialogResult.OK)
             {
+                dataHash = MutSync.PartHashWithSalt(absoluteDirPath + ConstValues.TestDataFileName);
                 ForceToEditLogAndBat();
-                GenerateAndCompare();
-            }
-            if (rs == DialogResult.Ignore)
-            {
-                if (File.Exists(absoluteDirPath + ConstValues.TestBatFileName) && timeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName))
-                {
-                    EditLogAndBatWhileModeOrPathChanged();
-                }
-                else
-                {
-                    ForceToEditLogAndBat();
-                }
                 GenerateAndCompare();
             }
         }
@@ -246,7 +234,11 @@ namespace gaocheng_debug
             {
                 MutSync.ShowMessageToWarn("测试数据文件未生成\n请先完成创建/修改测试数据");
             }
-            else if (dataGroupNum <= 0 || !File.Exists(absoluteDirPath + ConstValues.TestBatFileName))
+            else if (dataHash != MutSync.PartHashWithSalt(absoluteDirPath + ConstValues.TestDataFileName))
+            {
+                MutSync.ShowMessageToWarn("测试数据文件被更改\n请进入 创建/修改测试数据 读取该文件并再次生成以保证合法");
+            }
+            else if (!File.Exists(absoluteDirPath + ConstValues.TestBatFileName))
             {
                 MutSync.ShowMessageToWarn("测试批处理文件未生成\n请先完成创建/修改测试数据");
             }
@@ -260,7 +252,7 @@ namespace gaocheng_debug
             }
             else
             {
-                if (timeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName))
+                if (logAndBatTimeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName))
                 {
                     EditLogAndBatWhileModeOrPathChanged();
                 }

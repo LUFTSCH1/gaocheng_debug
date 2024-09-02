@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace gaocheng_debug
 {
@@ -35,14 +36,32 @@ namespace gaocheng_debug
 
         public static bool CheckProjectNameIegitimacy(in string projectName)
         {
-            if (DateTime.TryParseExact(projectName, ConstValues.ProjectNameFormatStr, ConstValues.InvariantCulture, DateTimeStyles.None, out dT))
-            {
-                return DateTime.Now >= dT;
-            }
-            return false;
+            return DateTime.TryParseExact(projectName, ConstValues.ProjectNameFormatStr, ConstValues.InvariantCulture, DateTimeStyles.None, out dT) && DateTime.Now >= dT;
         }
 
         public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, ConstValues.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        public static string PartHashWithSalt(in string fileName)
+        {
+            try
+            {
+                byte[] bytes_with_salt = Encoding.UTF8.GetBytes(ConstValues.HashSalt + MD5Hash(fileName));
+                ConstValues.MD5.Initialize();
+                byte[] hash_bytes = ConstValues.MD5.ComputeHash(bytes_with_salt);
+
+                string rs = string.Empty;
+                for (int i = 0; i < 8; ++i)
+                {
+                    rs += hash_bytes[i].ToString(ConstValues.HashConvertFormatStr);
+                }
+
+                return rs;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取文件哈希失败" + ex.Message);
+            }
+        }
 
         // 公有静态异步方法
         public static async Task<string> GetMD5HashFromFileAsync(string fileName)
@@ -50,18 +69,20 @@ namespace gaocheng_debug
             return await Task.Run(() => { 
                 try
                 {
-                    System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
-                    FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    byte[] retVal = md5.ComputeHash(file);
-                    file.Close();
- 
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0, len = retVal.Length; i < len; ++i)
+                    using (MD5 md5 = MD5.Create())
                     {
-                        sb.Append(retVal[i].ToString("x2"));
-                    }
+                        FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        byte[] retVal = md5.ComputeHash(file);
+                        file.Close();
+ 
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0, len = retVal.Length; i < len; ++i)
+                        {
+                            sb.Append(retVal[i].ToString(ConstValues.HashConvertFormatStr));
+                        }
                 
-                    return sb.ToString();
+                        return sb.ToString();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -79,5 +100,30 @@ namespace gaocheng_debug
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        // 私有静态方法
+        private static string MD5Hash(in string fileName)
+        {
+            try
+            {
+                ConstValues.MD5.Initialize();
+
+                FileStream file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                byte[] retVal = ConstValues.MD5.ComputeHash(file);
+                file.Close();
+            
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0, len = retVal.Length; i < len; ++i)
+                {
+                    sb.Append(retVal[i].ToString(ConstValues.HashConvertFormatStr));
+                }
+
+                return sb.ToString();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("获取文件哈希失败" + ex.Message);
+            }
+        }
     }
 }

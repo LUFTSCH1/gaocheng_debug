@@ -43,8 +43,8 @@ namespace gaocheng_debug
             cboProjectSelector.Items.Add(ConstValues.BlankItemStr);
 
             string[] directories = Directory.GetDirectories(ConstValues.TestLogRelativePath);
-            int len = 0, i = 0;
-            for (string temp; i < directories.Length; ++i)
+            int len = 0, i = 0, arr_len = directories.Length;
+            for (string temp; i < arr_len; ++i)
             {
                 temp = Path.GetFileName(directories[i]);
                 if (MutSync.CheckProjectNameIegitimacy(temp))
@@ -131,17 +131,18 @@ namespace gaocheng_debug
             if (File.Exists(absoluteDirPath + ConstValues.PathLogFileName))
             {
                 string[] path_info = File.ReadAllLines(absoluteDirPath + ConstValues.PathLogFileName);
-                if (path_info.Length == ConstValues.PathLogLines && DateTime.TryParseExact(path_info[0], ConstValues.ProjectCheckTimeFormat, ConstValues.InvariantCulture, DateTimeStyles.None, out timeChecker) && timeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.PathLogFileName))
+                if (path_info.Length == ConstValues.PathLogLines && DateTime.TryParseExact(path_info[0], ConstValues.ProjectCheckTimeFormat, ConstValues.InvariantCulture, DateTimeStyles.None, out logAndBatTimeChecker) && logAndBatTimeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.PathLogFileName))
                 {
-                    dataGroupNum = Convert.ToInt32(path_info[5]);
-                    cboTrimSelector.SelectedIndex = trimMode = Convert.ToInt32(path_info[6]);
-                    cboDisplaySelector.SelectedIndex = displayMode = Convert.ToInt32(path_info[7]);
+                    dataGroupNum = Convert.ToInt32(path_info[6]);
+                    cboTrimSelector.SelectedIndex = trimMode = Convert.ToInt32(path_info[7]);
+                    cboDisplaySelector.SelectedIndex = displayMode = Convert.ToInt32(path_info[8]);
 
                     if (path_info[1] == ConstValues.ProjectGeneratedFlagStr)
                     {
                         txtDemoExePath.Text = projectDemoPath = path_info[2];
                         txtYourExePath.Text = projectExePath = path_info[3];
                         projectLatestTestPath = path_info[4];
+                        dataHash = path_info[5];
 
                         TryToGetCompareResult();
                     }
@@ -152,7 +153,7 @@ namespace gaocheng_debug
                         txtYourExePath.Text = ConstValues.YourExePathTxtDefaultStr;
                     }
 
-                    if (!btnOpenProjectDirectory.Enabled)
+                    if (!btnNewOrEditTestData.Enabled)
                     {
                         EnableComponent();
                     }
@@ -165,6 +166,7 @@ namespace gaocheng_debug
             MutSync.ShowMessageToWarn($"项目{projectDirName}的\n{ConstValues.PathLog}\n文件不存在、不合法或被篡改");
             rtxResultViewer.Text = $"项目 {projectDirName} 的{ConstValues.PathLogExceptionStr}";
             btnDeleteProject.Enabled = true;
+            btnOpenProjectDirectory.Enabled = true;
         }
 
         private void ForceToEditLogAndBat()
@@ -192,10 +194,10 @@ namespace gaocheng_debug
                 projectLatestTestPath = absoluteDirPath;
             }
 
-            timeChecker = DateTime.Now;
+            logAndBatTimeChecker = DateTime.Now;
 
-            File.WriteAllText(absoluteDirPath + ConstValues.PathLogFileName, $"{timeChecker.ToString(ConstValues.ProjectCheckTimeFormat)}\n{ConstValues.ProjectGeneratedFlagStr}\n{projectDemoPath}\n{projectExePath}\n{absoluteDirPath}\n{dataGroupNum}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}");
-            File.SetLastWriteTime(absoluteDirPath + ConstValues.PathLogFileName, timeChecker);
+            File.WriteAllText(absoluteDirPath + ConstValues.PathLogFileName, $"{logAndBatTimeChecker.ToString(ConstValues.ProjectCheckTimeFormat)}\n{ConstValues.ProjectGeneratedFlagStr}\n{projectDemoPath}\n{projectExePath}\n{absoluteDirPath}\n{dataHash}\n{dataGroupNum}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}");
+            File.SetLastWriteTime(absoluteDirPath + ConstValues.PathLogFileName, logAndBatTimeChecker);
             
             string content = $"cd /d \"{absoluteDirPath}\"{ConstValues.NewLine}";
             content += $"..\\..\\rsc\\{ConstValues.GetInputData} {ConstValues.TestData} [1] | \"{txtDemoExePath.Text}\" 1>{ConstValues.DemoExeResult}{ConstValues.NewLine}";
@@ -208,7 +210,7 @@ namespace gaocheng_debug
             content += cboDisplaySelector.SelectedItem.ToString();
             content += $"1>{ConstValues.CompareResult} 2>&1";
             File.WriteAllText(absoluteDirPath + ConstValues.TestBatFileName, content, ConstValues.GB18030);
-            File.SetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName, timeChecker);
+            File.SetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName, logAndBatTimeChecker);
         }
 
         private void EditLogAndBatWhileModeOrPathChanged()
@@ -240,7 +242,7 @@ namespace gaocheng_debug
             }
             else
             {
-                MutSync.ShowMessageToWarn("cmd运行过程发生错误，生成失败");
+                MutSync.ShowMessageToWarn("cmd运行过程发生错误或被中断，生成失败");
                 rtxResultViewer.Text = ConstValues.TestProcessExceptionStr;
             }
         }

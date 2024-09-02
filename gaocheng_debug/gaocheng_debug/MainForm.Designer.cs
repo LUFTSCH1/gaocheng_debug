@@ -64,7 +64,7 @@
             this.cboProjectSelector.FormattingEnabled = true;
             this.cboProjectSelector.Items.AddRange(new object[] {
             "blank"});
-            this.cboProjectSelector.Location = new System.Drawing.Point(97, 30);
+            this.cboProjectSelector.Location = new System.Drawing.Point(97, 31);
             this.cboProjectSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboProjectSelector.Name = "cboProjectSelector";
             this.cboProjectSelector.Size = new System.Drawing.Size(272, 26);
@@ -75,7 +75,7 @@
             // lblProjectTip
             // 
             this.lblProjectTip.AutoSize = true;
-            this.lblProjectTip.Location = new System.Drawing.Point(10, 31);
+            this.lblProjectTip.Location = new System.Drawing.Point(10, 33);
             this.lblProjectTip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProjectTip.Name = "lblProjectTip";
             this.lblProjectTip.Size = new System.Drawing.Size(69, 20);
@@ -123,7 +123,7 @@
             // 
             this.btnNewProject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
             this.btnNewProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewProject.Location = new System.Drawing.Point(373, 26);
+            this.btnNewProject.Location = new System.Drawing.Point(376, 28);
             this.btnNewProject.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewProject.Name = "btnNewProject";
             this.btnNewProject.Size = new System.Drawing.Size(52, 30);
@@ -305,7 +305,7 @@
             this.btnOpenProjectDirectory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(114)))), ((int)(((byte)(61)))));
             this.btnOpenProjectDirectory.Enabled = false;
             this.btnOpenProjectDirectory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenProjectDirectory.Location = new System.Drawing.Point(488, 26);
+            this.btnOpenProjectDirectory.Location = new System.Drawing.Point(488, 28);
             this.btnOpenProjectDirectory.Margin = new System.Windows.Forms.Padding(2);
             this.btnOpenProjectDirectory.Name = "btnOpenProjectDirectory";
             this.btnOpenProjectDirectory.Size = new System.Drawing.Size(119, 30);
@@ -320,7 +320,7 @@
             this.btnDeleteProject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(28)))), ((int)(((byte)(49)))));
             this.btnDeleteProject.Enabled = false;
             this.btnDeleteProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteProject.Location = new System.Drawing.Point(431, 26);
+            this.btnDeleteProject.Location = new System.Drawing.Point(432, 28);
             this.btnDeleteProject.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteProject.Name = "btnDeleteProject";
             this.btnDeleteProject.Size = new System.Drawing.Size(52, 30);
