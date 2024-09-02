@@ -33,8 +33,6 @@ namespace gaocheng_debug
             {
                 txtTestData.Text = string.Empty;
             }
-
-            txtTestData.SelectAll();
         }
 
         // Button事件处理
@@ -45,14 +43,14 @@ namespace gaocheng_debug
 
             if (data_content == string.Empty)
             {
-                data_content = $"[{ConstValues.NewLine}";
+                data_content = ConstValues.DataIDFlag + ConstValues.NewLine;
                 len = data_content.Length;
             }
             else
             {
                 for (int i = 0; i < len; ++i)
                 {
-                    if (data_content[i] == '[' && ++cnt > ConstValues.MaxDataGroupNum)
+                    if (data_content[i] == ConstValues.DataIDFlag && ++cnt > ConstValues.MaxDataGroupNum)
                     {
                         MutSync.ShowMessageToWarn(ConstValues.DataGroupTruncationWarning);
                         break;
@@ -61,12 +59,12 @@ namespace gaocheng_debug
                 
                 if (cnt < 1)
                 {
-                    data_content = "[" + ConstValues.NewLine + data_content;
+                    data_content = ConstValues.DataIDFlag + ConstValues.NewLine + data_content;
                     len = data_content.Length;
                 }
             }
 
-            if (data_content[len - 1] != '\n')
+            if (data_content[len - 1] != ConstValues.LineEndFlag)
             {
                 data_content += ConstValues.NewLine;
                 len += ConstValues.NewLine.Length;
@@ -74,9 +72,9 @@ namespace gaocheng_debug
 
             cnt = 0;
             StringBuilder str = new StringBuilder();
-            for (int i = 0; i < len; ++i)
+            for (int i = 0; i < len && cnt < ConstValues.MaxDataGroupNum; )
             {
-                while (i < len && data_content[i] == '[')
+                while (i < len && data_content[i] == ConstValues.DataIDFlag)
                 {
                     ++cnt;
                     if (cnt > ConstValues.MaxDataGroupNum)
@@ -85,13 +83,14 @@ namespace gaocheng_debug
                         break;
                     }
                     str.Append($"[{cnt}]{ConstValues.NewLine}");
-                    while (i < len && data_content[i++] != '\n')
+                    while (i < len && data_content[i++] != ConstValues.LineEndFlag)
                         ;
                 }
 
-                if (i < len)
+                while (i < len && data_content[i] != ConstValues.DataIDFlag)
                 {
                     str.Append(data_content[i]);
+                    ++i;
                 }
             }
             File.WriteAllText(projectDirPath + ConstValues.TestDataFileName, str.ToString(), ConstValues.GB18030);

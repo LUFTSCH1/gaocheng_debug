@@ -12,6 +12,9 @@ namespace gaocheng_debug
         public const int InitialDirectoriesConfigLines = 2;
         public const int PathLogLines = 8;
 
+        public const char DataIDFlag = '[';
+        public const char LineEndFlag = '\n';
+
         public const string ProjectNameFormatStr = "yyyy-MM-dd-HH-mm-ss";
         public const string ProjectCheckTimeFormat = "yyyy_MM_dd_HH_mm_ss_fffffff";
 
