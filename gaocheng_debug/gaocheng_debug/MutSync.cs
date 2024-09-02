@@ -4,12 +4,15 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace gaocheng_debug
 {
     internal static class MutSync
     {
+        private static DateTime dT;
+
         // 公有静态方法
         public static void OpenFolder(in string fileFullName) => ShellExecute(IntPtr.Zero, "open", fileFullName);
 
@@ -28,6 +31,15 @@ namespace gaocheng_debug
 
             ShowWindowAsync(crproc.MainWindowHandle, 1);
             SetForegroundWindow(crproc.MainWindowHandle);
+        }
+
+        public static bool CheckProjectNameIegitimacy(in string projectName)
+        {
+            if (DateTime.TryParseExact(projectName, ConstValues.ProjectNameFormatStr, ConstValues.InvariantCulture, DateTimeStyles.None, out dT))
+            {
+                return DateTime.Now >= dT;
+            }
+            return false;
         }
 
         public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, ConstValues.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);

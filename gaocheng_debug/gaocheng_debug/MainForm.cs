@@ -17,29 +17,37 @@ namespace gaocheng_debug
         private readonly MD5CalculatorForm OwnMD5CalculatorForm;
 
         // 私有成员变量
-        private bool isDataChanged, isModeChanged, isPathChanged;
+        private bool isModeChanged, isPathChanged;
+
+        private int dataGroupNum;
+
         private int trimMode, displayMode;
+
+        private DateTime timeChecker;
 
         private string defaultDemoPath, defaultExePath;
 
         private string absoluteDirPath, projectDirName;
         private string projectDemoPath, projectExePath;
-        private string recordedAppPath;
+        private string projectLatestTestPath;
 
         // 属性
         public string DefaultDemoPath
         {
+            get { return defaultDemoPath; }
             set { defaultDemoPath = value; }
         }
 
         public string DefaultExePath
         {
+            get { return defaultExePath; }
             set { defaultExePath = value; }
         }
 
-        public bool DataChanged
+        public int DataGroupNum
         {
-            set { isDataChanged = value; }
+            get { return dataGroupNum; }
+            set { dataGroupNum = value; }
         }
 
         // 构造函数
@@ -52,22 +60,16 @@ namespace gaocheng_debug
             CMD.StartInfo.UseShellExecute = false;
             CMD.StartInfo.RedirectStandardInput = true;
 
-            if (!Directory.Exists(AbsoluteTestLogPath))
-            {
-                Directory.CreateDirectory(AbsoluteTestLogPath);
-            }
-
             InitializeComponent();
 
             {
                 string[] form1_names = { "校对工具", "oop，启动！", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
-                Random rnd = new Random();
-                Text = form1_names[rnd.Next(0, form1_names.Length)];
+                Text = form1_names[ConstValues.Rnd.Next(0, form1_names.Length)];
             }
 
             {
-                string[] paths = File.ReadAllLines(@".\rsc\initial_dirs.config");
-                if (paths.Length == ConstValues.InitialDirsConfigLines)
+                string[] paths = File.ReadAllLines(ConstValues.InitialDirectoriesConfigRelativePath);
+                if (paths.Length == ConstValues.InitialDirectoriesConfigLines)
                 {
                     defaultDemoPath = paths[0];
                     defaultExePath = paths[1];
@@ -76,7 +78,8 @@ namespace gaocheng_debug
                 {
                     defaultDemoPath = ConstValues.DefaultDirectory;
                     defaultExePath = ConstValues.DefaultDirectory;
-                    MutSync.ShowMessageToWarn("initial_dirs.config不合法，建议进入 设置 重设默认浏览目录");
+                    File.WriteAllText(ConstValues.InitialDirectoriesConfigRelativePath, $"{defaultDemoPath}\n{defaultExePath}");
+                    MutSync.ShowMessageToWarn($"由于{ConstValues.InitialDirectoriesConfig}非法，已重置该项设置");
                 }
             }
 
@@ -86,255 +89,6 @@ namespace gaocheng_debug
 
             RefreshFileList();
             cboProjectSelector.SelectedIndex = 0;
-        }
-
-        // 私有工具函数
-        private void DisableComponent()
-        {
-            btnBrowseDemoExe.Enabled = false;
-            btnBrowseYourExe.Enabled = false;
-            btnRetest.Enabled = false;
-            btnNewOrEditTestData.Enabled = false;
-            btnOpenProjectDirectory.Enabled = false;
-            btnDeleteProject.Enabled = false;
-            txtDemoExePath.Text = string.Empty;
-            txtYourExePath.Text = string.Empty;
-            rtxResultViewer.Text = string.Empty;
-            cboTrimSelector.SelectedIndex = 0;
-            cboDisplaySelector.SelectedIndex = 0;
-            cboTrimSelector.Enabled = false;
-            cboDisplaySelector.Enabled = false;
-        }
-
-        private void EnableComponent()
-        {
-            btnBrowseDemoExe.Enabled = true;
-            btnBrowseYourExe.Enabled = true;
-            btnRetest.Enabled = true;
-            btnNewOrEditTestData.Enabled = true;
-            btnOpenProjectDirectory.Enabled = true;
-            btnDeleteProject.Enabled = true;
-            cboTrimSelector.Enabled = true;
-            cboDisplaySelector.Enabled = true;
-        }
-
-        private void RefreshFileList()
-        {
-            cboProjectSelector.Items.Clear();
-            cboProjectSelector.Items.Add("blank");
-
-            string[] directories = Directory.GetDirectories(@".\test_log");
-            int len = directories.Length;
-            for (int i = 0; i < len; ++i)
-            {
-                directories[i] = Path.GetFileName(directories[i]);
-            }
-            Array.Sort(directories, delegate(string x, string y) { return y.CompareTo(x); });
-            for (int i = 0; i < len; ++i)
-            {
-                cboProjectSelector.Items.Add(directories[i]);
-            }
-        }
-
-        private bool ExeErrorFilter()
-        {
-            bool is_demo_exist = File.Exists(txtDemoExePath.Text);
-            bool is_exe_exist = File.Exists(txtYourExePath.Text);
-            
-            if (is_demo_exist && is_exe_exist) 
-            {
-                return true;
-            }
-            else
-            {
-                if (!is_demo_exist && !is_exe_exist)
-                {
-                    MutSync.ShowMessageToWarn("demo和作业exe文件均不存在");
-                }
-                else if (!is_demo_exist)
-                {
-                    MutSync.ShowMessageToWarn("demo文件不存在");
-                }
-                else
-                {
-                    MutSync.ShowMessageToWarn("作业exe文件不存在");
-                }
-
-                return false;
-            }
-        }
-
-        private string PrintResultInfo(in string resultFile)
-        {
-            return $"_compare_result.txt文件创建时间：{File.GetCreationTime(resultFile):yyyy/MM/dd HH:mm:ss.fffff}{ConstValues.NewLine}{File.ReadAllText(resultFile, ConstValues.GB18030)}";
-        }
-
-        private void TryToGetRecordedAppPath()
-        {
-            if (File.Exists(absoluteDirPath + @"\test.bat"))
-            {
-                string temp = File.ReadAllText(absoluteDirPath + @"\test.bat", ConstValues.GB18030);
-                recordedAppPath = string.Empty;
-                int i = 0, len = temp.Length;
-                while (i < len && temp[i] != '\"')
-                {
-                    ++i;
-                }
-                for (++i; i < len && temp[i] != '\"'; ++i)
-                {
-                    recordedAppPath += temp[i];
-                }
-            }
-            else
-            {
-                MutSync.ShowMessageToWarn("test.bat异常，您可能删除了该文件");
-            }
-        }
-
-        private void TryToGetCompareResult()
-        {
-            if (File.Exists(absoluteDirPath + @"\_compare_result.txt"))
-            {
-                rtxResultViewer.Text = PrintResultInfo(absoluteDirPath + @"\_compare_result.txt");
-            }
-            else
-            {
-                MutSync.ShowMessageToWarn($"项目{projectDirName}的\n_compare_result.txt\n文件不存在");
-                rtxResultViewer.Text = $"项目 {projectDirName} 的{ConstValues.ResultTxtNotExistExceptionStr}";
-            }
-        }
-
-        private void TryToGetPathLogInfo()
-        {
-            if (File.Exists(absoluteDirPath + @"\__path.log"))
-            {
-                string[] path_info = File.ReadAllLines(absoluteDirPath + @"\__path.log");
-                if (path_info.Length == ConstValues.PathLogLines)
-                {
-                    cboTrimSelector.SelectedIndex = trimMode = Convert.ToInt32(path_info[3]);
-                    cboDisplaySelector.SelectedIndex = displayMode = Convert.ToInt32(path_info[4]);
-
-                    if (path_info[0] != "generated")
-                    {
-                        txtDemoExePath.Text = string.Empty;
-                        txtYourExePath.Text = string.Empty;
-                        rtxResultViewer.Text = string.Empty;
-                    }
-                    else
-                    {
-                        txtDemoExePath.Text = projectDemoPath = path_info[1];
-                        txtYourExePath.Text = projectExePath = path_info[2];
-
-                        TryToGetRecordedAppPath();
-
-                        TryToGetCompareResult();
-                    }
-
-                    if (!btnOpenProjectDirectory.Enabled)
-                    {
-                        EnableComponent();
-                    }
-
-                    return;
-                }
-            }
-
-            DisableComponent();
-            MutSync.ShowMessageToWarn($"项目{projectDirName}的\n__path.log\n文件不存在或不合法");
-            rtxResultViewer.Text = $"项目 {projectDirName} 的{ConstValues.PathLogExceptionStr}";
-            btnDeleteProject.Enabled = true;
-        }
-
-        private string CompareCommandConstruct()
-        {
-            string compare = @"..\..\rsc\txt_compare --file1 _demo_result.txt --file2 _your_exe_result.txt --trim ";
-            if (cboTrimSelector.SelectedIndex == 0)
-            {
-                compare += "none ";
-            }
-            else if (cboTrimSelector.SelectedIndex == 1)
-            {
-                compare += "right ";
-            }
-            else
-            {
-                compare += "left ";
-            }
-            compare += "--display ";
-            if (cboDisplaySelector.SelectedIndex == 0)
-            {
-                compare += "normal ";
-            }
-            else
-            {
-                compare += "detailed ";
-            }
-            compare += "1>_compare_result.txt 2>&1";
-
-            return compare;
-        }
-
-        private void GenerateAndCompare()
-        {
-            if (!ExeErrorFilter())
-            {
-                return;
-            }
-            
-            if (isModeChanged || isPathChanged)
-            {
-                if (isPathChanged)
-                {
-                    projectDemoPath = txtDemoExePath.Text;
-                    projectExePath = txtYourExePath.Text;
-                    isPathChanged = false;
-                }
-                File.WriteAllText(absoluteDirPath + @"\__path.log", $"generated\n{projectDemoPath}\n{projectExePath}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}");
-            }
-
-            if (isModeChanged || isDataChanged)
-            {
-                if (isModeChanged)
-                {
-                    isModeChanged = false;
-                }
-                string test_bat_path = absoluteDirPath + @"\test.bat";
-                string[] bat_content = File.ReadAllLines(test_bat_path, ConstValues.GB18030);
-                if (bat_content.Length == ConstValues.TestBatLines)
-                {
-                    bat_content[bat_content.Length - 1] = CompareCommandConstruct();
-                    File.WriteAllLines(test_bat_path, bat_content, ConstValues.GB18030);
-                }
-                else
-                {
-                    MutSync.ShowMessageToWarn("test.bat文件不合法，请再次使用\n创建/修改测试数据");
-                    return;
-                }
-            }
-
-            string compare_result_path = absoluteDirPath + @"\_compare_result.txt";
-
-            if (File.Exists(compare_result_path))
-            {
-                File.Delete(compare_result_path);
-            }
-
-            CMD.Start();
-            CMD.StandardInput.WriteLine("\"" + absoluteDirPath + "\\test.bat\"");
-            CMD.StandardInput.WriteLine("cls&exit");
-            CMD.WaitForExit();
-            CMD.Close();
-
-            if (File.Exists(compare_result_path))
-            {
-                File.SetCreationTime(compare_result_path, DateTime.Now);
-                rtxResultViewer.Text = PrintResultInfo(compare_result_path);
-            }
-            else
-            {
-                MutSync.ShowMessageToWarn("cmd运行过程发生错误，生成失败");
-                rtxResultViewer.Text = ConstValues.TestProcessExceptionStr;
-            }
         }
 
         // ComboBox事件共用函数
@@ -362,37 +116,25 @@ namespace gaocheng_debug
 
         private void TsmiHelpClick(object sender, EventArgs e)
         {
-            if (File.Exists(@".\README.html"))
+            if (File.Exists(ConstValues.ReadMeHtmlRelativePath))
             {
-                Process.Start(@".\README.html");
+                Process.Start(ConstValues.ReadMeHtmlRelativePath);
             }
             else
             {
-                MutSync.ShowMessageToWarn("说明文件\nREADME.html\n已被删除");
+                MutSync.ShowMessageToWarn($"说明文件\n{ConstValues.ReadMeHtml}\n已被删除");
             }
         }
 
         // Button事件处理函数
         private void BtnNewProjectClick(object sender, EventArgs e)
         {
-            string new_path = AbsoluteTestLogPath + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+            string new_path = AbsoluteTestLogPath + DateTime.Now.ToString(ConstValues.ProjectNameFormatStr);
             Directory.CreateDirectory(new_path);
 
-            StreamWriter sw = new StreamWriter(new_path + @"\__path.log");
-            sw.Write("new\nno_data\nno_data\n0\n0");
-            sw.Close();
-
-            sw = new StreamWriter(new_path + @"\__test_data.txt", false, ConstValues.GB18030);
-            sw.Close();
-
-            sw = new StreamWriter(new_path + @"\_compare_result.txt", false, ConstValues.GB18030);
-            sw.Close();
-
-            sw = new StreamWriter(new_path + @"\_demo_result.txt", false, ConstValues.GB18030);
-            sw.Close();
-
-            sw = new StreamWriter(new_path + @"\_your_exe_result.txt", false, ConstValues.GB18030);
-            sw.Close();
+            timeChecker = DateTime.Now;
+            File.WriteAllText(new_path + ConstValues.PathLogFileName, $"{timeChecker.ToString(ConstValues.ProjectCheckTimeFormat)}\nnew_project\ndemo_exe_path\nyour_exe_path\nlatest_absolute_path\n0\n0\n0");
+            File.SetLastWriteTime(new_path + ConstValues.PathLogFileName, timeChecker);
 
             RefreshFileList();
             cboProjectSelector.SelectedIndex = 1;
@@ -403,7 +145,7 @@ namespace gaocheng_debug
 
         private void BtnDeleteProjectClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}", "确认", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (MessageBox.Show($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}", "操作确认", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 if (Directory.Exists(absoluteDirPath))
                 {
@@ -467,59 +209,65 @@ namespace gaocheng_debug
 
         private void BtnNewOrEditTestDataClick(object sender, EventArgs e)
         {
-            if (txtDemoExePath.Text == string.Empty || txtYourExePath.Text == string.Empty)
+            if (IsHaveCommonError())
             {
-                MutSync.ShowMessageToWarn("官方demo路径或作业exe路径为空");
+                return;
             }
-            else if (!ExeErrorFilter())
+
+            OwnNewOrEditTestDataForm.SetPath(absoluteDirPath);
+            DialogResult rs = OwnNewOrEditTestDataForm.ShowDialog(this);
+            if (rs == DialogResult.OK)
             {
-                ;
+                ForceToEditLogAndBat();
+                GenerateAndCompare();
             }
-            else
+            if (rs == DialogResult.Ignore)
             {
-                OwnNewOrEditTestDataForm.SetPath(absoluteDirPath, txtDemoExePath.Text, txtYourExePath.Text);
-                OwnNewOrEditTestDataForm.ShowDialog(this);
-                if (isDataChanged)
+                if (File.Exists(absoluteDirPath + ConstValues.TestBatFileName) && timeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName))
                 {
-                    recordedAppPath = absoluteDirPath;
-                    GenerateAndCompare();
-                    isDataChanged = false;
+                    EditLogAndBatWhileModeOrPathChanged();
                 }
+                else
+                {
+                    ForceToEditLogAndBat();
+                }
+                GenerateAndCompare();
             }
         }
 
         private void BtnRetestClick(object sender, EventArgs e)
         {
-            if (txtDemoExePath.Text == string.Empty || txtYourExePath.Text == string.Empty)
+            if (IsHaveCommonError())
             {
-                MutSync.ShowMessageToWarn("官方demo路径或作业exe路径为空");
+                return;
             }
-            else if (!ExeErrorFilter())
+
+            if (!File.Exists(absoluteDirPath + ConstValues.TestDataFileName))
             {
-                ;
+                MutSync.ShowMessageToWarn("测试数据文件未生成\n请先完成创建/修改测试数据");
             }
-            else if (!File.Exists(absoluteDirPath + @"\test.bat"))
+            else if (dataGroupNum <= 0 || !File.Exists(absoluteDirPath + ConstValues.TestBatFileName))
             {
-                MutSync.ShowMessageToWarn("批处理测试文件未生成\n请先完成创建/修改测试数据");
+                MutSync.ShowMessageToWarn("测试批处理文件未生成\n请先完成创建/修改测试数据");
             }
             else if (isPathChanged)
             {
-                MutSync.ShowMessageToWarn("官方demo路径或作业exe路径已变更\n请先完成创建/修改测试数据\n原因：相关批处理内容与变更的路径有关");
+                if (MessageBox.Show("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认", "操作确认", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                {
+                    EditLogAndBatWhileModeOrPathChanged();
+                    GenerateAndCompare();
+                }
             }
             else
             {
-                string[] bat_content = File.ReadAllLines(absoluteDirPath + @"\test.bat", ConstValues.GB18030);
-                if (bat_content.Length != ConstValues.TestBatLines)
+                if (timeChecker == File.GetLastWriteTime(absoluteDirPath + ConstValues.TestBatFileName))
                 {
-                    MutSync.ShowMessageToWarn("test.bat文件不合法，请再次使用\n创建/修改测试数据");
-                    return;
+                    EditLogAndBatWhileModeOrPathChanged();
                 }
-
-                if (recordedAppPath != absoluteDirPath)
+                else
                 {
-                    bat_content[0] = $"cd /d \"{absoluteDirPath}\"";
-                    File.WriteAllLines(absoluteDirPath + @"\test.bat", bat_content, ConstValues.GB18030);
-                    recordedAppPath = absoluteDirPath;
+                    MutSync.ShowMessageToWarn($"{ConstValues.TestBat}被篡改，将自动重新生成");
+                    ForceToEditLogAndBat();
                 }
 
                 GenerateAndCompare();
@@ -529,7 +277,7 @@ namespace gaocheng_debug
         // ComboBox事件处理函数
         private void CboProjectSelectorSelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((projectDirName = cboProjectSelector.SelectedItem.ToString()) == "blank")
+            if ((projectDirName = cboProjectSelector.SelectedItem.ToString()) == ConstValues.BlankItemStr)
             {
                 DisableComponent();
             }

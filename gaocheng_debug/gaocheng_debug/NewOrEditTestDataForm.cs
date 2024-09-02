@@ -8,7 +8,7 @@ namespace gaocheng_debug
     public partial class NewOrEditTestDataForm : Form
     {
         // 私有成员变量
-        private string projectDirPath, demo, exe;
+        private string projectDirPath;
 
         // 构造函数
         public NewOrEditTestDataForm()
@@ -17,23 +17,20 @@ namespace gaocheng_debug
         }
 
         // 公有方法
-        public void SetPath(in string absoluteDirPath, in string demoPath, in string exePath)
+        public void SetPath(in string absoluteDirPath)
         {
             projectDirPath = absoluteDirPath;
-            demo = demoPath;
-            exe = exePath;
         }
 
         // 窗体事件处理
         private void NewOrEditTestDataFormLoad(object sender, EventArgs e)
         {
-            if (File.Exists(projectDirPath + @"\__test_data.txt"))
+            if (File.Exists(projectDirPath + ConstValues.TestDataFileName))
             {
-                txtTestData.Text = File.ReadAllText(projectDirPath + @"\__test_data.txt", ConstValues.GB18030);
+                txtTestData.Text = File.ReadAllText(projectDirPath + ConstValues.TestDataFileName, ConstValues.GB18030);
             }
             else
             {
-                MutSync.ShowMessageToWarn("虽然应用依旧能运行，但不建议手动删除__test_data.txt");
                 txtTestData.Text = string.Empty;
             }
 
@@ -79,7 +76,7 @@ namespace gaocheng_debug
             StringBuilder str = new StringBuilder();
             for (int i = 0; i < len; ++i)
             {
-                if (data_content[i] == '[')
+                while (i < len && data_content[i] == '[')
                 {
                     ++cnt;
                     if (cnt > ConstValues.MaxDataGroupNum)
@@ -97,18 +94,18 @@ namespace gaocheng_debug
                     str.Append(data_content[i]);
                 }
             }
-            File.WriteAllText(projectDirPath + @"\__test_data.txt", str.ToString(), ConstValues.GB18030);
-
-            string content = $"cd /d \"{projectDirPath}\"{ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{demo}\" 1>_demo_result.txt{ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data __test_data.txt [1] | \"{exe}\" 1>_your_exe_result.txt{ConstValues.NewLine}";
-            content += $"for /l %%v in (2, 1, {cnt}) do ({ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{demo}\" 1>>_demo_result.txt{ConstValues.NewLine}";
-            content += $"..\\..\\rsc\\get_input_data.exe __test_data.txt [%%v] | \"{exe}\" 1>>_your_exe_result.txt{ConstValues.NewLine}){ConstValues.NewLine}mode";
-            File.WriteAllText(projectDirPath + @"\test.bat", content, ConstValues.GB18030);
+            File.WriteAllText(projectDirPath + ConstValues.TestDataFileName, str.ToString(), ConstValues.GB18030);
 
             MainForm Master = Owner as MainForm;
-            Master.DataChanged = true;
+            if (Master.DataGroupNum == cnt)
+            {
+                DialogResult = DialogResult.Ignore;
+            }
+            else
+            {
+                Master.DataGroupNum = cnt;
+                DialogResult = DialogResult.OK;
+            }
 
             Close();
         }

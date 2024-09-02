@@ -140,6 +140,9 @@
     <Compile Include="MutSync.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolFuncsForMainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

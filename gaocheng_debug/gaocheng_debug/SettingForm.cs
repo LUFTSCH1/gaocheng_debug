@@ -36,11 +36,17 @@ namespace gaocheng_debug
 
         private void BtnSaveClick(object sender, EventArgs e)
         {
-            File.WriteAllText(@".\rsc\initial_dirs.config", txtDemoExeDefaultPath.Text + "\n" + txtYourExeDefaultPath.Text);
+            File.WriteAllText(ConstValues.InitialDirectoriesConfigRelativePath, $"{txtDemoExeDefaultPath.Text}\n{txtYourExeDefaultPath.Text}");
 
             MainForm Master = Owner as MainForm;
-            Master.DefaultDemoPath = txtDemoExeDefaultPath.Text;
-            Master.DefaultExePath = txtYourExeDefaultPath.Text;
+            if (Master.DefaultDemoPath != txtDemoExeDefaultPath.Text)
+            {
+                Master.DefaultDemoPath = txtDemoExeDefaultPath.Text;
+            }
+            if (Master.DefaultExePath != txtYourExeDefaultPath.Text)
+            {
+                Master.DefaultExePath = txtYourExeDefaultPath.Text;
+            }
 
             Close();
         }

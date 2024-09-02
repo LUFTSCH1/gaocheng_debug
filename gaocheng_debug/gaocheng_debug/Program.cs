@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -25,6 +26,14 @@ namespace gaocheng_debug
 
             // 完整性检查
             IntegralityCheckerAsync.CheckIntegralityAsync().Wait();
+            if (!Directory.Exists(ConstValues.TestLogRelativePath))
+            {
+                Directory.CreateDirectory(ConstValues.TestLogRelativePath);
+            }
+            if (!File.Exists(ConstValues.InitialDirectoriesConfigRelativePath))
+            {
+                File.WriteAllText(ConstValues.InitialDirectoriesConfigRelativePath, $"{ConstValues.DefaultDirectory}\n{ConstValues.DefaultDirectory}");
+            }
 
             if (Environment.OSVersion.Version.Major >= 6)
             {

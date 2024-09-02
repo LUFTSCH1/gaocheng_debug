@@ -43,12 +43,7 @@ namespace gaocheng_debug
             }
 
             path += "\\";
-            if (!File.Exists(path + "initial_dirs.config"))
-            {
-                ShowWarningThenExit($"rsc文件夹中必要的\ninitial_dirs.config\n文件缺失，请考虑重新下载应用");
-            }
-
-            necessary_files = new string[] { "get_input_data.exe", "msvcp140d.dll", "txt_compare.exe", "ucrtbased.dll", "vcruntime140d.dll" };
+            necessary_files = new string[] { ConstValues.GetInputData, "msvcp140d.dll", ConstValues.TxtCompare, "ucrtbased.dll", "vcruntime140d.dll" };
             file_hash = new string[] { "0575ba8c3fcd1bd3fe7f2409325a3f98", "a66eaf437d3d8c53a127f77b2a896f0d", "665beeefe858a15c1f3d531baa64ee0d", "4d98940874d14692b02ece8f5b591362", "b907335a3619259f8aaf22c445de15ce" };
             for (int i = 0; i < necessary_files.Length; ++i)
             {
