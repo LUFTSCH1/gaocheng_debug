@@ -6,47 +6,45 @@ namespace gaocheng_debug
 {
     public partial class SettingForm : Form
     {
+        // 私有只读成员
+        private readonly MainForm Master;
+
         // 构造函数
-        public SettingForm(in string defaultDemoPath, in string defaultExePath)
+        public SettingForm(in MainForm master, in string defaultDemoExeDirectory, in string defaultYourExeDirectory)
         {
+            Master = master ?? throw new ArgumentNullException(nameof(master));
+
             InitializeComponent();
 
-            txtDemoExeDefaultPath.Text = defaultDemoPath;
-            txtYourExeDefaultPath.Text = defaultExePath;
+            txtDemoExeDefaultDirectory.Text = defaultDemoExeDirectory;
+            txtYourExeDefaultDirectory.Text = defaultYourExeDirectory;
         }
 
         // Button事件处理
         private void BtnSelectDemoExeDefaultPathClick(object sender, EventArgs e)
         {
-            fbdDemoAndYourExeDefaultPathSelector.Description = "选取demo默认浏览目录";
+            fbdDemoAndYourExeDefaultPathSelector.Description = "选取官方demo默认浏览目录";
             if (fbdDemoAndYourExeDefaultPathSelector.ShowDialog() == DialogResult.OK)
             {
-                txtDemoExeDefaultPath.Text = fbdDemoAndYourExeDefaultPathSelector.SelectedPath;
+                txtDemoExeDefaultDirectory.Text = fbdDemoAndYourExeDefaultPathSelector.SelectedPath;
             }
         }
 
         private void BtnSelectYourExeDefaultPathClick(object sender, EventArgs e)
         {
-            fbdDemoAndYourExeDefaultPathSelector.Description = "选取用户exe默认浏览目录";
+            fbdDemoAndYourExeDefaultPathSelector.Description = "选取作业exe默认浏览目录";
             if (fbdDemoAndYourExeDefaultPathSelector.ShowDialog() == DialogResult.OK)
             {
-                txtYourExeDefaultPath.Text = fbdDemoAndYourExeDefaultPathSelector.SelectedPath;
+                txtYourExeDefaultDirectory.Text = fbdDemoAndYourExeDefaultPathSelector.SelectedPath;
             }
         }
 
         private void BtnSaveClick(object sender, EventArgs e)
         {
-            File.WriteAllText(ConstValues.InitialDirectoriesConfigRelativePath, $"{txtDemoExeDefaultPath.Text}\n{txtYourExeDefaultPath.Text}");
+            File.WriteAllText(Global.InitialDirectoriesConfigRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}");
 
-            MainForm Master = Owner as MainForm;
-            if (Master.DefaultDemoPath != txtDemoExeDefaultPath.Text)
-            {
-                Master.DefaultDemoPath = txtDemoExeDefaultPath.Text;
-            }
-            if (Master.DefaultExePath != txtYourExeDefaultPath.Text)
-            {
-                Master.DefaultExePath = txtYourExeDefaultPath.Text;
-            }
+            Master.DefaultDemoExeDirectory = txtDemoExeDefaultDirectory.Text;
+            Master.DefaultYourExeDirectory = txtYourExeDefaultDirectory.Text;
 
             Close();
         }

@@ -87,7 +87,7 @@
             this.Name = "NewOrEditTestDataForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "创建/修改测试数据";
-            this.Load += new System.EventHandler(this.NewOrEditTestDataFormLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewOrEditTestFormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

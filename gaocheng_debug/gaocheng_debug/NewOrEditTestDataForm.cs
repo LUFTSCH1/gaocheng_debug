@@ -7,32 +7,53 @@ namespace gaocheng_debug
 {
     public partial class NewOrEditTestDataForm : Form
     {
-        // 私有成员变量
-        private string projectDirPath;
+        // 私有常量
+        private const int MaxDataGroupNum = 256;
+        public const char DataIDFlag = '[';
+        public const char LineEndFlag = '\n';
+
+        // 私有静态只读成员
+        private static readonly string DataGroupTruncationWarning = $"数据组数大于{MaxDataGroupNum}，将舍弃第{MaxDataGroupNum + 1}组及之后的数据";
+
+        // 私有只读成员
+        private readonly MainForm Master;
+
+        private readonly StringBuilder TestDataBuilder;
 
         // 构造函数
-        public NewOrEditTestDataForm()
+        public NewOrEditTestDataForm(in MainForm master)
         {
+            Master = master ?? throw new ArgumentNullException(nameof(master));
+
+            TestDataBuilder = new StringBuilder();
+
             InitializeComponent();
         }
 
         // 公有方法
-        public void SetPath(in string absoluteDirPath)
+        public void LoadTestDataContent()
         {
-            projectDirPath = absoluteDirPath;
-        }
-
-        // 窗体事件处理
-        private void NewOrEditTestDataFormLoad(object sender, EventArgs e)
-        {
-            if (File.Exists(projectDirPath + ConstValues.TestDataFileName))
+            if (File.Exists(Master.AbsoluteDirPath + Global.TestDataFileName))
             {
-                txtTestData.Text = File.ReadAllText(projectDirPath + ConstValues.TestDataFileName, ConstValues.GB18030);
+                txtTestData.Text = File.ReadAllText(Master.AbsoluteDirPath + Global.TestDataFileName, Global.GB18030);
             }
             else
             {
                 txtTestData.Text = string.Empty;
             }
+        }
+
+        // 阻止释放
+        private void NewOrEditTestFormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            Master.RecoverResultViewerText();
+
+            Hide();
+
+            Master.ChangeComponentEnabled();
+            Master.BtnNewProjectEnabled = true;
+            Master.FocusBackToMain();
         }
 
         // Button事件处理
@@ -43,60 +64,63 @@ namespace gaocheng_debug
 
             if (data_content == string.Empty)
             {
-                data_content = ConstValues.DataIDFlag + ConstValues.NewLine;
+                data_content = DataIDFlag + Global.NewLine;
                 len = data_content.Length;
             }
             else
             {
                 for (int i = 0; i < len; ++i)
                 {
-                    if (data_content[i] == ConstValues.DataIDFlag && ++cnt > ConstValues.MaxDataGroupNum)
+                    if (data_content[i] == DataIDFlag && ++cnt > MaxDataGroupNum)
                     {
-                        MutSync.ShowMessageToWarn(ConstValues.DataGroupTruncationWarning);
+                        MutSync.ShowMessageToWarn(DataGroupTruncationWarning);
                         break;
                     }
                 }
                 
                 if (cnt < 1)
                 {
-                    data_content = ConstValues.DataIDFlag + ConstValues.NewLine + data_content;
+                    data_content = DataIDFlag + Global.NewLine + data_content;
                     len = data_content.Length;
                 }
             }
 
-            if (data_content[len - 1] != ConstValues.LineEndFlag)
+            if (data_content[len - 1] != LineEndFlag)
             {
-                data_content += ConstValues.NewLine;
+                data_content += Global.NewLine;
                 len = data_content.Length;
             }
 
             cnt = 0;
-            StringBuilder str = new StringBuilder();
-            for (int i = 0; i < len && cnt < ConstValues.MaxDataGroupNum; )
+            for (int i = 0; i < len && cnt < MaxDataGroupNum; )
             {
-                while (i < len && data_content[i] == ConstValues.DataIDFlag)
+                while (i < len && data_content[i] == DataIDFlag)
                 {
-                    if (cnt >= ConstValues.MaxDataGroupNum)
+                    if (cnt >= MaxDataGroupNum)
                     {
                         break;
                     }
-                    str.Append($"[{++cnt}]{ConstValues.NewLine}");
-                    while (i < len && data_content[i++] != ConstValues.LineEndFlag)
+                    TestDataBuilder.Append($"[{++cnt}]{Global.NewLine}");
+                    while (i < len && data_content[i++] != LineEndFlag)
                         ;
                 }
 
-                while (i < len && data_content[i] != ConstValues.DataIDFlag)
+                while (i < len && data_content[i] != DataIDFlag)
                 {
-                    str.Append(data_content[i++]);
+                    TestDataBuilder.Append(data_content[i++]);
                 }
             }
-            File.WriteAllText(projectDirPath + ConstValues.TestDataFileName, str.ToString(), ConstValues.GB18030);
 
-            MainForm Master = Owner as MainForm;
+            File.WriteAllText(Master.AbsoluteDirPath + Global.TestDataFileName, TestDataBuilder.ToString(), Global.GB18030);
+            TestDataBuilder.Clear();
+
+            Hide();
+
             Master.DataGroupNum = cnt;
-            DialogResult = DialogResult.OK;
+            Master.ConstructAndTest();
 
-            Close();
+            Master.ChangeComponentEnabled();
+            Master.BtnNewProjectEnabled = true;
         }
     }
 }

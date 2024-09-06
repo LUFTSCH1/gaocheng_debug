@@ -167,7 +167,7 @@
             this.btnBrowseDemoExe.Size = new System.Drawing.Size(52, 30);
             this.btnBrowseDemoExe.TabIndex = 6;
             this.btnBrowseDemoExe.TabStop = false;
-            this.btnBrowseDemoExe.Text = "浏览";
+            this.btnBrowseDemoExe.Text = "选择";
             this.btnBrowseDemoExe.UseVisualStyleBackColor = false;
             this.btnBrowseDemoExe.Click += new System.EventHandler(this.BtnBrowseDemoExeClick);
             // 
@@ -182,7 +182,7 @@
             this.btnBrowseYourExe.Size = new System.Drawing.Size(52, 30);
             this.btnBrowseYourExe.TabIndex = 7;
             this.btnBrowseYourExe.TabStop = false;
-            this.btnBrowseYourExe.Text = "浏览";
+            this.btnBrowseYourExe.Text = "选择";
             this.btnBrowseYourExe.UseVisualStyleBackColor = false;
             this.btnBrowseYourExe.Click += new System.EventHandler(this.BtnBrowseYourExeClick);
             // 
@@ -291,7 +291,7 @@
             // 
             // tmrWarrantyOfProjectUniqueness
             // 
-            this.tmrWarrantyOfProjectUniqueness.Interval = 1000;
+            this.tmrWarrantyOfProjectUniqueness.Interval = 1024;
             this.tmrWarrantyOfProjectUniqueness.Tick += new System.EventHandler(this.TmrWarrantyOfProjectUniquenessTick);
             // 
             // ofdDemoAndYourExeSelector
@@ -362,6 +362,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "战地小薯条";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.mnsAdditionalFunctions.ResumeLayout(false);
             this.mnsAdditionalFunctions.PerformLayout();
             this.ResumeLayout(false);

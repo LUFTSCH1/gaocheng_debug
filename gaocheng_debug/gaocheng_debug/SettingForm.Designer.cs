@@ -30,10 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingForm));
             this.btnSelectDemoExeDefaultPath = new System.Windows.Forms.Button();
-            this.lblDemoExeDefaultPathTip = new System.Windows.Forms.Label();
-            this.txtDemoExeDefaultPath = new System.Windows.Forms.TextBox();
-            this.lblYourExeDefaultPathTip = new System.Windows.Forms.Label();
-            this.txtYourExeDefaultPath = new System.Windows.Forms.TextBox();
+            this.lblDemoExeDefaultDirectoryTip = new System.Windows.Forms.Label();
+            this.txtDemoExeDefaultDirectory = new System.Windows.Forms.TextBox();
+            this.lblYourExeDefaultDirectoryTip = new System.Windows.Forms.Label();
+            this.txtYourExeDefaultDirectory = new System.Windows.Forms.TextBox();
             this.btnSelectYourExeDefaultPath = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.fbdDemoAndYourExeDefaultPathSelector = new System.Windows.Forms.FolderBrowserDialog();
@@ -43,7 +43,7 @@
             // 
             this.btnSelectDemoExeDefaultPath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(187)))), ((int)(((byte)(208)))));
             this.btnSelectDemoExeDefaultPath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSelectDemoExeDefaultPath.Location = new System.Drawing.Point(649, 19);
+            this.btnSelectDemoExeDefaultPath.Location = new System.Drawing.Point(649, 22);
             this.btnSelectDemoExeDefaultPath.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnSelectDemoExeDefaultPath.Name = "btnSelectDemoExeDefaultPath";
             this.btnSelectDemoExeDefaultPath.Size = new System.Drawing.Size(70, 32);
@@ -53,55 +53,55 @@
             this.btnSelectDemoExeDefaultPath.UseVisualStyleBackColor = false;
             this.btnSelectDemoExeDefaultPath.Click += new System.EventHandler(this.BtnSelectDemoExeDefaultPathClick);
             // 
-            // lblDemoExeDefaultPathTip
+            // lblDemoExeDefaultDirectoryTip
             // 
-            this.lblDemoExeDefaultPathTip.AutoSize = true;
-            this.lblDemoExeDefaultPathTip.Location = new System.Drawing.Point(7, 6);
-            this.lblDemoExeDefaultPathTip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblDemoExeDefaultPathTip.Name = "lblDemoExeDefaultPathTip";
-            this.lblDemoExeDefaultPathTip.Size = new System.Drawing.Size(142, 20);
-            this.lblDemoExeDefaultPathTip.TabIndex = 1;
-            this.lblDemoExeDefaultPathTip.Text = "demo默认浏览目录";
+            this.lblDemoExeDefaultDirectoryTip.AutoSize = true;
+            this.lblDemoExeDefaultDirectoryTip.Location = new System.Drawing.Point(7, 6);
+            this.lblDemoExeDefaultDirectoryTip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblDemoExeDefaultDirectoryTip.Name = "lblDemoExeDefaultDirectoryTip";
+            this.lblDemoExeDefaultDirectoryTip.Size = new System.Drawing.Size(172, 20);
+            this.lblDemoExeDefaultDirectoryTip.TabIndex = 1;
+            this.lblDemoExeDefaultDirectoryTip.Text = "官方demo默认浏览目录";
             // 
-            // txtDemoExeDefaultPath
+            // txtDemoExeDefaultDirectory
             // 
-            this.txtDemoExeDefaultPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDemoExeDefaultPath.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDemoExeDefaultPath.Location = new System.Drawing.Point(10, 25);
-            this.txtDemoExeDefaultPath.Margin = new System.Windows.Forms.Padding(2);
-            this.txtDemoExeDefaultPath.Name = "txtDemoExeDefaultPath";
-            this.txtDemoExeDefaultPath.ReadOnly = true;
-            this.txtDemoExeDefaultPath.Size = new System.Drawing.Size(634, 25);
-            this.txtDemoExeDefaultPath.TabIndex = 2;
-            this.txtDemoExeDefaultPath.TabStop = false;
+            this.txtDemoExeDefaultDirectory.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDemoExeDefaultDirectory.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDemoExeDefaultDirectory.Location = new System.Drawing.Point(11, 28);
+            this.txtDemoExeDefaultDirectory.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDemoExeDefaultDirectory.Name = "txtDemoExeDefaultDirectory";
+            this.txtDemoExeDefaultDirectory.ReadOnly = true;
+            this.txtDemoExeDefaultDirectory.Size = new System.Drawing.Size(634, 25);
+            this.txtDemoExeDefaultDirectory.TabIndex = 2;
+            this.txtDemoExeDefaultDirectory.TabStop = false;
             // 
-            // lblYourExeDefaultPathTip
+            // lblYourExeDefaultDirectoryTip
             // 
-            this.lblYourExeDefaultPathTip.AutoSize = true;
-            this.lblYourExeDefaultPathTip.Location = new System.Drawing.Point(7, 51);
-            this.lblYourExeDefaultPathTip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblYourExeDefaultPathTip.Name = "lblYourExeDefaultPathTip";
-            this.lblYourExeDefaultPathTip.Size = new System.Drawing.Size(155, 20);
-            this.lblYourExeDefaultPathTip.TabIndex = 3;
-            this.lblYourExeDefaultPathTip.Text = "作业exe默认浏览目录";
+            this.lblYourExeDefaultDirectoryTip.AutoSize = true;
+            this.lblYourExeDefaultDirectoryTip.Location = new System.Drawing.Point(7, 64);
+            this.lblYourExeDefaultDirectoryTip.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblYourExeDefaultDirectoryTip.Name = "lblYourExeDefaultDirectoryTip";
+            this.lblYourExeDefaultDirectoryTip.Size = new System.Drawing.Size(155, 20);
+            this.lblYourExeDefaultDirectoryTip.TabIndex = 3;
+            this.lblYourExeDefaultDirectoryTip.Text = "作业exe默认浏览目录";
             // 
-            // txtYourExeDefaultPath
+            // txtYourExeDefaultDirectory
             // 
-            this.txtYourExeDefaultPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtYourExeDefaultPath.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtYourExeDefaultPath.Location = new System.Drawing.Point(10, 73);
-            this.txtYourExeDefaultPath.Margin = new System.Windows.Forms.Padding(2);
-            this.txtYourExeDefaultPath.Name = "txtYourExeDefaultPath";
-            this.txtYourExeDefaultPath.ReadOnly = true;
-            this.txtYourExeDefaultPath.Size = new System.Drawing.Size(634, 25);
-            this.txtYourExeDefaultPath.TabIndex = 4;
-            this.txtYourExeDefaultPath.TabStop = false;
+            this.txtYourExeDefaultDirectory.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtYourExeDefaultDirectory.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtYourExeDefaultDirectory.Location = new System.Drawing.Point(11, 86);
+            this.txtYourExeDefaultDirectory.Margin = new System.Windows.Forms.Padding(2);
+            this.txtYourExeDefaultDirectory.Name = "txtYourExeDefaultDirectory";
+            this.txtYourExeDefaultDirectory.ReadOnly = true;
+            this.txtYourExeDefaultDirectory.Size = new System.Drawing.Size(634, 25);
+            this.txtYourExeDefaultDirectory.TabIndex = 4;
+            this.txtYourExeDefaultDirectory.TabStop = false;
             // 
             // btnSelectYourExeDefaultPath
             // 
             this.btnSelectYourExeDefaultPath.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(187)))), ((int)(((byte)(208)))));
             this.btnSelectYourExeDefaultPath.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSelectYourExeDefaultPath.Location = new System.Drawing.Point(649, 68);
+            this.btnSelectYourExeDefaultPath.Location = new System.Drawing.Point(649, 80);
             this.btnSelectYourExeDefaultPath.Margin = new System.Windows.Forms.Padding(2);
             this.btnSelectYourExeDefaultPath.Name = "btnSelectYourExeDefaultPath";
             this.btnSelectYourExeDefaultPath.Size = new System.Drawing.Size(70, 32);
@@ -115,7 +115,7 @@
             // 
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(85)))), ((int)(((byte)(187)))), ((int)(((byte)(138)))));
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location = new System.Drawing.Point(649, 118);
+            this.btnSave.Location = new System.Drawing.Point(649, 135);
             this.btnSave.Margin = new System.Windows.Forms.Padding(2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(70, 32);
@@ -130,13 +130,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
-            this.ClientSize = new System.Drawing.Size(731, 161);
+            this.ClientSize = new System.Drawing.Size(731, 178);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnSelectYourExeDefaultPath);
-            this.Controls.Add(this.txtYourExeDefaultPath);
-            this.Controls.Add(this.lblYourExeDefaultPathTip);
-            this.Controls.Add(this.txtDemoExeDefaultPath);
-            this.Controls.Add(this.lblDemoExeDefaultPathTip);
+            this.Controls.Add(this.txtYourExeDefaultDirectory);
+            this.Controls.Add(this.lblYourExeDefaultDirectoryTip);
+            this.Controls.Add(this.txtDemoExeDefaultDirectory);
+            this.Controls.Add(this.lblDemoExeDefaultDirectoryTip);
             this.Controls.Add(this.btnSelectDemoExeDefaultPath);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -154,10 +154,10 @@
         #endregion
 
         private System.Windows.Forms.Button btnSelectDemoExeDefaultPath;
-        private System.Windows.Forms.Label lblDemoExeDefaultPathTip;
-        private System.Windows.Forms.TextBox txtDemoExeDefaultPath;
-        private System.Windows.Forms.Label lblYourExeDefaultPathTip;
-        private System.Windows.Forms.TextBox txtYourExeDefaultPath;
+        private System.Windows.Forms.Label lblDemoExeDefaultDirectoryTip;
+        private System.Windows.Forms.TextBox txtDemoExeDefaultDirectory;
+        private System.Windows.Forms.Label lblYourExeDefaultDirectoryTip;
+        private System.Windows.Forms.TextBox txtYourExeDefaultDirectory;
         private System.Windows.Forms.Button btnSelectYourExeDefaultPath;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.FolderBrowserDialog fbdDemoAndYourExeDefaultPathSelector;
