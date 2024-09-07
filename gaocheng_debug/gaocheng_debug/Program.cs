@@ -41,7 +41,7 @@ namespace gaocheng_debug
             }
 
             // 完整则创建文件锁以锁定文件
-            List<FileStream> fileLocks = MutSync.LockFilesThenDisposeFileList();
+            List<FileStream> file_locks = MutSync.LockFilesThenDisposeFileList();
 
             // 设置DPI感知
             if (Environment.OSVersion.Version.Major >= 6)
@@ -54,9 +54,9 @@ namespace gaocheng_debug
             Application.Run(new MainForm());
 
             // 释放文件锁
-            for (int i = 0, len = fileLocks.Count; i < len; ++i)
+            for (int i = 0, len = file_locks.Count; i < len; ++i)
             {
-                fileLocks[i].Close();
+                file_locks[i].Close();
             }
         }
 

@@ -49,7 +49,7 @@ namespace gaocheng_debug
         // 私有工具函数
         private bool CheckOperation(in string msg, in MessageBoxIcon icon) => MessageBox.Show(msg, "操作确认", MessageBoxButtons.YesNo, icon, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
 
-        private void LockProjectGaocheng() => projectGaochengLock = new FileStream(absoluteDirPath + Global.ProjectGaochengFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
+        private void LockProjectGaocheng() => projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteDirPath + Global.ProjectGaochengFileName);
 
         private void DisposeProjectGaochengLock()
         {
@@ -294,19 +294,19 @@ namespace gaocheng_debug
             }
 
             CMD.Start();
-            CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"");
             if (chkIsCMDPause.Checked)
             {
+                CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"");
                 CMD.StandardInput.WriteLine("cls");
                 CMD.StandardInput.WriteLine(ConstructTxtCompareCmd());
             }
             else
             {
-                CMD.StandardInput.WriteLine("cls&exit");
+                CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"&exit");
             }
             CMD.WaitForExit();
             CMD.Close();
-
+            
             demo_exe_lock.Close();
             your_exe_lock.Close();
 
