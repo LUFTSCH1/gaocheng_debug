@@ -52,6 +52,7 @@
             this.ofdDemoAndYourExeSelector = new System.Windows.Forms.OpenFileDialog();
             this.btnOpenProjectDirectory = new System.Windows.Forms.Button();
             this.btnDeleteProject = new System.Windows.Forms.Button();
+            this.chkIsCMDPause = new System.Windows.Forms.CheckBox();
             this.mnsAdditionalFunctions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -94,28 +95,28 @@
             this.mnsAdditionalFunctions.Location = new System.Drawing.Point(0, 0);
             this.mnsAdditionalFunctions.Name = "mnsAdditionalFunctions";
             this.mnsAdditionalFunctions.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(927, 28);
+            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(927, 30);
             this.mnsAdditionalFunctions.TabIndex = 2;
             this.mnsAdditionalFunctions.Text = "menuStrip1";
             // 
             // tsmiSettings
             // 
             this.tsmiSettings.Name = "tsmiSettings";
-            this.tsmiSettings.Size = new System.Drawing.Size(53, 24);
+            this.tsmiSettings.Size = new System.Drawing.Size(53, 26);
             this.tsmiSettings.Text = "设置";
             this.tsmiSettings.Click += new System.EventHandler(this.TsmiSettingsClick);
             // 
             // tsmiMD5Calculator
             // 
             this.tsmiMD5Calculator.Name = "tsmiMD5Calculator";
-            this.tsmiMD5Calculator.Size = new System.Drawing.Size(118, 24);
+            this.tsmiMD5Calculator.Size = new System.Drawing.Size(118, 26);
             this.tsmiMD5Calculator.Text = "计算文件MD5";
             this.tsmiMD5Calculator.Click += new System.EventHandler(this.TsmiMD5CalculatorClick);
             // 
             // tsmiHelp
             // 
             this.tsmiHelp.Name = "tsmiHelp";
-            this.tsmiHelp.Size = new System.Drawing.Size(83, 24);
+            this.tsmiHelp.Size = new System.Drawing.Size(83, 26);
             this.tsmiHelp.Text = "使用说明";
             this.tsmiHelp.Click += new System.EventHandler(this.TsmiHelpClick);
             // 
@@ -214,10 +215,10 @@
             this.btnRetest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnRetest.Enabled = false;
             this.btnRetest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRetest.Location = new System.Drawing.Point(713, 100);
+            this.btnRetest.Location = new System.Drawing.Point(796, 100);
             this.btnRetest.Margin = new System.Windows.Forms.Padding(2);
             this.btnRetest.Name = "btnRetest";
-            this.btnRetest.Size = new System.Drawing.Size(102, 30);
+            this.btnRetest.Size = new System.Drawing.Size(120, 30);
             this.btnRetest.TabIndex = 0;
             this.btnRetest.TabStop = false;
             this.btnRetest.Text = "重复测试";
@@ -231,8 +232,8 @@
             this.cboDisplaySelector.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cboDisplaySelector.FormattingEnabled = true;
             this.cboDisplaySelector.Items.AddRange(new object[] {
-            "--display normal ",
-            "--display detailed "});
+            "--display normal",
+            "--display detailed"});
             this.cboDisplaySelector.Location = new System.Drawing.Point(753, 28);
             this.cboDisplaySelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboDisplaySelector.Name = "cboDisplaySelector";
@@ -248,9 +249,9 @@
             this.cboTrimSelector.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cboTrimSelector.FormattingEnabled = true;
             this.cboTrimSelector.Items.AddRange(new object[] {
-            "--trim none ",
-            "--trim right ",
-            "--trim left "});
+            "--trim none",
+            "--trim right",
+            "--trim left"});
             this.cboTrimSelector.Location = new System.Drawing.Point(619, 28);
             this.cboTrimSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboTrimSelector.Name = "cboTrimSelector";
@@ -264,10 +265,10 @@
             this.btnNewOrEditTestData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
             this.btnNewOrEditTestData.Enabled = false;
             this.btnNewOrEditTestData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewOrEditTestData.Location = new System.Drawing.Point(679, 63);
+            this.btnNewOrEditTestData.Location = new System.Drawing.Point(619, 100);
             this.btnNewOrEditTestData.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewOrEditTestData.Name = "btnNewOrEditTestData";
-            this.btnNewOrEditTestData.Size = new System.Drawing.Size(168, 30);
+            this.btnNewOrEditTestData.Size = new System.Drawing.Size(173, 30);
             this.btnNewOrEditTestData.TabIndex = 12;
             this.btnNewOrEditTestData.TabStop = false;
             this.btnNewOrEditTestData.Text = "创建/修改测试数据";
@@ -330,12 +331,24 @@
             this.btnDeleteProject.UseVisualStyleBackColor = false;
             this.btnDeleteProject.Click += new System.EventHandler(this.BtnDeleteProjectClick);
             // 
+            // chkIsCMDPause
+            // 
+            this.chkIsCMDPause.AutoSize = true;
+            this.chkIsCMDPause.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.chkIsCMDPause.Location = new System.Drawing.Point(668, 66);
+            this.chkIsCMDPause.Name = "chkIsCMDPause";
+            this.chkIsCMDPause.Size = new System.Drawing.Size(196, 25);
+            this.chkIsCMDPause.TabIndex = 17;
+            this.chkIsCMDPause.Text = "在CMD中查看高亮结果";
+            this.chkIsCMDPause.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
             this.ClientSize = new System.Drawing.Size(927, 478);
+            this.Controls.Add(this.chkIsCMDPause);
             this.Controls.Add(this.cboDisplaySelector);
             this.Controls.Add(this.btnDeleteProject);
             this.Controls.Add(this.cboTrimSelector);
@@ -394,6 +407,7 @@
         private System.Windows.Forms.Button btnOpenProjectDirectory;
         private System.Windows.Forms.Button btnDeleteProject;
         private System.Windows.Forms.ToolStripMenuItem tsmiMD5Calculator;
+        private System.Windows.Forms.CheckBox chkIsCMDPause;
     }
 }
 

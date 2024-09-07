@@ -8,10 +8,10 @@
 * 作业exe测试结果（_your_exe_result.txt）  
 * 测试批处理（test.bat）  
 
-## 界面预览（适用于1.6.0及之后）  
+## 界面预览（适用于1.6.1及之后）  
 <ul>
   <li>程序主界面预览<br>
-    <img alt="主界面预览图片" src="./img/MainInterface.png" width="640px" height="357px"></li>
+    <img alt="主界面预览图片" src="./img/MainForm.png" width="640px" height="357px"></li>
   <li>单次比对生成的所有文件预览<br>
     <img alt="单个项目生成文件预览" src="./img/ProjectFiles.png" width="640px" height="249px"></li>
 </ul>

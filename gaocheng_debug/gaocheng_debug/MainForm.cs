@@ -151,16 +151,10 @@ namespace gaocheng_debug
         }
 
         // ComboBox事件共用函数
-        private void CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged(object sender, EventArgs e)
-        {
-            isModeChanged = (cboTrimSelector.SelectedIndex != trimMode || cboDisplaySelector.SelectedIndex != displayMode);
-        }
+        private void CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged(object sender, EventArgs e) => isModeChanged = (cboTrimSelector.SelectedIndex != trimMode || cboDisplaySelector.SelectedIndex != displayMode);
 
         // TextBox事件共用函数
-        private void TxtDemoExePathOrTxtYourExePathTextChanged(object sender, EventArgs e)
-        {
-            isPathChanged = (txtDemoExePath.Text != projectDemoExePath || txtYourExePath.Text != projectYourExePath);
-        }
+        private void TxtDemoExePathOrTxtYourExePathTextChanged(object sender, EventArgs e) => isPathChanged = (txtDemoExePath.Text != projectDemoExePath || txtYourExePath.Text != projectYourExePath);
 
         // ToolStripMenuItem事件处理函数
         private void TsmiSettingsClick(object sender, EventArgs e)
@@ -366,6 +360,7 @@ namespace gaocheng_debug
         private void CboProjectSelectorSelectedIndexChanged(object sender, EventArgs e)
         {
             DisposeProjectGaochengLock();
+            chkIsCMDPause.Checked = false;
 
             if ((projectDirName = cboProjectSelector.SelectedItem.ToString()) == BlankItemStr)
             {
