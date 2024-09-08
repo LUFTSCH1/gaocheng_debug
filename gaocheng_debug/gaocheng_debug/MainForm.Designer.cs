@@ -95,28 +95,28 @@
             this.mnsAdditionalFunctions.Location = new System.Drawing.Point(0, 0);
             this.mnsAdditionalFunctions.Name = "mnsAdditionalFunctions";
             this.mnsAdditionalFunctions.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(927, 30);
+            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(915, 28);
             this.mnsAdditionalFunctions.TabIndex = 2;
             this.mnsAdditionalFunctions.Text = "menuStrip1";
             // 
             // tsmiSettings
             // 
             this.tsmiSettings.Name = "tsmiSettings";
-            this.tsmiSettings.Size = new System.Drawing.Size(53, 26);
+            this.tsmiSettings.Size = new System.Drawing.Size(53, 24);
             this.tsmiSettings.Text = "设置";
             this.tsmiSettings.Click += new System.EventHandler(this.TsmiSettingsClick);
             // 
             // tsmiMD5Calculator
             // 
             this.tsmiMD5Calculator.Name = "tsmiMD5Calculator";
-            this.tsmiMD5Calculator.Size = new System.Drawing.Size(118, 26);
+            this.tsmiMD5Calculator.Size = new System.Drawing.Size(118, 24);
             this.tsmiMD5Calculator.Text = "计算文件MD5";
             this.tsmiMD5Calculator.Click += new System.EventHandler(this.TsmiMD5CalculatorClick);
             // 
             // tsmiHelp
             // 
             this.tsmiHelp.Name = "tsmiHelp";
-            this.tsmiHelp.Size = new System.Drawing.Size(83, 26);
+            this.tsmiHelp.Size = new System.Drawing.Size(83, 24);
             this.tsmiHelp.Text = "使用说明";
             this.tsmiHelp.Click += new System.EventHandler(this.TsmiHelpClick);
             // 
@@ -215,10 +215,10 @@
             this.btnRetest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnRetest.Enabled = false;
             this.btnRetest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRetest.Location = new System.Drawing.Point(796, 100);
+            this.btnRetest.Location = new System.Drawing.Point(791, 100);
             this.btnRetest.Margin = new System.Windows.Forms.Padding(2);
             this.btnRetest.Name = "btnRetest";
-            this.btnRetest.Size = new System.Drawing.Size(120, 30);
+            this.btnRetest.Size = new System.Drawing.Size(113, 30);
             this.btnRetest.TabIndex = 0;
             this.btnRetest.TabStop = false;
             this.btnRetest.Text = "重复测试";
@@ -234,7 +234,7 @@
             this.cboDisplaySelector.Items.AddRange(new object[] {
             "--display normal",
             "--display detailed"});
-            this.cboDisplaySelector.Location = new System.Drawing.Point(753, 28);
+            this.cboDisplaySelector.Location = new System.Drawing.Point(741, 28);
             this.cboDisplaySelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboDisplaySelector.Name = "cboDisplaySelector";
             this.cboDisplaySelector.Size = new System.Drawing.Size(163, 28);
@@ -255,7 +255,7 @@
             this.cboTrimSelector.Location = new System.Drawing.Point(619, 28);
             this.cboTrimSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboTrimSelector.Name = "cboTrimSelector";
-            this.cboTrimSelector.Size = new System.Drawing.Size(130, 28);
+            this.cboTrimSelector.Size = new System.Drawing.Size(118, 28);
             this.cboTrimSelector.TabIndex = 0;
             this.cboTrimSelector.TabStop = false;
             this.cboTrimSelector.SelectedIndexChanged += new System.EventHandler(this.CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged);
@@ -268,7 +268,7 @@
             this.btnNewOrEditTestData.Location = new System.Drawing.Point(619, 100);
             this.btnNewOrEditTestData.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewOrEditTestData.Name = "btnNewOrEditTestData";
-            this.btnNewOrEditTestData.Size = new System.Drawing.Size(173, 30);
+            this.btnNewOrEditTestData.Size = new System.Drawing.Size(168, 30);
             this.btnNewOrEditTestData.TabIndex = 12;
             this.btnNewOrEditTestData.TabStop = false;
             this.btnNewOrEditTestData.Text = "创建/修改测试数据";
@@ -281,11 +281,11 @@
             this.rtxResultViewer.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rtxResultViewer.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.rtxResultViewer.ForeColor = System.Drawing.Color.White;
-            this.rtxResultViewer.Location = new System.Drawing.Point(10, 144);
+            this.rtxResultViewer.Location = new System.Drawing.Point(11, 144);
             this.rtxResultViewer.Margin = new System.Windows.Forms.Padding(2);
             this.rtxResultViewer.Name = "rtxResultViewer";
             this.rtxResultViewer.ReadOnly = true;
-            this.rtxResultViewer.Size = new System.Drawing.Size(906, 323);
+            this.rtxResultViewer.Size = new System.Drawing.Size(893, 323);
             this.rtxResultViewer.TabIndex = 14;
             this.rtxResultViewer.TabStop = false;
             this.rtxResultViewer.Text = "";
@@ -347,7 +347,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
-            this.ClientSize = new System.Drawing.Size(927, 478);
+            this.ClientSize = new System.Drawing.Size(915, 478);
             this.Controls.Add(this.chkIsCMDPause);
             this.Controls.Add(this.cboDisplaySelector);
             this.Controls.Add(this.btnDeleteProject);
