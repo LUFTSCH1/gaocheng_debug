@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
@@ -15,15 +13,8 @@ namespace gaocheng_debug
         [STAThread]
         public static void Main()
         {
-            { // 阻止多开
-                string process_name = Process.GetCurrentProcess().ProcessName;
-                new Mutex(true, process_name, out bool is_not_running);
-                if (!is_not_running)
-                {
-                    MutSync.HandleRunningInstance(process_name);
-                    Environment.Exit((int)ErrorCode.ApplicationAlreadyRunning);
-                }
-            }
+            // 阻止多开
+            MutSync.HandleRunningInstance();
 
             // 完整性检查
             MutSync.CheckIntegrality();
@@ -41,12 +32,13 @@ namespace gaocheng_debug
             }
 
             // 完整则创建文件锁以锁定文件
-            List<FileStream> file_locks = MutSync.LockFilesThenDisposeFileList();
+            List<FileStream> file_locks = MutSync.LockFilesAndDisposeFileList();
 
             // 设置DPI感知
             if (Environment.OSVersion.Version.Major >= 6)
             {
-                SetProcessDpiAwarenessContext(-4); // #define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 ((DPI_AWARENESS_CONTEXT)-4)
+                // #define DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 ((DPI_AWARENESS_CONTEXT)-4)
+                SetProcessDpiAwarenessContext(-4);
             }
 
             Application.EnableVisualStyles();
@@ -57,6 +49,7 @@ namespace gaocheng_debug
             for (int i = 0, len = file_locks.Count; i < len; ++i)
             {
                 file_locks[i].Close();
+                file_locks[i] = null;
             }
         }
 

@@ -22,7 +22,7 @@ namespace gaocheng_debug
 
         public void ConstructAndTest()
         {
-            dataHash = MutSync.PartHashWithSalt(absoluteDirPath + Global.TestDataFileName);
+            dataHash = MutSync.MD5Hash(absoluteDirPath + Global.TestDataFileName);
             ForceToEditLogAndBat();
             GenerateAndCompare();
         }
@@ -222,7 +222,7 @@ namespace gaocheng_debug
             btnOpenProjectDirectory.Enabled = true;
         }
 
-        private string ConstructTxtCompareCmd() => $"..\\..\\{Global.ResourceDirectory}\\{Global.TxtCompare} --file1 {Global.DemoExeResult} --file2 {Global.YourExeResult} {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
+        private string ConstructTxtCompareCmd() => $"{AbsoluteTxtComparePath} --file1 {Global.DemoExeResult} --file2 {Global.YourExeResult} {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
 
         private void ForceToEditLogAndBat()
         {
@@ -257,11 +257,11 @@ namespace gaocheng_debug
             LockProjectGaocheng();
             
             string content = $"cd /d \"{absoluteDirPath}\"{Global.NewLine}";
-            content += $"..\\..\\{Global.ResourceDirectory}\\{Global.GetInputData} {Global.TestData} [1] | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}{Global.NewLine}";
-            content += $"..\\..\\{Global.ResourceDirectory}\\{Global.GetInputData} {Global.TestData} [1] | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}{Global.NewLine}";
+            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}{Global.NewLine}";
+            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}{Global.NewLine}";
             content += $"for /l %%v in (2, 1, {dataGroupNum}) do ({Global.NewLine}";
-            content += $"..\\..\\{Global.ResourceDirectory}\\{Global.GetInputData} {Global.TestData} [%%v] | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult}{Global.NewLine}";
-            content += $"..\\..\\{Global.ResourceDirectory}\\{Global.GetInputData} {Global.TestData} [%%v] | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}{Global.NewLine}){Global.NewLine}";
+            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [%%v] | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult}{Global.NewLine}";
+            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [%%v] | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}{Global.NewLine}){Global.NewLine}";
             content += $"{ConstructTxtCompareCmd()} 1>{Global.CompareResult} 2>&1";
             File.WriteAllText(absoluteDirPath + Global.TestBatFileName, content, Global.GB18030);
             File.SetLastWriteTime(absoluteDirPath + Global.TestBatFileName, timeChecker);
@@ -296,8 +296,7 @@ namespace gaocheng_debug
             CMD.Start();
             if (chkIsCMDPause.Checked)
             {
-                CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"");
-                CMD.StandardInput.WriteLine("cls");
+                CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"&cls");
                 CMD.StandardInput.WriteLine(ConstructTxtCompareCmd());
             }
             else

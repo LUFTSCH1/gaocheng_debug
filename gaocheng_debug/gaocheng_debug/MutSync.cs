@@ -28,7 +28,6 @@ namespace gaocheng_debug
         // 私有常量
         private const int MD5HashStringLength = 32;
         private const string HashConvertFormatStr = "x2";
-        private const string HashSalt = "这是个秘密";
 
         // 私有静态只读成员-顺序调用，不得冲突
         private static readonly MD5 MD5 = MD5.Create();
@@ -53,26 +52,51 @@ namespace gaocheng_debug
         // 公有静态方法
         public static void OpenFolder(in string fileFullName) => ShellExecute(IntPtr.Zero, "open", fileFullName);
 
-        public static void HandleRunningInstance(in string processName)
+        public static void HandleRunningInstance()
         {
             Process crproc = Process.GetCurrentProcess();
-            Process[] Processes = Process.GetProcessesByName(processName);
-            foreach (Process proc in Processes)
+            int cr_id = crproc.Id;
+            string cr_file_name = crproc.MainModule.FileName;
+            Process[] processes = Process.GetProcessesByName(crproc.ProcessName);
+
+            foreach (Process proc in processes)
             {
-                if (proc.Id != crproc.Id && Assembly.GetExecutingAssembly().Location.Replace("/", "\\") == crproc.MainModule.FileName)
+                if (proc.Id != cr_id && Assembly.GetExecutingAssembly().Location.Replace('/', '\\') == cr_file_name)
                 {
-                    crproc = proc;
-                    break;
+                    ShowWindowAsync(proc.MainWindowHandle, 1);
+                    SetForegroundWindow(proc.MainWindowHandle);
+                    Environment.Exit((int)ErrorCode.ApplicationAlreadyRunning);
                 }
             }
-
-            ShowWindowAsync(crproc.MainWindowHandle, 1);
-            SetForegroundWindow(crproc.MainWindowHandle);
         }
 
         public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
         public static FileStream NewReadOnlyFileHandle(in string fileName) => new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+
+        // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
+        public static string MD5Hash(in string fileName)
+        {
+            try
+            {
+                FileStream file = NewReadOnlyFileHandle(fileName);
+                byte[] hash_bytes = MD5.ComputeHash(file);
+                file.Close();
+                MD5.Initialize();
+
+                MD5StringBuilder.Length = 0;
+                for (int i = 0, len = hash_bytes.Length; i < len; ++i)
+                {
+                    MD5StringBuilder.Append(hash_bytes[i].ToString(HashConvertFormatStr));
+                }
+
+                return MD5StringBuilder.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取文件哈希失败" + ex.Message);
+            }
+        }
 
         // 此方法会创建更多对象，但更加安全，提供给异步/并行方法使用
         public static string GetMD5HashFromFile(in string fileName)
@@ -100,29 +124,7 @@ namespace gaocheng_debug
             }
         }
 
-        public static string PartHashWithSalt(in string fileName)
-        {
-            try
-            {
-                byte[] temp = Encoding.UTF8.GetBytes(HashSalt + MD5Hash(fileName));
-                byte[] hash_bytes = MD5.ComputeHash(temp);
-                MD5.Initialize();
-
-                MD5StringBuilder.Length = 0;
-                for (int i = 0; i < 8; ++i)
-                {
-                    MD5StringBuilder.Append(hash_bytes[i].ToString(HashConvertFormatStr));
-                }
-
-                return MD5StringBuilder.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("获取文件哈希失败" + ex.Message);
-            }
-        }
-
-        public static List<FileStream> LockFilesThenDisposeFileList()
+        public static List<FileStream> LockFilesAndDisposeFileList()
         {
             List<FileStream> locks = new List<FileStream>();
             for (int i = 0, len = FileList.Length; i < len; ++i)
@@ -171,22 +173,5 @@ namespace gaocheng_debug
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        // 私有静态方法-此方法及调用此方法的其它方法都不得被异步/并行方法调用
-        private static string MD5Hash(in string fileName)
-        {
-            FileStream file = NewReadOnlyFileHandle(fileName);
-            byte[] hash_bytes = MD5.ComputeHash(file);
-            file.Close();
-            MD5.Initialize();
-
-            MD5StringBuilder.Length = 0;
-            for (int i = 0, len = hash_bytes.Length; i < len; ++i)
-            {
-                MD5StringBuilder.Append(hash_bytes[i].ToString(HashConvertFormatStr));
-            }
-
-            return MD5StringBuilder.ToString();
-        }
     }
 }

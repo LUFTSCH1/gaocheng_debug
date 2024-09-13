@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -9,8 +10,9 @@ namespace gaocheng_debug
     {
         // 私有常量
         private const int MaxDataGroupNum = 256;
-        public const char DataIDFlag = '[';
-        public const char LineEndFlag = '\n';
+
+        private const char DataIDFlag  = '[';
+        private const char LineEndFlag = '\n';
 
         // 私有静态只读成员
         private static readonly string DataGroupTruncationWarning = $"数据组数大于{MaxDataGroupNum}，将舍弃第{MaxDataGroupNum + 1}组及之后的数据";
@@ -60,44 +62,26 @@ namespace gaocheng_debug
         private void BtnGenerateOrModifyThenTestClick(object sender, EventArgs e)
         {
             string data_content = txtTestData.Text;
-            int cnt = 0, len = data_content.Length;
 
-            if (data_content == string.Empty)
+            if (!data_content.Contains(DataIDFlag))
             {
-                data_content = DataIDFlag + Global.NewLine;
-                len = data_content.Length;
+                data_content = DataIDFlag + Global.NewLine + data_content;
             }
-            else
-            {
-                for (int i = 0; i < len; ++i)
-                {
-                    if (data_content[i] == DataIDFlag && ++cnt > MaxDataGroupNum)
-                    {
-                        MutSync.ShowMessageToWarn(DataGroupTruncationWarning);
-                        break;
-                    }
-                }
-                
-                if (cnt < 1)
-                {
-                    data_content = DataIDFlag + Global.NewLine + data_content;
-                    len = data_content.Length;
-                }
-            }
-
+            int len = data_content.Length;
             if (data_content[len - 1] != LineEndFlag)
             {
                 data_content += Global.NewLine;
                 len = data_content.Length;
             }
 
-            cnt = 0;
+            int cnt = 0;
             for (int i = 0; i < len && cnt < MaxDataGroupNum; )
             {
                 while (i < len && data_content[i] == DataIDFlag)
                 {
                     if (cnt >= MaxDataGroupNum)
                     {
+                        MutSync.ShowMessageToWarn(DataGroupTruncationWarning);
                         break;
                     }
                     TestDataBuilder.Append($"[{++cnt}]{Global.NewLine}");
@@ -118,7 +102,6 @@ namespace gaocheng_debug
 
             Master.DataGroupNum = cnt;
             Master.ConstructAndTest();
-
             Master.ChangeComponentEnabled();
             Master.BtnNewProjectEnabled = true;
         }
