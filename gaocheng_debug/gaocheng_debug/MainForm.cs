@@ -31,10 +31,6 @@ namespace gaocheng_debug
 
         private static readonly ProcessStartInfo ReadMeHtmlStartInfo = new ProcessStartInfo { FileName = Global.ReadMeHtmlRelativePath, UseShellExecute = true };
 
-        private static readonly string AbsoluteProjectDirectoryPath = $"{Directory.GetCurrentDirectory()}\\{Global.ProjectDirectory}\\";
-        private static readonly string AbsoluteGetInputDataPath     = $"{Directory.GetCurrentDirectory()}\\{Global.ResourceDirectory}\\{Global.GetInputData}";
-        private static readonly string AbsoluteTxtComparePath       = $"{Directory.GetCurrentDirectory()}\\{Global.ResourceDirectory}\\{Global.TxtCompare}";
-
         private static readonly string NewOrEditTestDataFormOpenTipStr = $"创建/修改测试数据 窗口已打开{Global.NewLine}{Global.NewLine}你仍可以计算文件MD5、查看使用说明、修改--trim和--display参数{Global.NewLine}但如果想进行其它操作，请继续完成 创建/修改测试数据 操作或将 创建/修改测试数据 窗体关闭";
         private static readonly string ResultTxtNotExistExceptionStr   = $"{Global.CompareResult}文件不存在{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.CompareResult}被删除{Global.NewLine}上次测试时遇到异常，导致{Global.CompareResult}未能生成，但用户忽略了该情况{Global.NewLine}{Global.NewLine}本异常不影响您继续使用该项目继续测试";
         private static readonly string ProjectGaochengExceptionStr     = $"{Global.ProjectGaocheng}文件不存在、不合法或被篡改{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.ProjectGaocheng}被删除{Global.NewLine}您在{Global.ProjectDirectory}中手动创建了该文件夹{Global.NewLine}您将1.6.0版本之前的项目放进了{Global.ProjectDirectory}{Global.NewLine}{Global.ProjectGaocheng}被篡改{Global.NewLine}{Global.NewLine}解决方法：{Global.NewLine}尝试在回收站中寻找本项目的{Global.ProjectGaocheng}文件并恢复{Global.NewLine}删除本项目";
@@ -43,6 +39,11 @@ namespace gaocheng_debug
         private static readonly string[] NewProjectStrSet = { " Ciallo～(∠・ω< )⌒★", " ( ｀･ω･´)ゞ", $"{Global.NewLine}| ᐕ)⁾⁾", " ٩( ╹▿╹ )۶", " ミ(ﾉ-∀-)ﾉ", " (δωδ)」", " (灬╹ω╹灬)" };
 
         // 私有只读成员，在构造函数中初始化
+        private readonly string AbsoluteProjectDirectoryPath;
+
+        private readonly string AbsoluteGetInputDataPath;
+        private readonly string AbsoluteTxtComparePath;
+
         private readonly Process CMD;
 
         private readonly SettingForm OwnSettingForm;
@@ -99,6 +100,13 @@ namespace gaocheng_debug
         // 构造函数
         public MainForm()
         {
+            {
+                string app_path = Directory.GetCurrentDirectory();
+                AbsoluteProjectDirectoryPath = $"{app_path}\\{Global.ProjectDirectory}\\";
+                AbsoluteGetInputDataPath = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.GetInputData}\"";
+                AbsoluteTxtComparePath   = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}\"";
+            }
+
             CMD = new Process();
             CMD.StartInfo.FileName = "cmd.exe";
             CMD.StartInfo.UseShellExecute = false;
