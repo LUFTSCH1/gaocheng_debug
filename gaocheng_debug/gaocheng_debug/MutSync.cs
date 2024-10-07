@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Drawing;
 using System.Reflection;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -27,10 +28,16 @@ namespace gaocheng_debug
 
         // 私有常量
         private const int MD5HashStringLength = 32;
+
+        private const double MaxHidePart = 0.6;
+
         private const string HashConvertFormatStr = "x2";
+
+        private const string HashSalt = "这是个秘密";
 
         // 私有静态只读成员-顺序调用，不得冲突
         private static readonly MD5 MD5 = MD5.Create();
+        
         private static readonly StringBuilder MD5StringBuilder = new StringBuilder(MD5HashStringLength);
 
         // 私有成员-检查完整性与加文件锁后释放，故不加readonly
@@ -74,6 +81,30 @@ namespace gaocheng_debug
 
         public static FileStream NewReadOnlyFileHandle(in string fileName) => new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
 
+        public static void BringToFrontAndFocus(in Form form)
+        {
+            Rectangle working_area = Screen.FromControl(form).WorkingArea;
+            if (form.Left   + MaxHidePart * form.Width  < working_area.Left  ||
+                form.Right  - MaxHidePart * form.Width  > working_area.Right ||
+                form.Top    + MaxHidePart * form.Height < working_area.Top   ||
+                form.Bottom - MaxHidePart * form.Height > working_area.Bottom)
+            {
+                form.Location = new Point(working_area.Width - form.Width >> 1, working_area.Height - form.Height >> 1);
+            }
+
+            if (!form.Visible)
+            {
+                form.Show();
+            }
+
+            if (form.WindowState == FormWindowState.Minimized)
+            {
+                form.WindowState = FormWindowState.Normal;
+            }
+            form.BringToFront();
+            form.Focus();
+        }
+
         // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
         public static string MD5Hash(in string fileName)
         {
@@ -82,6 +113,28 @@ namespace gaocheng_debug
                 FileStream file = NewReadOnlyFileHandle(fileName);
                 byte[] hash_bytes = MD5.ComputeHash(file);
                 file.Close();
+                MD5.Initialize();
+
+                MD5StringBuilder.Length = 0;
+                for (int i = 0, len = hash_bytes.Length; i < len; ++i)
+                {
+                    MD5StringBuilder.Append(hash_bytes[i].ToString(HashConvertFormatStr));
+                }
+
+                return MD5StringBuilder.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取文件哈希失败" + ex.Message);
+            }
+        }
+
+        // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
+        public static string MD5HashWithSalt(in string str)
+        {
+            try
+            {
+                byte[] hash_bytes = MD5.ComputeHash(Encoding.UTF8.GetBytes(string.Concat(HashSalt, str)));
                 MD5.Initialize();
 
                 MD5StringBuilder.Length = 0;

@@ -7,49 +7,26 @@ namespace gaocheng_debug
 {
     public partial class MainForm : Form
     {
-        public void ChangeComponentEnabled()
+        public void DoWhileEditCanceled()
         {
-            tsmiSettings.Enabled = !tsmiSettings.Enabled;
-            cboProjectSelector.Enabled = !cboProjectSelector.Enabled;
-            // 由于timer延迟修改，btnNewProject.Enabled不确定，须手动更改为一个确定值
-            btnDeleteProject.Enabled = !btnDeleteProject.Enabled;
-            btnOpenProjectDirectory.Enabled = !btnOpenProjectDirectory.Enabled;
-            btnBrowseDemoExe.Enabled = !btnBrowseDemoExe.Enabled;
-            btnBrowseYourExe.Enabled = !btnBrowseYourExe.Enabled;
-            // 无需改动 btnNewOrEditTestData.Enabled，已经做好判断
-            btnRetest.Enabled = !btnRetest.Enabled;
+            rtxResultViewer.Text = tempContainerForResultViewer;
+            EnableComponentAfterEdit();
+            MutSync.BringToFrontAndFocus(this);
         }
 
-        public void ConstructAndTest()
+        public void DoWhileEdited(in int groupNum)
         {
-            dataHash = MutSync.MD5Hash(absoluteDirPath + Global.TestDataFileName);
-            ForceToEditLogAndBat();
+            dataGroupNum = groupNum;
+            dataHash = MutSync.MD5Hash(absoluteTestDataPath);
+            EditProjectGaocheng();
             GenerateAndCompare();
-        }
-        
-        public void RecoverResultViewerText() => rtxResultViewer.Text = tempContainerForResultViewer;
-
-        public void FocusBackToMain()
-        {
-            if (Visible)
-            {
-                if (WindowState == FormWindowState.Minimized)
-                {
-                    WindowState = FormWindowState.Normal;
-                }
-                BringToFront();
-                Focus();
-            }
-            else
-            {
-                Show();
-            }
+            EnableComponentAfterEdit();
         }
 
         // 私有工具函数
         private bool CheckOperation(in string msg, in MessageBoxIcon icon) => MessageBox.Show(msg, "操作确认", MessageBoxButtons.YesNo, icon, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
 
-        private void LockProjectGaocheng() => projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteDirPath + Global.ProjectGaochengFileName);
+        private void LockProjectGaocheng() => projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
 
         private void DisposeProjectGaochengLock()
         {
@@ -58,6 +35,30 @@ namespace gaocheng_debug
                 projectGaochengLock.Close();
                 projectGaochengLock = null;
             }
+        }
+
+        private void DisableComponentWhileEditing()
+        {
+            btnNewProject.Enabled = false;
+            tsmiSettings.Enabled = false;
+            cboProjectSelector.Enabled = false;
+            btnDeleteProject.Enabled = false;
+            btnOpenProjectDirectory.Enabled = false;
+            btnBrowseDemoExe.Enabled = false;
+            btnBrowseYourExe.Enabled = false;
+            btnRetest.Enabled = false;
+        }
+
+        private void EnableComponentAfterEdit()
+        {
+            tsmiSettings.Enabled = true;
+            cboProjectSelector.Enabled = true;
+            btnDeleteProject.Enabled = true;
+            btnOpenProjectDirectory.Enabled = true;
+            btnBrowseDemoExe.Enabled = true;
+            btnBrowseYourExe.Enabled = true;
+            btnRetest.Enabled = true;
+            btnNewProject.Enabled = true;
         }
 
         private void DisableComponent()
@@ -75,7 +76,7 @@ namespace gaocheng_debug
             cboDisplaySelector.SelectedIndex = 0;
             cboTrimSelector.Enabled = false;
             cboDisplaySelector.Enabled = false;
-            chkIsCMDPause.Enabled = false;
+            chkIsInterfaceProgramPause.Enabled = false;
         }
 
         private void EnableComponent()
@@ -88,12 +89,13 @@ namespace gaocheng_debug
             btnDeleteProject.Enabled = true;
             cboTrimSelector.Enabled = true;
             cboDisplaySelector.Enabled = true;
-            chkIsCMDPause.Enabled = true;
+            chkIsInterfaceProgramPause.Enabled = true;
         }
 
         private void RefreshProjectList()
         {
             DateTime now = DateTime.Now;
+            DateTime prj_time;
 
             cboProjectSelector.Items.Clear();
             cboProjectSelector.Items.Add(BlankItemStr);
@@ -103,7 +105,7 @@ namespace gaocheng_debug
             for (string temp; i < arr_len; ++i)
             {
                 temp = Path.GetFileName(directories[i]);
-                if (TryToConvertDateTime(temp, ProjectNameFormatStr) && now >= timeChecker)
+                if (DateTime.TryParseExact(temp, ProjectNameFormatStr, InvariantCulture, DateTimeStyles.None, out prj_time) && now >= prj_time)
                 {
                     directories[len++] = temp;
                 }
@@ -166,33 +168,31 @@ namespace gaocheng_debug
 
         private void PrintResultInfo(in string resultFile) => rtxResultViewer.Text = $"{Global.CompareResult}文件创建/修改时间：{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}{File.ReadAllText(resultFile, Global.GB18030)}";
 
-        // 注意：本函数会修改timeChecker
-        private bool TryToConvertDateTime(in string timeString, in string timeFormat) => DateTime.TryParseExact(timeString, timeFormat, InvariantCulture, DateTimeStyles.None, out timeChecker);
-
         private void TryToGetProjectGaochengInfo()
         {
-            if (File.Exists(absoluteDirPath + Global.ProjectGaochengFileName))
+            absoluteProjectGaochengPath = $"{absoluteDirPath}\\{Global.ProjectGaocheng}";
+            if (File.Exists(absoluteProjectGaochengPath))
             {
-                string[] project_info = File.ReadAllLines(absoluteDirPath + Global.ProjectGaochengFileName);
-                if (project_info.Length == ProjectGaochengLines && TryToConvertDateTime(project_info[0], ProjectCheckTimeFormatStr) && timeChecker == File.GetLastWriteTime(absoluteDirPath + Global.ProjectGaochengFileName))
+                string[] project_info = File.ReadAllLines(absoluteProjectGaochengPath);
+                if (project_info.Length == Global.ProjectGaochengLines)
                 {
-                    // 锁
                     LockProjectGaocheng();
 
-                    dataGroupNum = Convert.ToInt32(project_info[6]);
-                    cboTrimSelector.SelectedIndex = trimMode = Convert.ToInt32(project_info[7]);
-                    cboDisplaySelector.SelectedIndex = displayMode = Convert.ToInt32(project_info[8]);
+                    absoluteTestDataPath      = $"{absoluteDirPath}\\{Global.TestData}";
+                    absoluteCompareResultPath = $"{absoluteDirPath}\\{Global.CompareResult}";
 
-                    if (project_info[1] == ProjectGeneratedFlagStr)
+                    if (project_info[0] == MutSync.MD5HashWithSalt($"{project_info[1]}\n{project_info[2]}\n{project_info[3]}\n{project_info[4]}\n{project_info[5]}\n{project_info[6]}"))
                     {
-                        txtDemoExePath.Text = projectDemoExePath = project_info[2];
-                        txtYourExePath.Text = projectYourExePath = project_info[3];
-                        projectLatestTestPath = project_info[4];
-                        dataHash = project_info[5];
+                        txtDemoExePath.Text = projectDemoExePath = project_info[1];
+                        txtYourExePath.Text = projectYourExePath = project_info[2];
+                        dataHash                                 = project_info[3];
+                        dataGroupNum                                   = Convert.ToInt32(project_info[4]);
+                        cboTrimSelector.SelectedIndex = trimMode       = Convert.ToInt32(project_info[5]);
+                        cboDisplaySelector.SelectedIndex = displayMode = Convert.ToInt32(project_info[6]);
 
-                        if (File.Exists(absoluteDirPath + Global.CompareResultFileName))
+                        if (File.Exists(absoluteCompareResultPath))
                         {
-                            PrintResultInfo(absoluteDirPath + Global.CompareResultFileName);
+                            PrintResultInfo(absoluteCompareResultPath);
                         }
                         else
                         {
@@ -201,6 +201,10 @@ namespace gaocheng_debug
                     }
                     else
                     {
+                        dataGroupNum                                   = 0;
+                        cboTrimSelector.SelectedIndex = trimMode       = 0;
+                        cboDisplaySelector.SelectedIndex = displayMode = 0;
+
                         rtxResultViewer.Text = NewProjectStrSet[RND.Next(0, NewProjectStrSet.Length)];
                         txtDemoExePath.Text = DemoExePathTxtDefaultStr;
                         txtYourExePath.Text = YourExePathTxtDefaultStr;
@@ -222,56 +226,60 @@ namespace gaocheng_debug
             btnOpenProjectDirectory.Enabled = true;
         }
 
-        private string ConstructTxtCompareCmd() => $"{AbsoluteTxtComparePath} --file1 {Global.DemoExeResult} --file2 {Global.YourExeResult} {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
-
-        private void ForceToEditLogAndBat()
+        private void OpenCmdAndTest()
         {
-            if (isModeChanged)
-            {
-                trimMode = cboTrimSelector.SelectedIndex;
-                displayMode = cboDisplaySelector.SelectedIndex;
-                isModeChanged = false;
-            }
-            if (isPathChanged)
-            {
-                if (projectDemoExePath != txtDemoExePath.Text)
-                {
-                    projectDemoExePath = txtDemoExePath.Text;
-                }
-                if (projectYourExePath != txtYourExePath.Text)
-                {
-                    projectYourExePath = txtYourExePath.Text;
-                }
-                isPathChanged = false;
-            }
-            if (projectLatestTestPath != absoluteDirPath)
-            {
-                projectLatestTestPath = absoluteDirPath;
-            }
+            string compare_cmd = $"{AbsoluteTxtComparePath} --file1 {Global.DemoExeResult} --file2 {Global.YourExeResult} {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
 
-            timeChecker = DateTime.Now;
+            InterfaceProgram.Start();
 
-            DisposeProjectGaochengLock();
-            File.WriteAllText(absoluteDirPath + Global.ProjectGaochengFileName, $"{timeChecker.ToString(ProjectCheckTimeFormatStr)}\n{ProjectGeneratedFlagStr}\n{projectDemoExePath}\n{projectYourExePath}\n{absoluteDirPath}\n{dataHash}\n{dataGroupNum}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}");
-            File.SetLastWriteTime(absoluteDirPath + Global.ProjectGaochengFileName, timeChecker);
-            LockProjectGaocheng();
-            
-            string content = $"cd /d \"{absoluteDirPath}\"{Global.NewLine}";
-            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}{Global.NewLine}";
-            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}{Global.NewLine}";
-            content += $"for /l %%v in (2, 1, {dataGroupNum}) do ({Global.NewLine}";
-            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [%%v] | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult}{Global.NewLine}";
-            content += $"{AbsoluteGetInputDataPath} {Global.TestData} [%%v] | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}{Global.NewLine}){Global.NewLine}";
-            content += $"{ConstructTxtCompareCmd()} 1>{Global.CompareResult} 2>&1";
-            File.WriteAllText(absoluteDirPath + Global.TestBatFileName, content, Global.GB18030);
-            File.SetLastWriteTime(absoluteDirPath + Global.TestBatFileName, timeChecker);
+            InterfaceProgram.StandardInput.WriteLine(
+                  $"cd /d \"{absoluteDirPath}\"\n"
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}\n"
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}\n"
+                + $"for /l %v in (2, 1, {dataGroupNum}) do "
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} [%v] | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult} & "
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} [%v] | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}\n"
+                + $"{compare_cmd} 1>{Global.CompareResult} 2>>&1"
+            );
+            if (chkIsInterfaceProgramPause.Checked)
+            {
+                InterfaceProgram.StandardInput.WriteLine("cls");
+                InterfaceProgram.StandardInput.WriteLine(compare_cmd);
+            }
+            else
+            {
+                InterfaceProgram.StandardInput.WriteLine("exit");
+            }
+            InterfaceProgram.WaitForExit();
+
+            InterfaceProgram.Close();
         }
 
-        private void EditLogAndBatWhileModeOrPathChanged()
+        private void EditProjectGaocheng()
         {
-            if (isModeChanged || isPathChanged || projectLatestTestPath != absoluteDirPath)
+            trimMode    = cboTrimSelector.SelectedIndex;
+            displayMode = cboDisplaySelector.SelectedIndex;
+            projectDemoExePath = txtDemoExePath.Text;
+            projectYourExePath = txtYourExePath.Text;
+            isModeChanged = false;
+            isPathChanged = false;
+            string prj_info = $"{projectDemoExePath}\n{projectYourExePath}\n{dataHash}\n{dataGroupNum}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}";
+            DisposeProjectGaochengLock();
+            File.WriteAllText(absoluteProjectGaochengPath, $"{MutSync.MD5HashWithSalt(prj_info)}\n{prj_info}");
+            LockProjectGaocheng();
+        }
+
+        private void EditProjectGaochengWhileNecessary()
+        {
+            if (isModeChanged || isPathChanged)
             {
-                ForceToEditLogAndBat();
+                trimMode    = cboTrimSelector.SelectedIndex;
+                displayMode = cboDisplaySelector.SelectedIndex;
+                projectDemoExePath = txtDemoExePath.Text;
+                projectYourExePath = txtYourExePath.Text;
+                isModeChanged = false;
+                isPathChanged = false;
+                EditProjectGaocheng();
             }
         }
 
@@ -286,39 +294,26 @@ namespace gaocheng_debug
             }
             Hide();
 
-            string compare_result_path = absoluteDirPath + Global.CompareResultFileName;
-
-            if (File.Exists(compare_result_path))
+            if (File.Exists(absoluteCompareResultPath))
             {
-                File.Delete(compare_result_path);
+                File.Delete(absoluteCompareResultPath);
             }
 
-            CMD.Start();
-            if (chkIsCMDPause.Checked)
-            {
-                CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"&cls");
-                CMD.StandardInput.WriteLine(ConstructTxtCompareCmd());
-            }
-            else
-            {
-                CMD.StandardInput.WriteLine($"\"{absoluteDirPath}{Global.TestBatFileName}\"&exit");
-            }
-            CMD.WaitForExit();
-            CMD.Close();
+            OpenCmdAndTest();
             
             demo_exe_lock.Close();
             your_exe_lock.Close();
 
-            if (File.Exists(compare_result_path))
+            if (File.Exists(absoluteCompareResultPath))
             {
-                PrintResultInfo(compare_result_path);
+                PrintResultInfo(absoluteCompareResultPath);
             }
             else
             {
-                rtxResultViewer.Text = TestProcessExceptionStr + DateTime.Now.ToString(Global.OperationTimeFormatStr);
+                rtxResultViewer.Text = $"{TestProcessExceptionStr}{DateTime.Now.ToString(Global.OperationTimeFormatStr)}";
             }
 
-            FocusBackToMain();
+            MutSync.BringToFrontAndFocus(this);
         }
     }
 }

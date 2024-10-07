@@ -5,34 +5,37 @@ namespace gaocheng_debug
 {
     internal enum ErrorCode
     {
-        ApplicationAlreadyRunning = 1,
-        NecessaryFileNotFound     = 2,
-        NecessaryFileReplaced     = 3
+        NoError,
+        ApplicationAlreadyRunning,
+        NecessaryFileNotFound,
+        NecessaryFileReplaced
     }
 
     internal static class Global
     {
         // 静态常量
+        public const int DefaultSettingsLines = 2;
+        public const int ProjectGaochengLines = 7;
+
         public const string DefaultDirectory = @"C:\";
         
         public const string OperationTimeFormatStr = "yyyy/MM/dd HH:mm:ss.ffff";
 
         // 自建文件
-        public const string ReadMeHtml               = "README.html";
-        public const string InitialDirectoriesConfig = "initial_directories.config";
-        public const string ProjectDirectoryLock     = "protector.lock";
+        public const string ReadMeHtml           = "README.html";
+        public const string DefaultSettings      = "default.settings";
+        public const string ProjectDirectoryLock = "protector.lock";
 
         // 资源和项目目录名
         public const string ResourceDirectory = "rsc";
         public const string ProjectDirectory  = "test_log";
 
         // 项目文件
-        public const string ProjectGaocheng = "__project.gaocheng";
-        public const string TestData        = "__test_data.txt";
-        public const string CompareResult   = "_compare_result.txt";
-        public const string DemoExeResult   = "_demo_exe_result.txt";
-        public const string YourExeResult   = "_your_exe_result.txt";
-        public const string TestBat         = "test.bat";
+        public const string ProjectGaocheng = "_project.gaocheng";
+        public const string TestData        = "_test_data.txt";
+        public const string CompareResult   = "compare_result.txt";
+        public const string DemoExeResult   = "demo_exe_result.txt";
+        public const string YourExeResult   = "your_exe_result.txt";
 
         // 渣哥的小工具
         public const string GetInputData = "get_input_data.exe";
@@ -43,14 +46,9 @@ namespace gaocheng_debug
 
         public static readonly string ProjectDirectoryRelativePath = $".\\{ProjectDirectory}";
 
-        public static readonly string ReadMeHtmlRelativePath               = $".\\{ReadMeHtml}";
-        public static readonly string InitialDirectoriesConfigRelativePath = $".\\{ResourceDirectory}\\{InitialDirectoriesConfig}";
-        public static readonly string ProjectDirectoryLockRelativePath     = $".\\{ProjectDirectory}\\{ProjectDirectoryLock}";
-
-        public static readonly string ProjectGaochengFileName = $"\\{ProjectGaocheng}";
-        public static readonly string TestDataFileName        = $"\\{TestData}";
-        public static readonly string CompareResultFileName   = $"\\{CompareResult}";
-        public static readonly string TestBatFileName         = $"\\{TestBat}";
+        public static readonly string ReadMeHtmlRelativePath           = $".\\{ReadMeHtml}";
+        public static readonly string DefaultSettingsRelativePath      = $".\\{ResourceDirectory}\\{DefaultSettings}";
+        public static readonly string ProjectDirectoryLockRelativePath = $".\\{ProjectDirectory}\\{ProjectDirectoryLock}";
 
         public static readonly Encoding GB18030 = GetEncodingGB18030();
 

@@ -41,7 +41,7 @@ namespace gaocheng_debug
 
         private void BtnSaveClick(object sender, EventArgs e)
         {
-            File.WriteAllText(Global.InitialDirectoriesConfigRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}");
+            File.WriteAllText(Global.DefaultSettingsRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}");
 
             Master.DefaultDemoExeDirectory = txtDemoExeDefaultDirectory.Text;
             Master.DefaultYourExeDirectory = txtYourExeDefaultDirectory.Text;

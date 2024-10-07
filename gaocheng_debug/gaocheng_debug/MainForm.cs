@@ -10,14 +10,9 @@ namespace gaocheng_debug
     public partial class MainForm : Form
     {
         // 私有常量
-        private const int InitialDirectoriesConfigLines = 2;
-        private const int ProjectGaochengLines          = 9;
+        private const string ProjectNameFormatStr = "yyyy-MM-dd-HH-mm-ss";
 
-        private const string ProjectNameFormatStr      = "yyyy-MM-dd-HH-mm-ss";
-        private const string ProjectCheckTimeFormatStr = "yyyy_MM_dd_HH_mm_ss_fffffff";
-
-        private const string BlankItemStr            = "blank";
-        private const string ProjectGeneratedFlagStr = "tested";
+        private const string BlankItemStr = "blank";
 
         private const string DemoExePathTxtDefaultStr = "Demo Exe File Path";
         private const string YourExePathTxtDefaultStr = "Your Exe File Path";
@@ -33,7 +28,7 @@ namespace gaocheng_debug
 
         private static readonly string NewOrEditTestDataFormOpenTipStr = $"创建/修改测试数据 窗口已打开{Global.NewLine}{Global.NewLine}你仍可以计算文件MD5、查看使用说明、修改--trim和--display参数{Global.NewLine}但如果想进行其它操作，请继续完成 创建/修改测试数据 操作或将 创建/修改测试数据 窗体关闭";
         private static readonly string ResultTxtNotExistExceptionStr   = $"{Global.CompareResult}文件不存在{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.CompareResult}被删除{Global.NewLine}上次测试时遇到异常，导致{Global.CompareResult}未能生成，但用户忽略了该情况{Global.NewLine}{Global.NewLine}本异常不影响您继续使用该项目继续测试";
-        private static readonly string ProjectGaochengExceptionStr     = $"{Global.ProjectGaocheng}文件不存在、不合法或被篡改{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.ProjectGaocheng}被删除{Global.NewLine}您在{Global.ProjectDirectory}中手动创建了该文件夹{Global.NewLine}您将1.6.0版本之前的项目放进了{Global.ProjectDirectory}{Global.NewLine}{Global.ProjectGaocheng}被篡改{Global.NewLine}{Global.NewLine}解决方法：{Global.NewLine}尝试在回收站中寻找本项目的{Global.ProjectGaocheng}文件并恢复{Global.NewLine}删除本项目";
+        private static readonly string ProjectGaochengExceptionStr     = $"{Global.ProjectGaocheng}文件不存在、不合法或被篡改{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.ProjectGaocheng}被删除{Global.NewLine}您在{Global.ProjectDirectory}中手动创建了该文件夹{Global.NewLine}您将1.7.0版本之前的项目放进了{Global.ProjectDirectory}{Global.NewLine}{Global.ProjectGaocheng}被篡改{Global.NewLine}{Global.NewLine}解决方法：{Global.NewLine}尝试在回收站中寻找本项目的{Global.ProjectGaocheng}文件并恢复{Global.NewLine}删除本项目";
         private static readonly string TestProcessExceptionStr         = $"cmd运行过程发生错误或被用户中断，生成{Global.CompareResult}失败{Global.NewLine}{Global.NewLine}建议检查源程序逻辑问题 以及 每组测试数据是否合法{Global.NewLine}{Global.NewLine}Tips: 你或许可以从cmd窗口中最后尝试执行命令中的测试数据序号入手{Global.NewLine}{Global.NewLine}最后尝试结束时间：";
 
         private static readonly string[] NewProjectStrSet = { " Ciallo～(∠・ω< )⌒★", " ( ｀･ω･´)ゞ", $"{Global.NewLine}| ᐕ)⁾⁾", " ٩( ╹▿╹ )۶", " ミ(ﾉ-∀-)ﾉ", " (δωδ)」", " (灬╹ω╹灬)" };
@@ -44,7 +39,7 @@ namespace gaocheng_debug
         private readonly string AbsoluteGetInputDataPath;
         private readonly string AbsoluteTxtComparePath;
 
-        private readonly Process CMD;
+        private readonly Process InterfaceProgram;
 
         private readonly SettingForm OwnSettingForm;
         private readonly NewOrEditTestDataForm OwnNewOrEditTestDataForm;
@@ -57,15 +52,16 @@ namespace gaocheng_debug
 
         private int trimMode, displayMode;
 
-        private DateTime timeChecker;
-
         private string dataHash;
 
         private string defaultDemoExeDirectory, defaultYourExeDirectory;
 
         private string absoluteDirPath, projectDirName;
         private string projectDemoExePath, projectYourExePath;
-        private string projectLatestTestPath;
+
+        private string absoluteProjectGaochengPath;
+        private string absoluteTestDataPath;
+        private string absoluteCompareResultPath;
 
         private string tempContainerForResultViewer;
 
@@ -82,19 +78,9 @@ namespace gaocheng_debug
             set { defaultYourExeDirectory = value; }
         }
 
-        public int DataGroupNum
+        public string AbsoluteTestDataPath
         {
-            set { dataGroupNum = value; }
-        }
-
-        public string AbsoluteDirPath
-        {
-            get { return absoluteDirPath; }
-        }
-
-        public bool BtnNewProjectEnabled
-        {
-            set { btnNewProject.Enabled = value; }
+            get { return absoluteTestDataPath; }
         }
 
         // 构造函数
@@ -103,36 +89,36 @@ namespace gaocheng_debug
             {
                 string app_path = Directory.GetCurrentDirectory();
                 AbsoluteProjectDirectoryPath = $"{app_path}\\{Global.ProjectDirectory}\\";
-                AbsoluteGetInputDataPath = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.GetInputData}\"";
-                AbsoluteTxtComparePath   = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}\"";
+                AbsoluteGetInputDataPath     = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.GetInputData}\"";
+                AbsoluteTxtComparePath       = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}\"";
             }
-
-            CMD = new Process();
-            CMD.StartInfo.FileName = "cmd.exe";
-            CMD.StartInfo.UseShellExecute = false;
-            CMD.StartInfo.RedirectStandardInput = true;
 
             InitializeComponent();
 
             {
-                string[] form1_names = { "校对工具", "oop，启动！", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
-                Text = form1_names[RND.Next(0, form1_names.Length)];
-            }
-
-            {
-                string[] paths = File.ReadAllLines(Global.InitialDirectoriesConfigRelativePath);
-                if (paths.Length == InitialDirectoriesConfigLines)
+                string[] defaults = File.ReadAllLines(Global.DefaultSettingsRelativePath);
+                if (defaults.Length == Global.DefaultSettingsLines)
                 {
-                    defaultDemoExeDirectory = paths[0];
-                    defaultYourExeDirectory = paths[1];
+                    defaultDemoExeDirectory = defaults[0];
+                    defaultYourExeDirectory = defaults[1];
                 }
                 else
                 {
                     defaultDemoExeDirectory = Global.DefaultDirectory;
                     defaultYourExeDirectory = Global.DefaultDirectory;
-                    File.WriteAllText(Global.InitialDirectoriesConfigRelativePath, $"{defaultDemoExeDirectory}\n{defaultYourExeDirectory}");
-                    MutSync.ShowMessageToWarn($"由于{Global.InitialDirectoriesConfig}非法，已重置该项设置");
+                    File.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}");
+                    MutSync.ShowMessageToWarn($"由于{Global.DefaultSettings}非法，已重置设置");
                 }
+            }
+
+            InterfaceProgram = new Process();
+            InterfaceProgram.StartInfo.FileName = "cmd.exe";
+            InterfaceProgram.StartInfo.UseShellExecute = false;
+            InterfaceProgram.StartInfo.RedirectStandardInput = true;
+
+            {
+                string[] form1_names = { "校对工具", "oop，启动！", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
+                Text = form1_names[RND.Next(0, form1_names.Length)];
             }
 
             OwnSettingForm = new SettingForm(this, defaultDemoExeDirectory, defaultYourExeDirectory);
@@ -174,19 +160,7 @@ namespace gaocheng_debug
 
         private void TsmiMD5CalculatorClick(object sender, EventArgs e)
         {
-            if (OwnMD5CalculatorForm.Visible)
-            {
-                if (OwnMD5CalculatorForm.WindowState == FormWindowState.Minimized)
-                {
-                    OwnMD5CalculatorForm.WindowState = FormWindowState.Normal;
-                }
-                OwnMD5CalculatorForm.BringToFront();
-                OwnMD5CalculatorForm.Focus();
-            }
-            else
-            {
-                OwnMD5CalculatorForm.Show();
-            }
+            MutSync.BringToFrontAndFocus(OwnMD5CalculatorForm);
         }
 
         private void TsmiHelpClick(object sender, EventArgs e)
@@ -204,12 +178,10 @@ namespace gaocheng_debug
         // Button事件处理函数
         private void BtnNewProjectClick(object sender, EventArgs e)
         {
-            string new_path = AbsoluteProjectDirectoryPath + DateTime.Now.ToString(ProjectNameFormatStr);
+            string new_path = $"{AbsoluteProjectDirectoryPath}{DateTime.Now.ToString(ProjectNameFormatStr)}";
             Directory.CreateDirectory(new_path);
 
-            timeChecker = DateTime.Now;
-            File.WriteAllText(new_path + Global.ProjectGaochengFileName, $"{timeChecker.ToString(ProjectCheckTimeFormatStr)}\nnew\nnull\nnull\nnull\nnull\n0\n0\n0");
-            File.SetLastWriteTime(new_path + Global.ProjectGaochengFileName, timeChecker);
+            File.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}", $"null\nnull\nnull\nnull\n0\n0\n0");
 
             RefreshProjectList();
             cboProjectSelector.SelectedIndex = 1;
@@ -297,24 +269,15 @@ namespace gaocheng_debug
                 return;
             }
 
-            if (OwnNewOrEditTestDataForm.Visible)
+            if (!OwnNewOrEditTestDataForm.Visible)
             {
-                if (OwnNewOrEditTestDataForm.WindowState == FormWindowState.Minimized)
-                {
-                    OwnNewOrEditTestDataForm.WindowState = FormWindowState.Normal;
-                }
-                OwnNewOrEditTestDataForm.BringToFront();
-                OwnNewOrEditTestDataForm.Focus();
-            }
-            else
-            {
-                btnNewProject.Enabled = false;
-                ChangeComponentEnabled();
+                DisableComponentWhileEditing();
                 tempContainerForResultViewer = rtxResultViewer.Text;
                 rtxResultViewer.Text = NewOrEditTestDataFormOpenTipStr;
                 OwnNewOrEditTestDataForm.LoadTestDataContent();
-                OwnNewOrEditTestDataForm.Show();
             }
+
+            MutSync.BringToFrontAndFocus(OwnNewOrEditTestDataForm);
         }
 
         private void BtnRetestClick(object sender, EventArgs e)
@@ -324,44 +287,17 @@ namespace gaocheng_debug
                 return;
             }
 
-            if (!Directory.Exists(absoluteDirPath))
-            {
-                MutSync.ShowMessageToWarn($"测试项目 {projectDirName} 被删除\n你可以尝试：\n1.从回收站中恢复项目\n使用 创建/修改测试数据 自动重新建立这个项目，但测试数据需要重新构造");
-                return;
-            }
-
-            if (!File.Exists(absoluteDirPath + Global.TestDataFileName))
+            if (!File.Exists(absoluteTestDataPath))
             {
                 MutSync.ShowMessageToWarn("测试数据文件未生成\n请先完成创建/修改测试数据");
             }
-            else if (dataHash != MutSync.MD5Hash(absoluteDirPath + Global.TestDataFileName))
+            else if (dataHash != MutSync.MD5Hash(absoluteTestDataPath))
             {
                 MutSync.ShowMessageToWarn("测试数据文件被更改\n请进入 创建/修改测试数据 读取该文件并再次生成以保证合法");
             }
-            else if (!File.Exists(absoluteDirPath + Global.TestBatFileName))
+            else if (!isPathChanged || CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认", MessageBoxIcon.Information))
             {
-                MutSync.ShowMessageToWarn("测试批处理文件未生成\n请先完成创建/修改测试数据");
-            }
-            else if (isPathChanged)
-            {
-                if (CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认", MessageBoxIcon.Information))
-                {
-                    EditLogAndBatWhileModeOrPathChanged();
-                    GenerateAndCompare();
-                }
-            }
-            else
-            {
-                if (timeChecker == File.GetLastWriteTime(absoluteDirPath + Global.TestBatFileName))
-                {
-                    EditLogAndBatWhileModeOrPathChanged();
-                }
-                else
-                {
-                    MutSync.ShowMessageToWarn($"{Global.TestBat}被篡改，将自动重新生成");
-                    ForceToEditLogAndBat();
-                }
-
+                EditProjectGaochengWhileNecessary();
                 GenerateAndCompare();
             }
         }
@@ -370,7 +306,7 @@ namespace gaocheng_debug
         private void CboProjectSelectorSelectedIndexChanged(object sender, EventArgs e)
         {
             DisposeProjectGaochengLock();
-            chkIsCMDPause.Checked = false;
+            chkIsInterfaceProgramPause.Checked = false;
 
             if ((projectDirName = cboProjectSelector.SelectedItem.ToString()) == BlankItemStr)
             {
@@ -378,7 +314,7 @@ namespace gaocheng_debug
             }
             else
             {
-                absoluteDirPath = AbsoluteProjectDirectoryPath + projectDirName;
+                absoluteDirPath = $"{AbsoluteProjectDirectoryPath}{projectDirName}";
                 if (Directory.Exists(absoluteDirPath))
                 {
                     TryToGetProjectGaochengInfo();

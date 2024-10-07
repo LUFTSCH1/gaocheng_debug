@@ -52,7 +52,7 @@
             this.ofdDemoAndYourExeSelector = new System.Windows.Forms.OpenFileDialog();
             this.btnOpenProjectDirectory = new System.Windows.Forms.Button();
             this.btnDeleteProject = new System.Windows.Forms.Button();
-            this.chkIsCMDPause = new System.Windows.Forms.CheckBox();
+            this.chkIsInterfaceProgramPause = new System.Windows.Forms.CheckBox();
             this.mnsAdditionalFunctions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -331,16 +331,16 @@
             this.btnDeleteProject.UseVisualStyleBackColor = false;
             this.btnDeleteProject.Click += new System.EventHandler(this.BtnDeleteProjectClick);
             // 
-            // chkIsCMDPause
+            // chkIsInterfaceProgramPause
             // 
-            this.chkIsCMDPause.AutoSize = true;
-            this.chkIsCMDPause.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.chkIsCMDPause.Location = new System.Drawing.Point(668, 66);
-            this.chkIsCMDPause.Name = "chkIsCMDPause";
-            this.chkIsCMDPause.Size = new System.Drawing.Size(196, 25);
-            this.chkIsCMDPause.TabIndex = 17;
-            this.chkIsCMDPause.Text = "在CMD中查看高亮结果";
-            this.chkIsCMDPause.UseVisualStyleBackColor = true;
+            this.chkIsInterfaceProgramPause.AutoSize = true;
+            this.chkIsInterfaceProgramPause.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.chkIsInterfaceProgramPause.Location = new System.Drawing.Point(619, 65);
+            this.chkIsInterfaceProgramPause.Name = "chkIsInterfaceProgramPause";
+            this.chkIsInterfaceProgramPause.Size = new System.Drawing.Size(226, 25);
+            this.chkIsInterfaceProgramPause.TabIndex = 17;
+            this.chkIsInterfaceProgramPause.Text = "在CMD窗口中查看高亮结果";
+            this.chkIsInterfaceProgramPause.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -348,7 +348,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
             this.ClientSize = new System.Drawing.Size(915, 478);
-            this.Controls.Add(this.chkIsCMDPause);
+            this.Controls.Add(this.chkIsInterfaceProgramPause);
             this.Controls.Add(this.cboDisplaySelector);
             this.Controls.Add(this.btnDeleteProject);
             this.Controls.Add(this.cboTrimSelector);
@@ -374,7 +374,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "战地小薯条";
+            this.Text = "tst";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.mnsAdditionalFunctions.ResumeLayout(false);
             this.mnsAdditionalFunctions.PerformLayout();
@@ -407,7 +407,7 @@
         private System.Windows.Forms.Button btnOpenProjectDirectory;
         private System.Windows.Forms.Button btnDeleteProject;
         private System.Windows.Forms.ToolStripMenuItem tsmiMD5Calculator;
-        private System.Windows.Forms.CheckBox chkIsCMDPause;
+        private System.Windows.Forms.CheckBox chkIsInterfaceProgramPause;
     }
 }
 

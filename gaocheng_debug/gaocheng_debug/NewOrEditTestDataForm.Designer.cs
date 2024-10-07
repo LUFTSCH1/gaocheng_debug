@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewOrEditTestDataForm));
             this.txtTestData = new System.Windows.Forms.TextBox();
             this.lblDataInputTip = new System.Windows.Forms.Label();
             this.btnGenerateOrModifyThenTest = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.lblSaveTip = new System.Windows.Forms.Label();
+            this.tmrSaveTipController = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // txtTestData
@@ -45,6 +49,8 @@
             this.txtTestData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtTestData.Size = new System.Drawing.Size(630, 588);
             this.txtTestData.TabIndex = 0;
+            this.txtTestData.TextChanged += new System.EventHandler(this.TxtTestDataTextChanged);
+            this.txtTestData.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtTestDataKeyDown);
             // 
             // lblDataInputTip
             // 
@@ -70,12 +76,43 @@
             this.btnGenerateOrModifyThenTest.UseVisualStyleBackColor = false;
             this.btnGenerateOrModifyThenTest.Click += new System.EventHandler(this.BtnGenerateOrModifyThenTestClick);
             // 
+            // btnSave
+            // 
+            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(114)))), ((int)(((byte)(61)))));
+            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSave.Location = new System.Drawing.Point(342, 10);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(115, 33);
+            this.btnSave.TabIndex = 3;
+            this.btnSave.Text = "暂存(Ctrl+S)";
+            this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.BtnSaveClick);
+            // 
+            // lblSaveTip
+            // 
+            this.lblSaveTip.AutoSize = true;
+            this.lblSaveTip.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblSaveTip.ForeColor = System.Drawing.Color.ForestGreen;
+            this.lblSaveTip.Location = new System.Drawing.Point(270, 15);
+            this.lblSaveTip.Name = "lblSaveTip";
+            this.lblSaveTip.Size = new System.Drawing.Size(65, 25);
+            this.lblSaveTip.TabIndex = 4;
+            this.lblSaveTip.Text = "Saved";
+            this.lblSaveTip.Visible = false;
+            // 
+            // tmrSaveTipController
+            // 
+            this.tmrSaveTipController.Interval = 500;
+            this.tmrSaveTipController.Tick += new System.EventHandler(this.TmrSaveTipControllerTick);
+            // 
             // NewOrEditTestDataForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
             this.ClientSize = new System.Drawing.Size(650, 646);
+            this.Controls.Add(this.lblSaveTip);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnGenerateOrModifyThenTest);
             this.Controls.Add(this.lblDataInputTip);
             this.Controls.Add(this.txtTestData);
@@ -98,5 +135,8 @@
         private System.Windows.Forms.TextBox txtTestData;
         private System.Windows.Forms.Label lblDataInputTip;
         private System.Windows.Forms.Button btnGenerateOrModifyThenTest;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label lblSaveTip;
+        private System.Windows.Forms.Timer tmrSaveTipController;
     }
 }

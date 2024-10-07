@@ -27,29 +27,27 @@ namespace gaocheng_debug
             double file_size = Convert.ToDouble(new FileInfo(fileName).Length);
             if (file_size < BinaryFileSize)
             {
-                return $"{file_size:F2}B";
+                return $"{file_size:F2} B";
             }
             file_size /= BinaryFileSize;
             if (file_size < BinaryFileSize)
             {
-                return $"{file_size:F2}KB";
+                return $"{file_size:F2} KiB";
             }
             file_size /= BinaryFileSize;
             if (file_size < BinaryFileSize)
             {
-                return $"{file_size:F2}MB";
+                return $"{file_size:F2} MiB";
             }
-            return $"{file_size / BinaryFileSize:F2}GB";
+            return $"{file_size / BinaryFileSize:F2} GiB";
         }
 
         // 阻止释放
         private void MD5CalculatorFormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-
             Hide();
-
-            Master.FocusBackToMain();
+            MutSync.BringToFrontAndFocus(Master);
         }
 
         // Button事件异步处理

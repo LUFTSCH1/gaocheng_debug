@@ -22,6 +22,9 @@ namespace gaocheng_debug
 
         private readonly StringBuilder TestDataBuilder;
 
+        // 私有成员变量
+        private bool isContentChanged;
+
         // 构造函数
         public NewOrEditTestDataForm(in MainForm master)
         {
@@ -35,27 +38,28 @@ namespace gaocheng_debug
         // 公有方法
         public void LoadTestDataContent()
         {
-            if (File.Exists(Master.AbsoluteDirPath + Global.TestDataFileName))
+            if (File.Exists(Master.AbsoluteTestDataPath))
             {
-                txtTestData.Text = File.ReadAllText(Master.AbsoluteDirPath + Global.TestDataFileName, Global.GB18030);
+                txtTestData.Text = File.ReadAllText(Master.AbsoluteTestDataPath, Global.GB18030);
             }
             else
             {
                 txtTestData.Text = string.Empty;
             }
+            Application.DoEvents();
+            isContentChanged = false;
         }
 
         // 阻止释放
         private void NewOrEditTestFormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            Master.RecoverResultViewerText();
-
+            if (isContentChanged && MessageBox.Show("您有改动仍未保存，退出前是否暂存？", "未保存的改动", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                WriteTestData(txtTestData.Text);
+            }
             Hide();
-
-            Master.ChangeComponentEnabled();
-            Master.BtnNewProjectEnabled = true;
-            Master.FocusBackToMain();
+            Master.DoWhileEditCanceled();
         }
 
         // Button事件处理
@@ -95,15 +99,47 @@ namespace gaocheng_debug
                 }
             }
 
-            File.WriteAllText(Master.AbsoluteDirPath + Global.TestDataFileName, TestDataBuilder.ToString(), Global.GB18030);
+            WriteTestData(TestDataBuilder.ToString());
             TestDataBuilder.Clear();
 
             Hide();
+            Master.DoWhileEdited(cnt);
+        }
 
-            Master.DataGroupNum = cnt;
-            Master.ConstructAndTest();
-            Master.ChangeComponentEnabled();
-            Master.BtnNewProjectEnabled = true;
+        private void TxtTestDataTextChanged(object sender, EventArgs e)
+        {
+            if (!isContentChanged)
+            {
+                isContentChanged = true;
+            }
+        }
+
+        private void TxtTestDataKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.S)
+            {
+                e.SuppressKeyPress = true;
+                WriteTestDataWithTip();
+            }
+        }
+
+        private void BtnSaveClick(object sender, EventArgs e) => WriteTestDataWithTip();
+
+        private void TmrSaveTipControllerTick(object sender, EventArgs e)
+        {
+            lblSaveTip.Visible = false;
+            tmrSaveTipController.Enabled = false;
+        }
+
+        // 私有工具函数
+        private void WriteTestData(in string content) => File.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
+
+        private void WriteTestDataWithTip()
+        {
+            WriteTestData(txtTestData.Text);
+            isContentChanged = false;
+            lblSaveTip.Visible = true;
+            tmrSaveTipController.Enabled = true;
         }
     }
 }

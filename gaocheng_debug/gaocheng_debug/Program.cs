@@ -22,9 +22,9 @@ namespace gaocheng_debug
             {
                 Directory.CreateDirectory(Global.ProjectDirectoryRelativePath);
             }
-            if (!File.Exists(Global.InitialDirectoriesConfigRelativePath))
+            if (!File.Exists(Global.DefaultSettingsRelativePath))
             {
-                File.WriteAllText(Global.InitialDirectoriesConfigRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}");
+                File.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}");
             }
             if (!File.Exists(Global.ProjectDirectoryLockRelativePath))
             {
