@@ -91,18 +91,18 @@
             // lblSaveTip
             // 
             this.lblSaveTip.AutoSize = true;
-            this.lblSaveTip.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblSaveTip.ForeColor = System.Drawing.Color.ForestGreen;
-            this.lblSaveTip.Location = new System.Drawing.Point(270, 15);
+            this.lblSaveTip.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblSaveTip.ForeColor = System.Drawing.Color.DarkCyan;
+            this.lblSaveTip.Location = new System.Drawing.Point(271, 17);
             this.lblSaveTip.Name = "lblSaveTip";
-            this.lblSaveTip.Size = new System.Drawing.Size(65, 25);
+            this.lblSaveTip.Size = new System.Drawing.Size(65, 19);
             this.lblSaveTip.TabIndex = 4;
-            this.lblSaveTip.Text = "Saved";
+            this.lblSaveTip.Text = "SAVED";
             this.lblSaveTip.Visible = false;
             // 
             // tmrSaveTipController
             // 
-            this.tmrSaveTipController.Interval = 500;
+            this.tmrSaveTipController.Interval = 256;
             this.tmrSaveTipController.Tick += new System.EventHandler(this.TmrSaveTipControllerTick);
             // 
             // NewOrEditTestDataForm

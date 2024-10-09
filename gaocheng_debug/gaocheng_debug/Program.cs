@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
@@ -24,11 +25,11 @@ namespace gaocheng_debug
             }
             if (!File.Exists(Global.DefaultSettingsRelativePath))
             {
-                File.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}");
+                MutSync.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}", Encoding.UTF8);
             }
             if (!File.Exists(Global.ProjectDirectoryLockRelativePath))
             {
-                File.WriteAllText(Global.ProjectDirectoryLockRelativePath, "protector");
+                MutSync.WriteAllText(Global.ProjectDirectoryLockRelativePath, string.Empty, Encoding.UTF8);
             }
 
             // 完整则创建文件锁以锁定文件

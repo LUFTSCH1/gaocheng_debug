@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
@@ -26,12 +27,31 @@ namespace gaocheng_debug
 
         private static readonly ProcessStartInfo ReadMeHtmlStartInfo = new ProcessStartInfo { FileName = Global.ReadMeHtmlRelativePath, UseShellExecute = true };
 
-        private static readonly string NewOrEditTestDataFormOpenTipStr = $"创建/修改测试数据 窗口已打开{Global.NewLine}{Global.NewLine}你仍可以计算文件MD5、查看使用说明、修改--trim和--display参数{Global.NewLine}但如果想进行其它操作，请继续完成 创建/修改测试数据 操作或将 创建/修改测试数据 窗体关闭";
-        private static readonly string ResultTxtNotExistExceptionStr   = $"{Global.CompareResult}文件不存在{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.CompareResult}被删除{Global.NewLine}上次测试时遇到异常，导致{Global.CompareResult}未能生成，但用户忽略了该情况{Global.NewLine}{Global.NewLine}本异常不影响您继续使用该项目继续测试";
-        private static readonly string ProjectGaochengExceptionStr     = $"{Global.ProjectGaocheng}文件不存在、不合法或被篡改{Global.NewLine}{Global.NewLine}导致本异常的原因可能是：{Global.NewLine}{Global.ProjectGaocheng}被删除{Global.NewLine}您在{Global.ProjectDirectory}中手动创建了该文件夹{Global.NewLine}您将1.7.0版本之前的项目放进了{Global.ProjectDirectory}{Global.NewLine}{Global.ProjectGaocheng}被篡改{Global.NewLine}{Global.NewLine}解决方法：{Global.NewLine}尝试在回收站中寻找本项目的{Global.ProjectGaocheng}文件并恢复{Global.NewLine}删除本项目";
-        private static readonly string TestProcessExceptionStr         = $"cmd运行过程发生错误或被用户中断，生成{Global.CompareResult}失败{Global.NewLine}{Global.NewLine}建议检查源程序逻辑问题 以及 每组测试数据是否合法{Global.NewLine}{Global.NewLine}Tips: 你或许可以从cmd窗口中最后尝试执行命令中的测试数据序号入手{Global.NewLine}{Global.NewLine}最后尝试结束时间：";
+        private static readonly string NewOrEditTestDataFormOpenTipStr =   $"创建/修改测试数据 窗口已打开{Global.NewLine}{Global.NewLine}"
+                                                                         + $"你仍可以计算文件MD5、查看使用说明、修改--trim和--display参数{Global.NewLine}"
+                                                                         + $"但如果想进行其它操作，请继续完成 创建/修改测试数据 操作或将 创建/修改测试数据 窗体关闭";
+        private static readonly string ResultTxtNotExistExceptionStr   =   $"{Global.CompareResult}文件不存在{Global.NewLine}{Global.NewLine}"
+                                                                         + $"导致本异常的原因可能是：{Global.NewLine}"
+                                                                         + $"{Global.CompareResult}被删除{Global.NewLine}"
+                                                                         + $"上次测试时遇到异常，导致{Global.CompareResult}未能生成，但用户忽略了该情况{Global.NewLine}{Global.NewLine}"
+                                                                         + $"本异常不影响您继续使用该项目继续测试";
+        private static readonly string ProjectGaochengExceptionStr     =   $"{Global.ProjectGaocheng}文件不存在、不合法或被篡改{Global.NewLine}{Global.NewLine}"
+                                                                         + $"导致本异常的原因可能是：{Global.NewLine}"
+                                                                         + $"{Global.ProjectGaocheng}被删除{Global.NewLine}"
+                                                                         + $"您在{Global.ProjectDirectory}中手动创建了该文件夹{Global.NewLine}"
+                                                                         + $"您将1.7.0版本之前的项目放进了{Global.ProjectDirectory}{Global.NewLine}{Global.NewLine}"
+                                                                         + $"解决方法：{Global.NewLine}"
+                                                                         + $"尝试在回收站中寻找本项目的{Global.ProjectGaocheng}文件并恢复{Global.NewLine}"
+                                                                         + $"删除本项目";
+        private static readonly string TestProcessExceptionStr         =   $"cmd运行过程发生错误或被用户中断，生成{Global.CompareResult}失败{Global.NewLine}{Global.NewLine}"
+                                                                         + $"建议检查源程序逻辑问题 以及 每组测试数据是否合法{Global.NewLine}{Global.NewLine}"
+                                                                         + $"Tips: 你或许可以从cmd窗口中最后尝试执行命令中的测试数据序号入手{Global.NewLine}{Global.NewLine}"
+                                                                         + $"最后尝试结束时间：";
 
-        private static readonly string[] NewProjectStrSet = { " Ciallo～(∠・ω< )⌒★", " ( ｀･ω･´)ゞ", $"{Global.NewLine}| ᐕ)⁾⁾", " ٩( ╹▿╹ )۶", " ミ(ﾉ-∀-)ﾉ", " (δωδ)」", " (灬╹ω╹灬)" };
+        private static readonly string[] NewProjectStrSet = {
+            " Ciallo～(∠・ω< )⌒★", " ( ｀･ω･´)ゞ", $"{Global.NewLine}| ᐕ)⁾⁾",
+            " ٩( ╹▿╹ )۶", " ミ(ﾉ-∀-)ﾉ", " (灬╹ω╹灬)"
+        };
 
         // 私有只读成员，在构造函数中初始化
         private readonly string AbsoluteProjectDirectoryPath;
@@ -61,6 +81,8 @@ namespace gaocheng_debug
 
         private string absoluteProjectGaochengPath;
         private string absoluteTestDataPath;
+        private string absoluteDemoExeResultPath;
+        private string absoluteYourExeResultPath;
         private string absoluteCompareResultPath;
 
         private string tempContainerForResultViewer;
@@ -96,7 +118,7 @@ namespace gaocheng_debug
             InitializeComponent();
 
             {
-                string[] defaults = File.ReadAllLines(Global.DefaultSettingsRelativePath);
+                string[] defaults = MutSync.ReadAllLines(Global.DefaultSettingsRelativePath);
                 if (defaults.Length == Global.DefaultSettingsLines)
                 {
                     defaultDemoExeDirectory = defaults[0];
@@ -106,7 +128,7 @@ namespace gaocheng_debug
                 {
                     defaultDemoExeDirectory = Global.DefaultDirectory;
                     defaultYourExeDirectory = Global.DefaultDirectory;
-                    File.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}");
+                    MutSync.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}", Encoding.UTF8);
                     MutSync.ShowMessageToWarn($"由于{Global.DefaultSettings}非法，已重置设置");
                 }
             }
@@ -117,7 +139,11 @@ namespace gaocheng_debug
             InterfaceProgram.StartInfo.RedirectStandardInput = true;
 
             {
-                string[] form1_names = { "校对工具", "oop，启动！", "高程，启动！", "QAQ", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？", "是兄弟，就来田野打架1捞我", "让我康康你的小红车" , "(✿╹◡╹)", "٩( ╹▿╹ )۶" };
+                string[] form1_names = {
+                    "校对工具", "oop，启动！", "高程，启动！",
+                    "(✿╹◡╹)", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？",
+                    "是兄弟，就来田野打架1捞我", "让我康康你的小红车", "٩( ╹▿╹ )۶"
+                };
                 Text = form1_names[RND.Next(0, form1_names.Length)];
             }
 
@@ -132,7 +158,7 @@ namespace gaocheng_debug
         // 窗体关闭释放资源
         private void MainFormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((OwnNewOrEditTestDataForm.Visible || OwnMD5CalculatorForm.Visible) && !CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
+            if ((OwnNewOrEditTestDataForm.Visible || OwnMD5CalculatorForm.Visible) && !MutSync.CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
             {
                 e.Cancel = true;
             }
@@ -181,7 +207,7 @@ namespace gaocheng_debug
             string new_path = $"{AbsoluteProjectDirectoryPath}{DateTime.Now.ToString(ProjectNameFormatStr)}";
             Directory.CreateDirectory(new_path);
 
-            File.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}", $"null\nnull\nnull\nnull\n0\n0\n0");
+            MutSync.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}", $"awa\nQAQ\nTAT\nOvO\n0\n0\n0", Encoding.UTF8);
 
             RefreshProjectList();
             cboProjectSelector.SelectedIndex = 1;
@@ -192,7 +218,7 @@ namespace gaocheng_debug
 
         private void BtnDeleteProjectClick(object sender, EventArgs e)
         {
-            if (CheckOperation($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}", MessageBoxIcon.Warning))
+            if (MutSync.CheckOperation($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}", MessageBoxIcon.Warning))
             {
                 if (Directory.Exists(absoluteDirPath))
                 {
@@ -295,7 +321,7 @@ namespace gaocheng_debug
             {
                 MutSync.ShowMessageToWarn("测试数据文件被更改\n请进入 创建/修改测试数据 读取该文件并再次生成以保证合法");
             }
-            else if (!isPathChanged || CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认", MessageBoxIcon.Information))
+            else if (!isPathChanged || MutSync.CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认"))
             {
                 EditProjectGaochengWhileNecessary();
                 GenerateAndCompare();

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace gaocheng_debug
@@ -41,7 +41,7 @@ namespace gaocheng_debug
 
         private void BtnSaveClick(object sender, EventArgs e)
         {
-            File.WriteAllText(Global.DefaultSettingsRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}");
+            MutSync.WriteAllText(Global.DefaultSettingsRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}", Encoding.UTF8);
 
             Master.DefaultDemoExeDirectory = txtDemoExeDefaultDirectory.Text;
             Master.DefaultYourExeDirectory = txtYourExeDefaultDirectory.Text;

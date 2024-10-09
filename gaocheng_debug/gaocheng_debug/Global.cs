@@ -8,7 +8,9 @@ namespace gaocheng_debug
         NoError,
         ApplicationAlreadyRunning,
         NecessaryFileNotFound,
-        NecessaryFileReplaced
+        NecessaryFileReplaced,
+        FileAccessError,
+        HashComputeError
     }
 
     internal static class Global
@@ -20,6 +22,8 @@ namespace gaocheng_debug
         public const string DefaultDirectory = @"C:\";
         
         public const string OperationTimeFormatStr = "yyyy/MM/dd HH:mm:ss.ffff";
+
+        public const string ErrorTitle = "错误";
 
         // 自建文件
         public const string ReadMeHtml           = "README.html";

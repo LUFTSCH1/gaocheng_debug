@@ -232,6 +232,7 @@
             this.cboDisplaySelector.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cboDisplaySelector.FormattingEnabled = true;
             this.cboDisplaySelector.Items.AddRange(new object[] {
+            "--display none",
             "--display normal",
             "--display detailed"});
             this.cboDisplaySelector.Location = new System.Drawing.Point(741, 28);
@@ -251,7 +252,8 @@
             this.cboTrimSelector.Items.AddRange(new object[] {
             "--trim none",
             "--trim right",
-            "--trim left"});
+            "--trim left",
+            "--trim all"});
             this.cboTrimSelector.Location = new System.Drawing.Point(619, 28);
             this.cboTrimSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboTrimSelector.Name = "cboTrimSelector";

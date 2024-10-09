@@ -40,7 +40,7 @@ namespace gaocheng_debug
         {
             if (File.Exists(Master.AbsoluteTestDataPath))
             {
-                txtTestData.Text = File.ReadAllText(Master.AbsoluteTestDataPath, Global.GB18030);
+                txtTestData.Text = MutSync.ReadAllText(Master.AbsoluteTestDataPath, Global.GB18030);
             }
             else
             {
@@ -54,7 +54,7 @@ namespace gaocheng_debug
         private void NewOrEditTestFormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            if (isContentChanged && MessageBox.Show("您有改动仍未保存，退出前是否暂存？", "未保存的改动", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (isContentChanged && MutSync.CheckOperation("您有改动仍未保存，退出前是否暂存？", MessageBoxIcon.Information, "未保存的改动", MessageBoxDefaultButton.Button1))
             {
                 WriteTestData(txtTestData.Text);
             }
@@ -132,12 +132,15 @@ namespace gaocheng_debug
         }
 
         // 私有工具函数
-        private void WriteTestData(in string content) => File.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
+        private void WriteTestData(in string content) => MutSync.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
 
         private void WriteTestDataWithTip()
         {
-            WriteTestData(txtTestData.Text);
-            isContentChanged = false;
+            if (isContentChanged || !File.Exists(Master.AbsoluteTestDataPath))
+            {
+                WriteTestData(txtTestData.Text);
+                isContentChanged = false;
+            }
             lblSaveTip.Visible = true;
             tmrSaveTipController.Enabled = true;
         }

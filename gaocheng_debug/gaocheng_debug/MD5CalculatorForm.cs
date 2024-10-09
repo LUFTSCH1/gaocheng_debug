@@ -61,20 +61,29 @@ namespace gaocheng_debug
 
                 txtResultViewer.Text = await Task.Run(() =>
                 {
-                    DateTime start_time = DateTime.Now;
-                    string hash = MutSync.GetMD5HashFromFile(path);
-                    DateTime finish_time = DateTime.Now;
-                    
-                    string result = $"目录  ：{Path.GetDirectoryName(path)}{Global.NewLine}文件名：{Path.GetFileName(path)}{Global.NewLine}大小  ：{file_size}{Global.NewLine}";
-                    if (hash.Length == 32)
+                    string file_info =   $"目录  ：{Path.GetDirectoryName(path)}{Global.NewLine}"
+                                       + $"文件名：{Path.GetFileName(path)}{Global.NewLine}"
+                                       + $"大小  ：{file_size}{Global.NewLine}";
+
+                    string hash;
+                    DateTime start_time = DateTime.Now, finish_time;
+                    try
                     {
-                        result += $"MD5   ：{hash}{Global.NewLine}{Global.NewLine}开始  ：{start_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}完成  ：{finish_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}用时  ：{(finish_time - start_time).TotalSeconds:F4}s";
+                        hash = MutSync.GetMD5HashFromFile(path);
+                        finish_time = DateTime.Now;
+                        return   $"{file_info}MD5   ：{hash}{Global.NewLine}{Global.NewLine}"
+                               + $"开始  ：{start_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
+                               + $"完成  ：{finish_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
+                               + $"用时  ：{(finish_time - start_time).TotalSeconds:F4}s";
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        result += $"开始  ：{start_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}中断  ：{finish_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}历时  ：{(finish_time - start_time).TotalSeconds:F4}s{Global.NewLine}错误  ：{hash}";
+                        finish_time = DateTime.Now;
+                        return   $"{file_info}开始  ：{start_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
+                               + $"中断  ：{finish_time.ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
+                               + $"历时  ：{(finish_time - start_time).TotalSeconds:F4}s{Global.NewLine}"
+                               + $"错误  ：{ex.Message}";
                     }
-                    return result;
                 }).ConfigureAwait(true);
             }
         }

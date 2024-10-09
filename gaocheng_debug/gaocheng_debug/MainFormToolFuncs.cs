@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -24,8 +25,6 @@ namespace gaocheng_debug
         }
 
         // 私有工具函数
-        private bool CheckOperation(in string msg, in MessageBoxIcon icon) => MessageBox.Show(msg, "操作确认", MessageBoxButtons.YesNo, icon, MessageBoxDefaultButton.Button2) == DialogResult.Yes;
-
         private void LockProjectGaocheng() => projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
 
         private void DisposeProjectGaochengLock()
@@ -158,7 +157,7 @@ namespace gaocheng_debug
             }
             else if (txtDemoExePath.Text == txtYourExePath.Text)
             {
-                return !CheckOperation("官方demo路径和作业exe路径相同\n你真的要测试同一程序对同一数据的两次输出吗？\n如需继续测试，请按确认", MessageBoxIcon.Information);
+                return !MutSync.CheckOperation("官方demo路径和作业exe路径相同\n你真的要测试同一程序对同一数据的两次输出吗？\n如需继续测试，请按确认");
             }
             else
             {
@@ -166,20 +165,53 @@ namespace gaocheng_debug
             }
         }
 
-        private void PrintResultInfo(in string resultFile) => rtxResultViewer.Text = $"{Global.CompareResult}文件创建/修改时间：{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}{File.ReadAllText(resultFile, Global.GB18030)}";
+        private void CheckProjectFileAccess()
+        {
+            while (true)
+            {
+                try
+                {
+                    new FileStream(absoluteTestDataPath, FileMode.Open, FileAccess.Read, FileShare.Read).Close();
+                    if (File.Exists(absoluteCompareResultPath))
+                    {
+                        new FileStream(absoluteCompareResultPath, FileMode.Open, FileAccess.Write).Close();
+                    }
+                    if (File.Exists(absoluteDemoExeResultPath))
+                    {
+                        new FileStream(absoluteDemoExeResultPath, FileMode.Open, FileAccess.Write).Close();
+                    }
+                    if (File.Exists(absoluteYourExeResultPath))
+                    {
+                        new FileStream(absoluteYourExeResultPath, FileMode.Open, FileAccess.Write).Close();
+                    }
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    if (!MutSync.CheckOperation($"项目 {projectDirName} 中文件测试需要的权限不满足，是否重试？\n错误信息：{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.FileAccessError);
+                    }
+                }
+            }
+        }
+
+        private void PrintResultInfo(in string resultFile) => rtxResultViewer.Text = $"{Global.CompareResult}文件创建/修改时间：{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
 
         private void TryToGetProjectGaochengInfo()
         {
             absoluteProjectGaochengPath = $"{absoluteDirPath}\\{Global.ProjectGaocheng}";
             if (File.Exists(absoluteProjectGaochengPath))
             {
-                string[] project_info = File.ReadAllLines(absoluteProjectGaochengPath);
+                string[] project_info = MutSync.ReadAllLines(absoluteProjectGaochengPath);
                 if (project_info.Length == Global.ProjectGaochengLines)
                 {
                     LockProjectGaocheng();
 
                     absoluteTestDataPath      = $"{absoluteDirPath}\\{Global.TestData}";
                     absoluteCompareResultPath = $"{absoluteDirPath}\\{Global.CompareResult}";
+                    absoluteDemoExeResultPath = $"{absoluteDirPath}\\{Global.DemoExeResult}";
+                    absoluteYourExeResultPath = $"{absoluteDirPath}\\{Global.YourExeResult}";
 
                     if (project_info[0] == MutSync.MD5HashWithSalt($"{project_info[1]}\n{project_info[2]}\n{project_info[3]}\n{project_info[4]}\n{project_info[5]}\n{project_info[6]}"))
                     {
@@ -234,11 +266,11 @@ namespace gaocheng_debug
 
             InterfaceProgram.StandardInput.WriteLine(
                   $"cd /d \"{absoluteDirPath}\"\n"
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}\n"
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} [1] | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}\n"
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} 1 | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}\n"
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} 1 | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}\n"
                 + $"for /l %v in (2, 1, {dataGroupNum}) do "
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} [%v] | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult} & "
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} [%v] | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}\n"
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} %v | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult} & "
+                + $"{AbsoluteGetInputDataPath} {Global.TestData} %v | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}\n"
                 + $"{compare_cmd} 1>{Global.CompareResult} 2>>&1"
             );
             if (chkIsInterfaceProgramPause.Checked)
@@ -265,7 +297,7 @@ namespace gaocheng_debug
             isPathChanged = false;
             string prj_info = $"{projectDemoExePath}\n{projectYourExePath}\n{dataHash}\n{dataGroupNum}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}";
             DisposeProjectGaochengLock();
-            File.WriteAllText(absoluteProjectGaochengPath, $"{MutSync.MD5HashWithSalt(prj_info)}\n{prj_info}");
+            MutSync.WriteAllText(absoluteProjectGaochengPath, $"{MutSync.MD5HashWithSalt(prj_info)}\n{prj_info}", Encoding.UTF8);
             LockProjectGaocheng();
         }
 
@@ -285,6 +317,7 @@ namespace gaocheng_debug
 
         private void GenerateAndCompare()
         {
+            CheckProjectFileAccess();
             FileStream demo_exe_lock = MutSync.NewReadOnlyFileHandle(txtDemoExePath.Text);
             FileStream your_exe_lock = MutSync.NewReadOnlyFileHandle(txtYourExePath.Text);
 
@@ -298,7 +331,7 @@ namespace gaocheng_debug
             {
                 File.Delete(absoluteCompareResultPath);
             }
-
+            
             OpenCmdAndTest();
             
             demo_exe_lock.Close();

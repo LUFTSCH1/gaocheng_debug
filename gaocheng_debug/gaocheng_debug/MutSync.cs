@@ -35,6 +35,12 @@ namespace gaocheng_debug
 
         private const string HashSalt = "这是个秘密";
 
+        private const string ConfirmTitle = "操作确认";
+
+        private const string GetMD5ErrorStr    = "获取文件哈希失败，是否重试？\n错误信息：";
+        private const string ReadFileErrorStr  = "读取文件失败，是否重试？\n错误信息：";
+        private const string WriteFileErrorStr = "写入文件失败，是否重试？\n错误信息：";
+
         // 私有静态只读成员-顺序调用，不得冲突
         private static readonly MD5 MD5 = MD5.Create();
         
@@ -79,7 +85,80 @@ namespace gaocheng_debug
 
         public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-        public static FileStream NewReadOnlyFileHandle(in string fileName) => new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+        public static bool CheckOperation(in string msg, in MessageBoxIcon icon = MessageBoxIcon.Information, in string title = ConfirmTitle, in MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button2) => MessageBox.Show(msg, title, MessageBoxButtons.YesNo, icon, defaultButton) == DialogResult.Yes;
+
+        public static FileStream NewReadOnlyFileHandle(in string fileName)
+        {
+            while (true)
+            {
+                try
+                {
+                    return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                }
+                catch (Exception ex)
+                {
+                    if (!CheckOperation($"锁定文件失败，是否重试？\n错误信息：{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.FileAccessError);
+                    }
+                }
+            }
+        }
+
+        public static string ReadAllText(in string fileName, in Encoding encoding)
+        {
+            while (true)
+            {
+                try
+                {
+                    return File.ReadAllText(fileName, encoding);
+                }
+                catch (Exception ex)
+                {
+                    if (!CheckOperation($"{ReadFileErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.FileAccessError);
+                    }
+                }
+            }
+        }
+
+        public static string[] ReadAllLines(in string fileName)
+        {
+            while (true)
+            {
+                try
+                {
+                    return File.ReadAllLines(fileName);
+                }
+                catch (Exception ex)
+                {
+                    if (!CheckOperation($"{ReadFileErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.FileAccessError);
+                    }
+                }
+            }
+        }
+
+        public static void WriteAllText(in string fileName, in string content, in Encoding encoding)
+        {
+            while (true)
+            {
+                try
+                {
+                    File.WriteAllText(fileName, content, encoding);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    if (!CheckOperation($"{WriteFileErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.FileAccessError);
+                    }
+                }
+            }
+        }
 
         public static void BringToFrontAndFocus(in Form form)
         {
@@ -108,72 +187,65 @@ namespace gaocheng_debug
         // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
         public static string MD5Hash(in string fileName)
         {
-            try
+            while (true)
             {
-                FileStream file = NewReadOnlyFileHandle(fileName);
-                byte[] hash_bytes = MD5.ComputeHash(file);
-                file.Close();
-                MD5.Initialize();
-
-                MD5StringBuilder.Length = 0;
-                for (int i = 0, len = hash_bytes.Length; i < len; ++i)
+                try
                 {
-                    MD5StringBuilder.Append(hash_bytes[i].ToString(HashConvertFormatStr));
-                }
+                    FileStream file = NewReadOnlyFileHandle(fileName);
+                    byte[] hash_bytes = MD5.ComputeHash(file);
+                    file.Close();
+                    MD5.Initialize();
 
-                return MD5StringBuilder.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("获取文件哈希失败" + ex.Message);
+                    return ConvertBytesToMD5(hash_bytes);
+                }
+                catch (Exception ex)
+                {
+                    if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.HashComputeError);
+                    }
+                }
             }
         }
 
         // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
         public static string MD5HashWithSalt(in string str)
         {
-            try
+            while (true)
             {
-                byte[] hash_bytes = MD5.ComputeHash(Encoding.UTF8.GetBytes(string.Concat(HashSalt, str)));
-                MD5.Initialize();
-
-                MD5StringBuilder.Length = 0;
-                for (int i = 0, len = hash_bytes.Length; i < len; ++i)
+                try
                 {
-                    MD5StringBuilder.Append(hash_bytes[i].ToString(HashConvertFormatStr));
-                }
+                    byte[] hash_bytes = MD5.ComputeHash(Encoding.UTF8.GetBytes(string.Concat(HashSalt, str)));
+                    MD5.Initialize();
 
-                return MD5StringBuilder.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("获取文件哈希失败" + ex.Message);
+                    return ConvertBytesToMD5(hash_bytes);
+                }
+                catch (Exception ex)
+                {
+                    if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.HashComputeError);
+                    }
+                }
             }
         }
 
         // 此方法会创建更多对象，但更加安全，提供给异步/并行方法使用
         public static string GetMD5HashFromFile(in string fileName)
         {
-            try
+            using (MD5 md5 = MD5.Create())
             {
-                using (MD5 md5 = MD5.Create())
+                FileStream file = NewReadOnlyFileHandle(fileName);
+                byte[] hash_bytes = md5.ComputeHash(file);
+                file.Close();
+
+                StringBuilder sb = new StringBuilder(MD5HashStringLength);
+                for (int i = 0, len = hash_bytes.Length; i < len; ++i)
                 {
-                    FileStream file = NewReadOnlyFileHandle(fileName);
-                    byte[] hash_bytes = md5.ComputeHash(file);
-                    file.Close();
-
-                    StringBuilder sb = new StringBuilder(MD5HashStringLength);
-                    for (int i = 0, len = hash_bytes.Length; i < len; ++i)
-                    {
-                        sb.Append(hash_bytes[i].ToString(HashConvertFormatStr));
-                    }
-
-                    return sb.ToString();
+                    sb.Append(hash_bytes[i].ToString(HashConvertFormatStr));
                 }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
+
+                return sb.ToString();
             }
         }
 
@@ -204,14 +276,31 @@ namespace gaocheng_debug
 
             Parallel.ForEach(FileList, file =>
             {
+                string hash;
+                while (true)
+                {
+                    try
+                    {
+                        hash = GetMD5HashFromFile(file.FileName);
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                        {
+                            Environment.Exit((int)ErrorCode.HashComputeError);
+                        }
+                    }
+                }
+
                 if (!File.Exists(file.FileName))
                 {
                     ShowMessageToWarn($"应用程序相对路径下必要的\n{file.FileName}\n文件缺失，请检查回收站或考虑重新下载应用");
                     Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
                 }
-                else if(new FileInfo(file.FileName).Length > MaxFileSize || file.MD5Hash != GetMD5HashFromFile(file.FileName))
+                else if(new FileInfo(file.FileName).Length > MaxFileSize || file.MD5Hash != hash)
                 {
-                    ShowMessageToWarn($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换或其它原因导致哈希计算失败");
+                    ShowMessageToWarn($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换");
                     Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
                 }
             });
@@ -226,5 +315,17 @@ namespace gaocheng_debug
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        // 私有静态方法
+        // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
+        private static string ConvertBytesToMD5(in byte[] bytes)
+        {
+            MD5StringBuilder.Length = 0;
+            for (int i = 0, len = bytes.Length; i < len; ++i)
+            {
+                MD5StringBuilder.Append(bytes[i].ToString(HashConvertFormatStr));
+            }
+            return MD5StringBuilder.ToString();
+        }
     }
 }
