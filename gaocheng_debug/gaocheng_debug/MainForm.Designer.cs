@@ -53,6 +53,7 @@
             this.btnOpenProjectDirectory = new System.Windows.Forms.Button();
             this.btnDeleteProject = new System.Windows.Forms.Button();
             this.chkIsInterfaceProgramPause = new System.Windows.Forms.CheckBox();
+            this.仓库地址ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnsAdditionalFunctions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,7 +91,8 @@
             this.mnsAdditionalFunctions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSettings,
             this.tsmiMD5Calculator,
-            this.tsmiHelp});
+            this.tsmiHelp,
+            this.仓库地址ToolStripMenuItem});
             this.mnsAdditionalFunctions.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.mnsAdditionalFunctions.Location = new System.Drawing.Point(0, 0);
             this.mnsAdditionalFunctions.Name = "mnsAdditionalFunctions";
@@ -279,7 +281,7 @@
             // 
             // rtxResultViewer
             // 
-            this.rtxResultViewer.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.rtxResultViewer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(51)))), ((int)(((byte)(102)))));
             this.rtxResultViewer.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rtxResultViewer.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.rtxResultViewer.ForeColor = System.Drawing.Color.White;
@@ -343,6 +345,13 @@
             this.chkIsInterfaceProgramPause.TabIndex = 17;
             this.chkIsInterfaceProgramPause.Text = "在CMD窗口中查看高亮结果";
             this.chkIsInterfaceProgramPause.UseVisualStyleBackColor = true;
+            // 
+            // 仓库地址ToolStripMenuItem
+            // 
+            this.仓库地址ToolStripMenuItem.Name = "仓库地址ToolStripMenuItem";
+            this.仓库地址ToolStripMenuItem.Size = new System.Drawing.Size(83, 24);
+            this.仓库地址ToolStripMenuItem.Text = "仓库地址";
+            this.仓库地址ToolStripMenuItem.Click += new System.EventHandler(this.TsmiRepositoryAddressClick);
             // 
             // MainForm
             // 
@@ -410,6 +419,7 @@
         private System.Windows.Forms.Button btnDeleteProject;
         private System.Windows.Forms.ToolStripMenuItem tsmiMD5Calculator;
         private System.Windows.Forms.CheckBox chkIsInterfaceProgramPause;
+        private System.Windows.Forms.ToolStripMenuItem 仓库地址ToolStripMenuItem;
     }
 }
 

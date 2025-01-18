@@ -30,27 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewOrEditTestDataForm));
-            this.txtTestData = new System.Windows.Forms.TextBox();
             this.lblDataInputTip = new System.Windows.Forms.Label();
             this.btnGenerateOrModifyThenTest = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.lblSaveTip = new System.Windows.Forms.Label();
             this.tmrSaveTipController = new System.Windows.Forms.Timer(this.components);
+            this.rtxTestDataEditor = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
-            // 
-            // txtTestData
-            // 
-            this.txtTestData.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtTestData.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTestData.Location = new System.Drawing.Point(10, 48);
-            this.txtTestData.Margin = new System.Windows.Forms.Padding(2);
-            this.txtTestData.Multiline = true;
-            this.txtTestData.Name = "txtTestData";
-            this.txtTestData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtTestData.Size = new System.Drawing.Size(630, 588);
-            this.txtTestData.TabIndex = 0;
-            this.txtTestData.TextChanged += new System.EventHandler(this.TxtTestDataTextChanged);
-            this.txtTestData.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtTestDataKeyDown);
             // 
             // lblDataInputTip
             // 
@@ -105,17 +91,28 @@
             this.tmrSaveTipController.Interval = 256;
             this.tmrSaveTipController.Tick += new System.EventHandler(this.TmrSaveTipControllerTick);
             // 
+            // rtxTestDataEditor
+            // 
+            this.rtxTestDataEditor.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtxTestDataEditor.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtxTestDataEditor.Location = new System.Drawing.Point(12, 49);
+            this.rtxTestDataEditor.Name = "rtxTestDataEditor";
+            this.rtxTestDataEditor.Size = new System.Drawing.Size(626, 585);
+            this.rtxTestDataEditor.TabIndex = 5;
+            this.rtxTestDataEditor.Text = "";
+            this.rtxTestDataEditor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RtxTestDataEditorKeyDown);
+            // 
             // NewOrEditTestDataForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
             this.ClientSize = new System.Drawing.Size(650, 646);
+            this.Controls.Add(this.rtxTestDataEditor);
             this.Controls.Add(this.lblSaveTip);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnGenerateOrModifyThenTest);
             this.Controls.Add(this.lblDataInputTip);
-            this.Controls.Add(this.txtTestData);
             this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -131,12 +128,11 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TextBox txtTestData;
         private System.Windows.Forms.Label lblDataInputTip;
         private System.Windows.Forms.Button btnGenerateOrModifyThenTest;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblSaveTip;
         private System.Windows.Forms.Timer tmrSaveTipController;
+        private System.Windows.Forms.RichTextBox rtxTestDataEditor;
     }
 }

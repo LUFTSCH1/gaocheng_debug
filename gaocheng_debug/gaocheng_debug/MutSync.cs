@@ -33,7 +33,7 @@ namespace gaocheng_debug
 
         private const string HashConvertFormatStr = "x2";
 
-        private const string HashSalt = "这是个秘密";
+        private const string HashSalt = "不告诉你";
 
         private const string ConfirmTitle = "操作确认";
 
@@ -47,8 +47,7 @@ namespace gaocheng_debug
         private static readonly StringBuilder MD5StringBuilder = new StringBuilder(MD5HashStringLength);
 
         // 私有成员-检查完整性与加文件锁后释放，故不加readonly
-        private static FileListItem[] FileList =
-        {
+        private static FileListItem[] FileList = {
             new FileListItem(@".\gaocheng_debug.exe.config"                         , "98dbb4a9bc384dca6b79a47886c42891"),
             new FileListItem(@".\System.Buffers.dll"                                , "ecdfe8ede869d2ccc6bf99981ea96400"),
             new FileListItem(@".\System.Memory.dll"                                 , "f09441a1ee47fb3e6571a3a448e05baf"),
@@ -63,7 +62,8 @@ namespace gaocheng_debug
         };
 
         // 公有静态方法
-        public static void OpenFolder(in string fileFullName) => ShellExecute(IntPtr.Zero, "open", fileFullName);
+        public static void OpenFolder(in string fileFullName) =>
+            ShellExecute(IntPtr.Zero, "open", fileFullName);
 
         public static void HandleRunningInstance()
         {
@@ -83,9 +83,13 @@ namespace gaocheng_debug
             }
         }
 
-        public static void ShowMessageToWarn(in string msg) => MessageBox.Show(msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        public static void ShowMessageToWarn(in string msg) =>
+            MessageBox.Show(msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-        public static bool CheckOperation(in string msg, in MessageBoxIcon icon = MessageBoxIcon.Information, in string title = ConfirmTitle, in MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button2) => MessageBox.Show(msg, title, MessageBoxButtons.YesNo, icon, defaultButton) == DialogResult.Yes;
+        public static bool CheckOperation(in string msg, in MessageBoxIcon icon = MessageBoxIcon.Information,
+                                          in string title = ConfirmTitle,
+                                          in MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button2) =>
+            MessageBox.Show(msg, title, MessageBoxButtons.YesNo, icon, defaultButton) == DialogResult.Yes;
 
         public static FileStream NewReadOnlyFileHandle(in string fileName)
         {
@@ -97,7 +101,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!CheckOperation($"锁定文件失败，是否重试？\n错误信息：{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!CheckOperation($"锁定文件失败，是否重试？\n错误信息：{ex.Message}",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.FileAccessError);
                     }
@@ -115,7 +122,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!CheckOperation($"{ReadFileErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!CheckOperation($"{ReadFileErrorStr}{ex.Message}",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.FileAccessError);
                     }
@@ -133,7 +143,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!CheckOperation($"{ReadFileErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!CheckOperation($"{ReadFileErrorStr}{ex.Message}",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.FileAccessError);
                     }
@@ -152,7 +165,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!CheckOperation($"{WriteFileErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!CheckOperation($"{WriteFileErrorStr}{ex.Message}",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.FileAccessError);
                     }
@@ -168,7 +184,8 @@ namespace gaocheng_debug
                 form.Top    + MaxHidePart * form.Height < working_area.Top   ||
                 form.Bottom - MaxHidePart * form.Height > working_area.Bottom)
             {
-                form.Location = new Point(working_area.Width - form.Width >> 1, working_area.Height - form.Height >> 1);
+                form.Location = new Point(working_area.Width - form.Width >> 1,
+                                          working_area.Height - form.Height >> 1);
             }
 
             if (!form.Visible)
@@ -200,7 +217,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.HashComputeError);
                     }
@@ -222,7 +242,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.HashComputeError);
                     }
@@ -286,7 +309,10 @@ namespace gaocheng_debug
                     }
                     catch (Exception ex)
                     {
-                        if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                        if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
+                                            MessageBoxIcon.Error,
+                                            Global.ErrorTitle,
+                                            MessageBoxDefaultButton.Button1))
                         {
                             Environment.Exit((int)ErrorCode.HashComputeError);
                         }
@@ -308,7 +334,9 @@ namespace gaocheng_debug
 
         // 私有静态外部方法
         [System.Runtime.InteropServices.DllImport("shell32.dll")]
-        private static extern IntPtr ShellExecute(IntPtr hwnd, string lpOperation, string lpFile, string lpParameters = "", string lpDirectory = "", int show_style = 1);
+        private static extern IntPtr ShellExecute(IntPtr hwnd, string lpOperation,
+                                                  string lpFile, string lpParameters = "",
+                                                  string lpDirectory = "", int show_style = 1);
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool ShowWindowAsync(IntPtr hWnd, int cmdShow);

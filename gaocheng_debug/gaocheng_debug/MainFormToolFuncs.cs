@@ -10,7 +10,7 @@ namespace gaocheng_debug
     {
         public void DoWhileEditCanceled()
         {
-            rtxResultViewer.Text = tempContainerForResultViewer;
+            rtxResultViewer.Rtf = tempContainerForResultViewer;
             EnableComponentAfterEdit();
             MutSync.BringToFrontAndFocus(this);
         }
@@ -25,7 +25,8 @@ namespace gaocheng_debug
         }
 
         // 私有工具函数
-        private void LockProjectGaocheng() => projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
+        private void LockProjectGaocheng() =>
+            projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
 
         private void DisposeProjectGaochengLock()
         {
@@ -104,7 +105,12 @@ namespace gaocheng_debug
             for (string temp; i < arr_len; ++i)
             {
                 temp = Path.GetFileName(directories[i]);
-                if (DateTime.TryParseExact(temp, ProjectNameFormatStr, InvariantCulture, DateTimeStyles.None, out prj_time) && now >= prj_time)
+                if (DateTime.TryParseExact(temp,
+                                           ProjectNameFormatStr,
+                                           InvariantCulture,
+                                           DateTimeStyles.None,
+                                           out prj_time) &&
+                    now >= prj_time)
                 {
                     directories[len++] = temp;
                 }
@@ -188,7 +194,10 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!MutSync.CheckOperation($"项目 {projectDirName} 中文件测试需要的权限不满足，是否重试？\n错误信息：{ex.Message}", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!MutSync.CheckOperation($"项目 {projectDirName} 中文件测试需要的权限不满足，是否重试？\n错误信息：{ex.Message}",
+                                                MessageBoxIcon.Error,
+                                                Global.ErrorTitle,
+                                                MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.FileAccessError);
                     }
@@ -196,7 +205,22 @@ namespace gaocheng_debug
             }
         }
 
-        private void PrintResultInfo(in string resultFile) => rtxResultViewer.Text = $"{Global.CompareResult}文件创建/修改时间：{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
+        private void PrintResultInfo(in string resultFile)
+        {
+            string time_info = $"{Global.CompareResult}文件创建/修改时间：{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}";
+            rtxResultViewer.Text = $"{time_info}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
+            rtxResultViewer.Select(0, time_info.Length);
+            rtxResultViewer.SelectionColor = TimeInfoColor;
+            rtxResultViewer.DeselectAll();
+        }
+
+        private void PrintErrorInfo(in string errorStr)
+        {
+            rtxResultViewer.Text = errorStr;
+            rtxResultViewer.SelectAll();
+            rtxResultViewer.SelectionColor = ErrorInfoColor;
+            rtxResultViewer.DeselectAll();
+        }
 
         private void TryToGetProjectGaochengInfo()
         {
@@ -228,7 +252,7 @@ namespace gaocheng_debug
                         }
                         else
                         {
-                            rtxResultViewer.Text = $"运行过测试的项目 {projectDirName} {ResultTxtNotExistExceptionStr}";
+                            PrintErrorInfo($"运行过测试的项目 {projectDirName} {ResultTxtNotExistExceptionStr}");
                         }
                     }
                     else
@@ -252,8 +276,8 @@ namespace gaocheng_debug
             }
 
             DisableComponent();
-            MutSync.ShowMessageToWarn($"项目{projectDirName}的\n{Global.ProjectGaocheng}\n文件不存在、不合法或被篡改");
-            rtxResultViewer.Text = $"项目 {projectDirName} 的{ProjectGaochengExceptionStr}";
+            MutSync.ShowMessageToWarn($"项目{projectDirName}的\n{Global.ProjectGaocheng}\n文件不存在或不合法");
+            PrintErrorInfo($"项目 {projectDirName} 的{ProjectGaochengExceptionStr}");
             btnDeleteProject.Enabled = true;
             btnOpenProjectDirectory.Enabled = true;
         }
@@ -343,7 +367,7 @@ namespace gaocheng_debug
             }
             else
             {
-                rtxResultViewer.Text = $"{TestProcessExceptionStr}{DateTime.Now.ToString(Global.OperationTimeFormatStr)}";
+                PrintErrorInfo($"{TestProcessExceptionStr}{DateTime.Now.ToString(Global.OperationTimeFormatStr)}");
             }
 
             MutSync.BringToFrontAndFocus(this);

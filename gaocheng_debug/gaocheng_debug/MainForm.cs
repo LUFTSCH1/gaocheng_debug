@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Drawing;
 using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
@@ -19,6 +20,10 @@ namespace gaocheng_debug
         private const string YourExePathTxtDefaultStr = "Your Exe File Path";
 
         // 私有静态只读成员
+        private static readonly Color TimeInfoColor  = Color.FromArgb(144, 238, 144);
+        private static readonly Color ErrorInfoColor = Color.FromArgb(255, 99, 71);
+        private static readonly Color TipColor       = Color.FromArgb(255, 165, 0);
+
         private static readonly Comparer<string> CMP = Comparer<string>.Create((x, y) => y.CompareTo(x));
 
         private static readonly Random RND = new Random();
@@ -26,6 +31,7 @@ namespace gaocheng_debug
         private static readonly CultureInfo InvariantCulture = CultureInfo.InvariantCulture;
 
         private static readonly ProcessStartInfo ReadMeHtmlStartInfo = new ProcessStartInfo { FileName = Global.ReadMeHtmlRelativePath, UseShellExecute = true };
+        private static readonly ProcessStartInfo RepositoryAddressStartInfo = new ProcessStartInfo { FileName = "https://github.com/LUFTSCH1/gaocheng_debug", UseShellExecute = true };
 
         private static readonly string NewOrEditTestDataFormOpenTipStr =   $"创建/修改测试数据 窗口已打开{Global.NewLine}{Global.NewLine}"
                                                                          + $"你仍可以计算文件MD5、查看使用说明、修改--trim和--display参数{Global.NewLine}"
@@ -35,7 +41,7 @@ namespace gaocheng_debug
                                                                          + $"{Global.CompareResult}被删除{Global.NewLine}"
                                                                          + $"上次测试时遇到异常，导致{Global.CompareResult}未能生成，但用户忽略了该情况{Global.NewLine}{Global.NewLine}"
                                                                          + $"本异常不影响您继续使用该项目继续测试";
-        private static readonly string ProjectGaochengExceptionStr     =   $"{Global.ProjectGaocheng}文件不存在、不合法或被篡改{Global.NewLine}{Global.NewLine}"
+        private static readonly string ProjectGaochengExceptionStr     =   $"{Global.ProjectGaocheng}文件不存在或不合法{Global.NewLine}{Global.NewLine}"
                                                                          + $"导致本异常的原因可能是：{Global.NewLine}"
                                                                          + $"{Global.ProjectGaocheng}被删除{Global.NewLine}"
                                                                          + $"您在{Global.ProjectDirectory}中手动创建了该文件夹{Global.NewLine}"
@@ -48,7 +54,7 @@ namespace gaocheng_debug
                                                                          + $"Tips: 你或许可以从cmd窗口中最后尝试执行命令中的测试数据序号入手{Global.NewLine}{Global.NewLine}"
                                                                          + $"最后尝试结束时间：";
 
-        private static readonly string[] NewProjectStrSet = {
+        private static readonly string[] NewProjectStrSet = new string[] {
             " Ciallo～(∠・ω< )⌒★", " ( ｀･ω･´)ゞ", $"{Global.NewLine}| ᐕ)⁾⁾",
             " ٩( ╹▿╹ )۶", " ミ(ﾉ-∀-)ﾉ", " (灬╹ω╹灬)"
         };
@@ -142,7 +148,7 @@ namespace gaocheng_debug
                 string[] form1_names = {
                     "校对工具", "oop，启动！", "高程，启动！",
                     "(✿╹◡╹)", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？",
-                    "是兄弟，就来田野打架1捞我", "让我康康你的小红车", "٩( ╹▿╹ )۶"
+                    "EA的🐎似了（Oct 22, 2024）", "让我康康你的小红车", "٩( ╹▿╹ )۶"
                 };
                 Text = form1_names[RND.Next(0, form1_names.Length)];
             }
@@ -158,7 +164,8 @@ namespace gaocheng_debug
         // 窗体关闭释放资源
         private void MainFormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((OwnNewOrEditTestDataForm.Visible || OwnMD5CalculatorForm.Visible) && !MutSync.CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
+            if ((OwnNewOrEditTestDataForm.Visible || OwnMD5CalculatorForm.Visible) &&
+                !MutSync.CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
             {
                 e.Cancel = true;
             }
@@ -173,21 +180,19 @@ namespace gaocheng_debug
         }
 
         // ComboBox事件共用函数
-        private void CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged(object sender, EventArgs e) => isModeChanged = (cboTrimSelector.SelectedIndex != trimMode || cboDisplaySelector.SelectedIndex != displayMode);
+        private void CboTrimSelectorOrCboDisplaySelectorSelectedIndexChanged(object sender, EventArgs e) =>
+            isModeChanged = (cboTrimSelector.SelectedIndex != trimMode || cboDisplaySelector.SelectedIndex != displayMode);
 
         // TextBox事件共用函数
-        private void TxtDemoExePathOrTxtYourExePathTextChanged(object sender, EventArgs e) => isPathChanged = (txtDemoExePath.Text != projectDemoExePath || txtYourExePath.Text != projectYourExePath);
+        private void TxtDemoExePathOrTxtYourExePathTextChanged(object sender, EventArgs e) =>
+            isPathChanged = (txtDemoExePath.Text != projectDemoExePath || txtYourExePath.Text != projectYourExePath);
 
         // ToolStripMenuItem事件处理函数
-        private void TsmiSettingsClick(object sender, EventArgs e)
-        {
+        private void TsmiSettingsClick(object sender, EventArgs e) =>
             OwnSettingForm.ShowDialog();
-        }
 
-        private void TsmiMD5CalculatorClick(object sender, EventArgs e)
-        {
+        private void TsmiMD5CalculatorClick(object sender, EventArgs e) =>
             MutSync.BringToFrontAndFocus(OwnMD5CalculatorForm);
-        }
 
         private void TsmiHelpClick(object sender, EventArgs e)
         {
@@ -201,13 +206,20 @@ namespace gaocheng_debug
             }
         }
 
+        private void TsmiRepositoryAddressClick(object sender, EventArgs e)
+        {
+            Process.Start(RepositoryAddressStartInfo);
+        }
+
         // Button事件处理函数
         private void BtnNewProjectClick(object sender, EventArgs e)
         {
             string new_path = $"{AbsoluteProjectDirectoryPath}{DateTime.Now.ToString(ProjectNameFormatStr)}";
             Directory.CreateDirectory(new_path);
 
-            MutSync.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}", $"awa\nQAQ\nTAT\nOvO\n0\n0\n0", Encoding.UTF8);
+            MutSync.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}",
+                                 $"awa\nQAQ\nTAT\nOvO\n0\n0\n0",
+                                 Encoding.UTF8);
 
             RefreshProjectList();
             cboProjectSelector.SelectedIndex = 1;
@@ -218,7 +230,8 @@ namespace gaocheng_debug
 
         private void BtnDeleteProjectClick(object sender, EventArgs e)
         {
-            if (MutSync.CheckOperation($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}", MessageBoxIcon.Warning))
+            if (MutSync.CheckOperation($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}",
+                                       MessageBoxIcon.Warning))
             {
                 if (Directory.Exists(absoluteDirPath))
                 {
@@ -298,8 +311,13 @@ namespace gaocheng_debug
             if (!OwnNewOrEditTestDataForm.Visible)
             {
                 DisableComponentWhileEditing();
-                tempContainerForResultViewer = rtxResultViewer.Text;
+                tempContainerForResultViewer = rtxResultViewer.Rtf;
+
                 rtxResultViewer.Text = NewOrEditTestDataFormOpenTipStr;
+                rtxResultViewer.SelectAll();
+                rtxResultViewer.SelectionColor = TipColor;
+                rtxResultViewer.DeselectAll();
+
                 OwnNewOrEditTestDataForm.LoadTestDataContent();
             }
 
@@ -321,7 +339,8 @@ namespace gaocheng_debug
             {
                 MutSync.ShowMessageToWarn("测试数据文件被更改\n请进入 创建/修改测试数据 读取该文件并再次生成以保证合法");
             }
-            else if (!isPathChanged || MutSync.CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认"))
+            else if (!isPathChanged ||
+                     MutSync.CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认"))
             {
                 EditProjectGaochengWhileNecessary();
                 GenerateAndCompare();
