@@ -144,7 +144,7 @@ namespace gaocheng_debug
 
         private void WriteTestDataWithTip()
         {
-            WriteTestData(rtxTestDataEditor.Text);
+            WriteTestData(rtxTestDataEditor.Text.Replace("\n", Global.NewLine));
             lblSaveTip.Visible = true;
             tmrSaveTipController.Enabled = true;
         }
