@@ -61,7 +61,7 @@
             this.lblDemoExeDefaultDirectoryTip.Name = "lblDemoExeDefaultDirectoryTip";
             this.lblDemoExeDefaultDirectoryTip.Size = new System.Drawing.Size(172, 20);
             this.lblDemoExeDefaultDirectoryTip.TabIndex = 1;
-            this.lblDemoExeDefaultDirectoryTip.Text = "官方demo默认浏览目录";
+            this.lblDemoExeDefaultDirectoryTip.Text = "课程demo默认浏览目录";
             // 
             // txtDemoExeDefaultDirectory
             // 

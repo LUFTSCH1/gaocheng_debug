@@ -33,7 +33,7 @@ namespace gaocheng_debug
 
         private const string HashConvertFormatStr = "x2";
 
-        private const string HashSalt = "不告诉你";
+        private const string HashSalt = "你猜";
 
         private const string ConfirmTitle = "操作确认";
 
@@ -48,7 +48,7 @@ namespace gaocheng_debug
 
         // 私有成员-检查完整性与加文件锁后释放，故不加readonly
         private static FileListItem[] FileList = {
-            new FileListItem(@".\gaocheng_debug.exe.config"                         , "98dbb4a9bc384dca6b79a47886c42891"),
+            new FileListItem(@".\gaocheng_debug.exe.config"                         , "d18c574c943a73b85361040965c28e13"),
             new FileListItem(@".\System.Buffers.dll"                                , "ecdfe8ede869d2ccc6bf99981ea96400"),
             new FileListItem(@".\System.Memory.dll"                                 , "f09441a1ee47fb3e6571a3a448e05baf"),
             new FileListItem(@".\System.Numerics.Vectors.dll"                       , "aaa2cbf14e06e9d3586d8a4ed455db33"),

@@ -12,6 +12,8 @@ namespace gaocheng_debug
     public partial class MainForm : Form
     {
         // 私有常量
+        private const char ProjectSplitChar = ' ';
+
         private const string ProjectNameFormatStr = "yyyy-MM-dd-HH-mm-ss";
 
         private const string BlankItemStr = "blank";
@@ -19,12 +21,14 @@ namespace gaocheng_debug
         private const string DemoExePathTxtDefaultStr = "Demo Exe File Path";
         private const string YourExePathTxtDefaultStr = "Your Exe File Path";
 
+        private const string ProjectPattern = @"^[1-9]\d?-b[1-9]\d?(-[1-9]\d?)?$";
+
         // 私有静态只读成员
         private static readonly Color TimeInfoColor  = Color.FromArgb(144, 238, 144);
         private static readonly Color ErrorInfoColor = Color.FromArgb(255, 99, 71);
         private static readonly Color TipColor       = Color.FromArgb(255, 165, 0);
 
-        private static readonly Comparer<string> CMP = Comparer<string>.Create((x, y) => y.CompareTo(x));
+        private static readonly Comparer<string> CMP = Comparer<string>.Create((x, y) => { string m = x.Split(ProjectSplitChar)[1], n = y.Split(ProjectSplitChar)[1]; return n.CompareTo(m); });
 
         private static readonly Random RND = new Random();
 
@@ -111,6 +115,11 @@ namespace gaocheng_debug
             get { return absoluteTestDataPath; }
         }
 
+        public string NewProjectDirName
+        {
+            set { projectDirName = value; }
+        }
+
         // 构造函数
         public MainForm()
         {
@@ -146,7 +155,7 @@ namespace gaocheng_debug
 
             {
                 string[] form1_names = {
-                    "校对工具", "oop，启动！", "高程，启动！",
+                    "校对工具", "高程，启动！",
                     "(✿╹◡╹)", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？",
                     "EA的🐎似了（Oct 22, 2024）", "让我康康你的小红车", "٩( ╹▿╹ )۶"
                 };
@@ -214,8 +223,16 @@ namespace gaocheng_debug
         // Button事件处理函数
         private void BtnNewProjectClick(object sender, EventArgs e)
         {
-            string new_path = $"{AbsoluteProjectDirectoryPath}{DateTime.Now.ToString(ProjectNameFormatStr)}";
-            Directory.CreateDirectory(new_path);
+            NewProjectForm npf = new NewProjectForm(this);
+            if (npf.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            string new_path = $"{AbsoluteProjectDirectoryPath}{projectDirName}{ProjectSplitChar}{DateTime.Now.ToString(ProjectNameFormatStr)}";
+            if (!Directory.Exists(new_path))
+            {
+                Directory.CreateDirectory(new_path);
+            }
 
             MutSync.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}",
                                  $"awa\nQAQ\nTAT\nOvO\n0\n0\n0",

@@ -23,7 +23,7 @@ namespace gaocheng_debug
         // Button事件处理
         private void BtnSelectDemoExeDefaultPathClick(object sender, EventArgs e)
         {
-            fbdDemoAndYourExeDefaultPathSelector.Description = "选取官方demo默认浏览目录";
+            fbdDemoAndYourExeDefaultPathSelector.Description = "选取课程demo默认浏览目录";
             if (fbdDemoAndYourExeDefaultPathSelector.ShowDialog() == DialogResult.OK)
             {
                 txtDemoExeDefaultDirectory.Text = fbdDemoAndYourExeDefaultPathSelector.SelectedPath;

@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 namespace gaocheng_debug
 {
@@ -102,17 +103,20 @@ namespace gaocheng_debug
 
             string[] directories = Directory.GetDirectories(Global.ProjectDirectoryRelativePath);
             int len = 0, i = 0, arr_len = directories.Length;
-            for (string temp; i < arr_len; ++i)
+            for (string[] temp; i < arr_len; ++i)
             {
-                temp = Path.GetFileName(directories[i]);
-                if (DateTime.TryParseExact(temp,
+                string dir = Path.GetFileName(directories[i]);
+                temp = dir.Split(ProjectSplitChar);
+                if (temp.Length == 2 &&
+                    Regex.IsMatch(temp[0], ProjectPattern) &&
+                    DateTime.TryParseExact(temp[1],
                                            ProjectNameFormatStr,
                                            InvariantCulture,
                                            DateTimeStyles.None,
                                            out prj_time) &&
                     now >= prj_time)
                 {
-                    directories[len++] = temp;
+                    directories[len++] = dir;
                 }
             }
             Array.Sort(directories, 0, len, CMP);
@@ -286,7 +290,21 @@ namespace gaocheng_debug
         {
             string compare_cmd = $"{AbsoluteTxtComparePath} --file1 {Global.DemoExeResult} --file2 {Global.YourExeResult} {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
 
-            InterfaceProgram.Start();
+            while (true)
+            {
+                try
+                {
+                    InterfaceProgram.Start();
+                    break;
+                }
+                catch
+                {
+                    if (!MutSync.CheckOperation("启动CMD失败，是否重试？", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    {
+                        return;
+                    }
+                }
+            }
 
             InterfaceProgram.StandardInput.WriteLine(
                   $"cd /d \"{absoluteDirPath}\"\n"
@@ -350,6 +368,7 @@ namespace gaocheng_debug
                 OwnMD5CalculatorForm.Hide();
             }
             Hide();
+            Enabled = false;
 
             if (File.Exists(absoluteCompareResultPath))
             {
@@ -370,6 +389,7 @@ namespace gaocheng_debug
                 PrintErrorInfo($"{TestProcessExceptionStr}{DateTime.Now.ToString(Global.OperationTimeFormatStr)}");
             }
 
+            Enabled = true;
             MutSync.BringToFrontAndFocus(this);
         }
     }
