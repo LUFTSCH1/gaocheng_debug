@@ -42,7 +42,7 @@
             // 
             this.cboChapter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboChapter.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cboChapter.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboChapter.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboChapter.FormattingEnabled = true;
             this.cboChapter.Items.AddRange(new object[] {
             "1",
@@ -63,14 +63,14 @@
             "16"});
             this.cboChapter.Location = new System.Drawing.Point(12, 12);
             this.cboChapter.Name = "cboChapter";
-            this.cboChapter.Size = new System.Drawing.Size(71, 26);
+            this.cboChapter.Size = new System.Drawing.Size(56, 30);
             this.cboChapter.TabIndex = 0;
             // 
             // cboProblem
             // 
             this.cboProblem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboProblem.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cboProblem.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboProblem.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboProblem.FormattingEnabled = true;
             this.cboProblem.Items.AddRange(new object[] {
             "1",
@@ -105,16 +105,16 @@
             "30",
             "31",
             "32"});
-            this.cboProblem.Location = new System.Drawing.Point(127, 12);
+            this.cboProblem.Location = new System.Drawing.Point(112, 12);
             this.cboProblem.Name = "cboProblem";
-            this.cboProblem.Size = new System.Drawing.Size(71, 26);
+            this.cboProblem.Size = new System.Drawing.Size(56, 30);
             this.cboProblem.TabIndex = 1;
             // 
             // cboQuestion
             // 
             this.cboQuestion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboQuestion.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cboQuestion.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboQuestion.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboQuestion.FormattingEnabled = true;
             this.cboQuestion.Items.AddRange(new object[] {
             "1",
@@ -133,9 +133,9 @@
             "14",
             "15",
             "16"});
-            this.cboQuestion.Location = new System.Drawing.Point(231, 12);
+            this.cboQuestion.Location = new System.Drawing.Point(201, 12);
             this.cboQuestion.Name = "cboQuestion";
-            this.cboQuestion.Size = new System.Drawing.Size(71, 26);
+            this.cboQuestion.Size = new System.Drawing.Size(56, 30);
             this.cboQuestion.TabIndex = 2;
             this.cboQuestion.Visible = false;
             // 
@@ -144,7 +144,7 @@
             this.chkIsLastEnabled.AutoSize = true;
             this.chkIsLastEnabled.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.chkIsLastEnabled.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.chkIsLastEnabled.Location = new System.Drawing.Point(12, 48);
+            this.chkIsLastEnabled.Location = new System.Drawing.Point(12, 54);
             this.chkIsLastEnabled.Name = "chkIsLastEnabled";
             this.chkIsLastEnabled.Size = new System.Drawing.Size(130, 25);
             this.chkIsLastEnabled.TabIndex = 3;
@@ -157,7 +157,7 @@
             this.btnNewProject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
             this.btnNewProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNewProject.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnNewProject.Location = new System.Drawing.Point(197, 48);
+            this.btnNewProject.Location = new System.Drawing.Point(152, 51);
             this.btnNewProject.Name = "btnNewProject";
             this.btnNewProject.Size = new System.Drawing.Size(105, 29);
             this.btnNewProject.TabIndex = 4;
@@ -169,7 +169,7 @@
             // 
             this.lblChapterProblem.AutoSize = true;
             this.lblChapterProblem.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblChapterProblem.Location = new System.Drawing.Point(89, 15);
+            this.lblChapterProblem.Location = new System.Drawing.Point(74, 15);
             this.lblChapterProblem.Name = "lblChapterProblem";
             this.lblChapterProblem.Size = new System.Drawing.Size(32, 23);
             this.lblChapterProblem.TabIndex = 5;
@@ -179,7 +179,7 @@
             // 
             this.lblProblemQuestion.AutoSize = true;
             this.lblProblemQuestion.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblProblemQuestion.Location = new System.Drawing.Point(204, 15);
+            this.lblProblemQuestion.Location = new System.Drawing.Point(174, 15);
             this.lblProblemQuestion.Name = "lblProblemQuestion";
             this.lblProblemQuestion.Size = new System.Drawing.Size(21, 23);
             this.lblProblemQuestion.TabIndex = 6;
@@ -191,7 +191,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
-            this.ClientSize = new System.Drawing.Size(318, 91);
+            this.ClientSize = new System.Drawing.Size(269, 91);
             this.Controls.Add(this.lblProblemQuestion);
             this.Controls.Add(this.lblChapterProblem);
             this.Controls.Add(this.btnNewProject);
