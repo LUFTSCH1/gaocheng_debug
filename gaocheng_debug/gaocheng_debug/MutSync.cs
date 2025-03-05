@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Reflection;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -286,7 +285,7 @@ namespace gaocheng_debug
             return locks;
         }
 
-        // 完整性并行检查
+        // 哈希资产检查
         public static void CheckIntegrality()
         {
             const long MaxFileSize = 2 * 1024 * 1024;
@@ -297,39 +296,64 @@ namespace gaocheng_debug
                 Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
             }
 
-            Parallel.ForEach(FileList, file =>
+            foreach (FileListItem file in FileList)
             {
-                string hash;
-                while (true)
+                while (!File.Exists(file.FileName))
                 {
-                    try
+                    if (!CheckOperation($"应用程序相对路径下必要的\n{file.FileName}\n文件缺失，请检查回收站或考虑重新下载应用。\n是否重试检查？",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
                     {
-                        hash = GetMD5HashFromFile(file.FileName);
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
-                                            MessageBoxIcon.Error,
-                                            Global.ErrorTitle,
-                                            MessageBoxDefaultButton.Button1))
-                        {
-                            Environment.Exit((int)ErrorCode.HashComputeError);
-                        }
+                        Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
                     }
                 }
 
-                if (!File.Exists(file.FileName))
+                while (new FileInfo(file.FileName).Length > MaxFileSize)
                 {
-                    ShowMessageToWarn($"应用程序相对路径下必要的\n{file.FileName}\n文件缺失，请检查回收站或考虑重新下载应用");
-                    Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
+                    if (!CheckOperation($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换\n是否重试检查？",
+                                        MessageBoxIcon.Error,
+                                        Global.ErrorTitle,
+                                        MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
+                    }
                 }
-                else if(new FileInfo(file.FileName).Length > MaxFileSize || file.MD5Hash != hash)
+
+                while (true)
                 {
-                    ShowMessageToWarn($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换");
-                    Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
+                    string hash;
+                    while (true)
+                    {
+                        try
+                        {
+                            hash = GetMD5HashFromFile(file.FileName);
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
+                                                MessageBoxIcon.Error,
+                                                Global.ErrorTitle,
+                                                MessageBoxDefaultButton.Button1))
+                            {
+                                Environment.Exit((int)ErrorCode.HashComputeError);
+                            }
+                        }
+                    }
+                    if (hash == file.MD5Hash)
+                    {
+                        break;
+                    }
+                    else if (!CheckOperation($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换\n是否重试检查？",
+                                             MessageBoxIcon.Error,
+                                             Global.ErrorTitle,
+                                             MessageBoxDefaultButton.Button1))
+                    {
+                        Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
+                    }
                 }
-            });
+            }
         }
 
         // 私有静态外部方法
