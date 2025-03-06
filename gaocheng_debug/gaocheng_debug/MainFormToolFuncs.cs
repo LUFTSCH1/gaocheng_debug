@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using System.Globalization;
 using System.Windows.Forms;
-using System.Text.RegularExpressions;
 
 namespace gaocheng_debug
 {
@@ -108,7 +107,7 @@ namespace gaocheng_debug
                 string dir = Path.GetFileName(directories[i]);
                 temp = dir.Split(ProjectSplitChar);
                 if (temp.Length == 2 &&
-                    Regex.IsMatch(temp[0], ProjectPattern) &&
+                    ProjectRegex.IsMatch(temp[0]) &&
                     DateTime.TryParseExact(temp[1],
                                            ProjectNameFormatStr,
                                            InvariantCulture,

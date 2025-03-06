@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace gaocheng_debug
 {
@@ -20,8 +21,6 @@ namespace gaocheng_debug
 
         private const string DemoExePathTxtDefaultStr = "Demo Exe File Path";
         private const string YourExePathTxtDefaultStr = "Your Exe File Path";
-
-        private const string ProjectPattern = @"^[1-9]\d?-b[1-9]\d?(-[1-9]\d?)?$";
 
         // 私有静态只读成员
         private static readonly Color TimeInfoColor  = Color.FromArgb(144, 238, 144);
@@ -62,6 +61,8 @@ namespace gaocheng_debug
             " Ciallo～(∠・ω< )⌒★", " ( ｀･ω･´)ゞ", $"{Global.NewLine}| ᐕ)⁾⁾",
             " ٩( ╹▿╹ )۶", " ミ(ﾉ-∀-)ﾉ", " (灬╹ω╹灬)"
         };
+
+        private static readonly Regex ProjectRegex = new Regex(@"^[1-9]\d?-b[1-9]\d?(-[1-9]\d?)?$", RegexOptions.Compiled);
 
         // 私有只读成员，在构造函数中初始化
         private readonly string AbsoluteProjectDirectoryPath;

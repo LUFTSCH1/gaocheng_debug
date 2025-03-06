@@ -7,7 +7,7 @@
 * 官方demo测试结果（demo_exe_result.txt）
 * 作业exe测试结果（your_exe_result.txt）
 
-### [点此下载](https://github.com/LUFTSCH1/gaocheng_debug/releases/latest)
+### [点此下载（仅适用于Windows on x86/x64）](https://github.com/LUFTSCH1/gaocheng_debug/releases/latest)
 
 ## 界面预览
 * 应用主界面预览
@@ -15,7 +15,7 @@
 * 单次测试生成的所有文件预览
 ![单个项目生成文件预览](./img/files.jpg "单个项目生成文件预览")
 
-## 编译须知（如果你想编译源码的话）
+## 编译须知（如果你想编译项目的话）
 首次编译后直接运行可能报错，需要将resource文件夹中的的rsc文件夹以及README.html文件复制到生成exe同级目录下。若还无法正常运行，则检查MutSync.cs文件代码中检查的文件存在性、检查的文件大小是否超过2MB，以及MD5是否正确（尤其是gaocheng_debug.exe.config）
 
 <blockquote>（“你一定是坚坚的学生吧”<br>
