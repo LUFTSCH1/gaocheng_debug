@@ -33,7 +33,7 @@ namespace gaocheng_debug
 
         private const string HashConvertFormatStr = "x2";
 
-        private const string HashSalt = "你猜";
+        private const string HashSalt = "到底是什么呢？";
 
         private const string ConfirmTitle = "操作确认";
 
