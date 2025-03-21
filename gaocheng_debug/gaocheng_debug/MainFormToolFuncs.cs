@@ -362,9 +362,9 @@ namespace gaocheng_debug
             FileStream demo_exe_lock = MutSync.NewReadOnlyFileHandle(txtDemoExePath.Text);
             FileStream your_exe_lock = MutSync.NewReadOnlyFileHandle(txtYourExePath.Text);
 
-            if (OwnMD5CalculatorForm.Visible)
+            if (OwnHashCalculatorForm.Visible)
             {
-                OwnMD5CalculatorForm.Hide();
+                OwnHashCalculatorForm.Hide();
             }
             Hide();
             Enabled = false;

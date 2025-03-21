@@ -34,7 +34,7 @@
             this.lblProjectTip = new System.Windows.Forms.Label();
             this.mnsAdditionalFunctions = new System.Windows.Forms.MenuStrip();
             this.tsmiSettings = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiMD5Calculator = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiHashCalculator = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiRepositoryAddress = new System.Windows.Forms.ToolStripMenuItem();
             this.btnNewProject = new System.Windows.Forms.Button();
@@ -90,7 +90,7 @@
             this.mnsAdditionalFunctions.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnsAdditionalFunctions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiSettings,
-            this.tsmiMD5Calculator,
+            this.tsmiHashCalculator,
             this.tsmiHelp,
             this.tsmiRepositoryAddress});
             this.mnsAdditionalFunctions.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
@@ -108,12 +108,12 @@
             this.tsmiSettings.Text = "设置";
             this.tsmiSettings.Click += new System.EventHandler(this.TsmiSettingsClick);
             // 
-            // tsmiMD5Calculator
+            // tsmiHashCalculator
             // 
-            this.tsmiMD5Calculator.Name = "tsmiMD5Calculator";
-            this.tsmiMD5Calculator.Size = new System.Drawing.Size(118, 24);
-            this.tsmiMD5Calculator.Text = "计算文件MD5";
-            this.tsmiMD5Calculator.Click += new System.EventHandler(this.TsmiMD5CalculatorClick);
+            this.tsmiHashCalculator.Name = "tsmiHashCalculator";
+            this.tsmiHashCalculator.Size = new System.Drawing.Size(128, 24);
+            this.tsmiHashCalculator.Text = "计算文件哈希值";
+            this.tsmiHashCalculator.Click += new System.EventHandler(this.TsmiHashCalculatorClick);
             // 
             // tsmiHelp
             // 
@@ -417,7 +417,7 @@
         private System.Windows.Forms.OpenFileDialog ofdDemoAndYourExeSelector;
         private System.Windows.Forms.Button btnOpenProjectDirectory;
         private System.Windows.Forms.Button btnDeleteProject;
-        private System.Windows.Forms.ToolStripMenuItem tsmiMD5Calculator;
+        private System.Windows.Forms.ToolStripMenuItem tsmiHashCalculator;
         private System.Windows.Forms.CheckBox chkIsInterfaceProgramPause;
         private System.Windows.Forms.ToolStripMenuItem tsmiRepositoryAddress;
     }

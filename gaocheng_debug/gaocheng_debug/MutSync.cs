@@ -27,6 +27,7 @@ namespace gaocheng_debug
 
         // 私有常量
         private const int MD5HashStringLength = 32;
+        private const int SHA256HashStringLength = 64;
 
         private const double MaxHidePart = 0.6;
 
@@ -42,8 +43,12 @@ namespace gaocheng_debug
 
         // 私有静态只读成员-顺序调用，不得冲突
         private static readonly MD5 MD5 = MD5.Create();
-        
         private static readonly StringBuilder MD5StringBuilder = new StringBuilder(MD5HashStringLength);
+
+        private static readonly MD5 MD5ForFile = MD5.Create();
+        private static readonly SHA1 SHA1ForFile = SHA1.Create();
+        private static readonly SHA256 SHA256ForFile = SHA256.Create();
+        private static readonly StringBuilder HashStringBuilder = new StringBuilder(SHA256HashStringLength);
 
         // 私有成员-检查完整性与加文件锁后释放，故不加readonly
         private static FileListItem[] FileList = {
@@ -53,9 +58,9 @@ namespace gaocheng_debug
             new FileListItem(@".\System.Numerics.Vectors.dll"                       , "aaa2cbf14e06e9d3586d8a4ed455db33"),
             new FileListItem(@".\System.Runtime.CompilerServices.Unsafe.dll"        , "c610e828b54001574d86dd2ed730e392"),
             new FileListItem(@".\System.Text.Encoding.CodePages.dll"                , "2c9e9cd5c6f31ebfdc8155efdc20f4f7"),
-            new FileListItem($".\\{Global.ResourceDirectory}\\{Global.GetInputData}", "0575ba8c3fcd1bd3fe7f2409325a3f98"),
+            new FileListItem($".\\{Global.ResourceDirectory}\\{Global.GetInputData}", "89f356fa5854ba3a0dbdd69835decf86"),
+            new FileListItem($".\\{Global.ResourceDirectory}\\{Global.TxtCompare}"  , "d7a6a869781090b13ffeb05e849b0e74"),
             new FileListItem($".\\{Global.ResourceDirectory}\\msvcp140d.dll"        , "a66eaf437d3d8c53a127f77b2a896f0d"),
-            new FileListItem($".\\{Global.ResourceDirectory}\\{Global.TxtCompare}"  , "665beeefe858a15c1f3d531baa64ee0d"),
             new FileListItem($".\\{Global.ResourceDirectory}\\ucrtbased.dll"        , "4d98940874d14692b02ece8f5b591362"),
             new FileListItem($".\\{Global.ResourceDirectory}\\vcruntime140d.dll"    , "b907335a3619259f8aaf22c445de15ce")
         };
@@ -252,23 +257,32 @@ namespace gaocheng_debug
             }
         }
 
-        // 此方法会创建更多对象，但更加安全，提供给异步/并行方法使用
+        // 文件哈希，以下三个方法不可同时调用
         public static string GetMD5HashFromFile(in string fileName)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                FileStream file = NewReadOnlyFileHandle(fileName);
-                byte[] hash_bytes = md5.ComputeHash(file);
-                file.Close();
+            FileStream file = NewReadOnlyFileHandle(fileName);
+            byte[] hash_bytes = MD5ForFile.ComputeHash(file);
+            file.Close();
+            MD5ForFile.Initialize();
+            return ConvertBytesToHash(hash_bytes);
+        }
 
-                StringBuilder sb = new StringBuilder(MD5HashStringLength);
-                for (int i = 0, len = hash_bytes.Length; i < len; ++i)
-                {
-                    sb.Append(hash_bytes[i].ToString(HashConvertFormatStr));
-                }
+        public static string GetSHA1HashFromFile(in string fileName)
+        {
+            FileStream file = NewReadOnlyFileHandle(fileName);
+            byte[] hash_bytes = SHA1ForFile.ComputeHash(file);
+            file.Close();
+            SHA1ForFile.Initialize();
+            return ConvertBytesToHash(hash_bytes);
+        }
 
-                return sb.ToString();
-            }
+        public static string GetSHA256HashFromFile(in string fileName)
+        {
+            FileStream file = NewReadOnlyFileHandle(fileName);
+            byte[] hash_bytes = SHA256ForFile.ComputeHash(file);
+            file.Close();
+            SHA256ForFile.Initialize();
+            return ConvertBytesToHash(hash_bytes);
         }
 
         public static List<FileStream> LockFilesAndDisposeFileList()
@@ -288,7 +302,7 @@ namespace gaocheng_debug
         // 哈希资产检查
         public static void CheckIntegrality()
         {
-            const long MaxFileSize = 2 * 1024 * 1024;
+            const long MaxFileSize =  (1024 + 512) * 1024;
 
             if (!Directory.Exists($".\\{Global.ResourceDirectory}"))
             {
@@ -378,6 +392,16 @@ namespace gaocheng_debug
                 MD5StringBuilder.Append(bytes[i].ToString(HashConvertFormatStr));
             }
             return MD5StringBuilder.ToString();
+        }
+
+        private static string ConvertBytesToHash(in byte[] bytes)
+        {
+            HashStringBuilder.Length = 0;
+            for (int i = 0, len = bytes.Length; i < len; ++i)
+            {
+                HashStringBuilder.Append(bytes[i].ToString(HashConvertFormatStr));
+            }
+            return HashStringBuilder.ToString();
         }
     }
 }

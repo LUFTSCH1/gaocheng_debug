@@ -37,7 +37,7 @@ namespace gaocheng_debug
         private static readonly ProcessStartInfo RepositoryAddressStartInfo = new ProcessStartInfo { FileName = "https://github.com/LUFTSCH1/gaocheng_debug", UseShellExecute = true };
 
         private static readonly string NewOrEditTestDataFormOpenTipStr =   $"创建/修改测试数据 窗口已打开{Global.NewLine}{Global.NewLine}"
-                                                                         + $"你仍可以计算文件MD5、查看使用说明、修改--trim和--display参数{Global.NewLine}"
+                                                                         + $"你仍可以计算文件哈希值、查看使用说明、修改--trim和--display参数{Global.NewLine}"
                                                                          + $"但如果想进行其它操作，请继续完成 创建/修改测试数据 操作或将 创建/修改测试数据 窗体关闭";
         private static readonly string ResultTxtNotExistExceptionStr   =   $"{Global.CompareResult}文件不存在{Global.NewLine}{Global.NewLine}"
                                                                          + $"导致本异常的原因可能是：{Global.NewLine}"
@@ -74,7 +74,7 @@ namespace gaocheng_debug
 
         private readonly SettingForm OwnSettingForm;
         private readonly NewOrEditTestDataForm OwnNewOrEditTestDataForm;
-        private readonly MD5CalculatorForm OwnMD5CalculatorForm;
+        private readonly HashCalculatorForm OwnHashCalculatorForm;
 
         // 私有成员变量
         private bool isModeChanged, isPathChanged;
@@ -121,6 +121,11 @@ namespace gaocheng_debug
             set { projectDirName = value; }
         }
 
+        public string ProjectDirName
+        {
+            get { return projectDirName; }
+        }
+
         // 构造函数
         public MainForm()
         {
@@ -157,15 +162,15 @@ namespace gaocheng_debug
             {
                 string[] form1_names = {
                     "校对工具", "高程，启动！",
-                    "(✿╹◡╹)", "Ciallo～(∠・ω< )⌒★", "兄弟，写多久了？",
-                    "EA的🐎似了（Oct 22, 2024）", "让我康康你的小红车", "٩( ╹▿╹ )۶"
+                    "(✿╹◡╹)", "Ciallo～(∠・ω< )⌒★",
+                    "兄弟，写多久了？", "让我康康你的小红车", "٩( ╹▿╹ )۶"
                 };
                 Text = form1_names[RND.Next(0, form1_names.Length)];
             }
 
             OwnSettingForm = new SettingForm(this, defaultDemoExeDirectory, defaultYourExeDirectory);
             OwnNewOrEditTestDataForm = new NewOrEditTestDataForm(this);
-            OwnMD5CalculatorForm = new MD5CalculatorForm(this);
+            OwnHashCalculatorForm = new HashCalculatorForm(this);
 
             RefreshProjectList();
             cboProjectSelector.SelectedIndex = 0;
@@ -174,7 +179,7 @@ namespace gaocheng_debug
         // 窗体关闭释放资源
         private void MainFormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((OwnNewOrEditTestDataForm.Visible || OwnMD5CalculatorForm.Visible) &&
+            if ((OwnNewOrEditTestDataForm.Visible || OwnHashCalculatorForm.Visible) &&
                 !MutSync.CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
             {
                 e.Cancel = true;
@@ -183,7 +188,7 @@ namespace gaocheng_debug
             {
                 OwnSettingForm.Dispose();
                 OwnNewOrEditTestDataForm.Dispose();
-                OwnMD5CalculatorForm.Dispose();
+                OwnHashCalculatorForm.Dispose();
                 DisposeProjectGaochengLock();
                 Application.Exit();
             }
@@ -201,8 +206,8 @@ namespace gaocheng_debug
         private void TsmiSettingsClick(object sender, EventArgs e) =>
             OwnSettingForm.ShowDialog();
 
-        private void TsmiMD5CalculatorClick(object sender, EventArgs e) =>
-            MutSync.BringToFrontAndFocus(OwnMD5CalculatorForm);
+        private void TsmiHashCalculatorClick(object sender, EventArgs e) =>
+            MutSync.BringToFrontAndFocus(OwnHashCalculatorForm);
 
         private void TsmiHelpClick(object sender, EventArgs e)
         {

@@ -96,15 +96,7 @@
             "21",
             "22",
             "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-            "32"});
+            "24"});
             this.cboProblem.Location = new System.Drawing.Point(112, 12);
             this.cboProblem.Name = "cboProblem";
             this.cboProblem.Size = new System.Drawing.Size(56, 30);

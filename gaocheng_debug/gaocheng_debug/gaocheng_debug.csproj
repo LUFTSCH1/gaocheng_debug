@@ -146,11 +146,11 @@
     <Compile Include="NewOrEditTestDataForm.Designer.cs">
       <DependentUpon>NewOrEditTestDataForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MD5CalculatorForm.cs">
+    <Compile Include="HashCalculatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MD5CalculatorForm.Designer.cs">
-      <DependentUpon>MD5CalculatorForm.cs</DependentUpon>
+    <Compile Include="HashCalculatorForm.Designer.cs">
+      <DependentUpon>HashCalculatorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MutSync.cs" />
     <Compile Include="Program.cs" />
@@ -172,8 +172,8 @@
     <EmbeddedResource Include="NewOrEditTestDataForm.resx">
       <DependentUpon>NewOrEditTestDataForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MD5CalculatorForm.resx">
-      <DependentUpon>MD5CalculatorForm.cs</DependentUpon>
+    <EmbeddedResource Include="HashCalculatorForm.resx">
+      <DependentUpon>HashCalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

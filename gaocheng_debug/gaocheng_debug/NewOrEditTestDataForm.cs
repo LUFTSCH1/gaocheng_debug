@@ -34,6 +34,7 @@ namespace gaocheng_debug
         // 公有方法
         public void LoadTestDataContent()
         {
+            Text = $"创建/修改测试数据 <{Master.ProjectDirName}>";
             if (File.Exists(Master.AbsoluteTestDataPath))
             {
                 rtxTestDataEditor.Text = MutSync.ReadAllText(Master.AbsoluteTestDataPath, Global.GB18030);
