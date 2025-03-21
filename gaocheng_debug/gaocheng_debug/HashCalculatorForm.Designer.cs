@@ -41,7 +41,7 @@
             this.btnSelectFileAndCalculateMD5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
             this.btnSelectFileAndCalculateMD5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSelectFileAndCalculateMD5.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSelectFileAndCalculateMD5.Location = new System.Drawing.Point(643, 12);
+            this.btnSelectFileAndCalculateMD5.Location = new System.Drawing.Point(658, 11);
             this.btnSelectFileAndCalculateMD5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnSelectFileAndCalculateMD5.Name = "btnSelectFileAndCalculateMD5";
             this.btnSelectFileAndCalculateMD5.Size = new System.Drawing.Size(139, 33);
@@ -60,7 +60,7 @@
             this.txtResultViewer.Name = "txtResultViewer";
             this.txtResultViewer.ReadOnly = true;
             this.txtResultViewer.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResultViewer.Size = new System.Drawing.Size(772, 253);
+            this.txtResultViewer.Size = new System.Drawing.Size(787, 226);
             this.txtResultViewer.TabIndex = 1;
             // 
             // ofdFilePathBrowser
@@ -76,15 +76,15 @@
             this.cboHashAlgorithmSelector.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.cboHashAlgorithmSelector.Font = new System.Drawing.Font("Consolas", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboHashAlgorithmSelector.FormattingEnabled = true;
-            this.cboHashAlgorithmSelector.Location = new System.Drawing.Point(517, 14);
+            this.cboHashAlgorithmSelector.Location = new System.Drawing.Point(555, 13);
             this.cboHashAlgorithmSelector.Name = "cboHashAlgorithmSelector";
-            this.cboHashAlgorithmSelector.Size = new System.Drawing.Size(121, 30);
+            this.cboHashAlgorithmSelector.Size = new System.Drawing.Size(98, 30);
             this.cboHashAlgorithmSelector.TabIndex = 2;
             // 
             // lblHashAlgorithmTip
             // 
             this.lblHashAlgorithmTip.AutoSize = true;
-            this.lblHashAlgorithmTip.Location = new System.Drawing.Point(438, 18);
+            this.lblHashAlgorithmTip.Location = new System.Drawing.Point(476, 17);
             this.lblHashAlgorithmTip.Name = "lblHashAlgorithmTip";
             this.lblHashAlgorithmTip.Size = new System.Drawing.Size(73, 20);
             this.lblHashAlgorithmTip.TabIndex = 3;
@@ -95,7 +95,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
-            this.ClientSize = new System.Drawing.Size(793, 314);
+            this.ClientSize = new System.Drawing.Size(808, 287);
             this.Controls.Add(this.lblHashAlgorithmTip);
             this.Controls.Add(this.cboHashAlgorithmSelector);
             this.Controls.Add(this.txtResultViewer);
