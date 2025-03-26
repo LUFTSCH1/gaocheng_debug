@@ -136,8 +136,6 @@ namespace gaocheng_debug
                 AbsoluteTxtComparePath       = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}\"";
             }
 
-            InitializeComponent();
-
             {
                 string[] defaults = MutSync.ReadAllLines(Global.DefaultSettingsRelativePath);
                 if (defaults.Length == Global.DefaultSettingsLines)
@@ -159,6 +157,16 @@ namespace gaocheng_debug
             InterfaceProgram.StartInfo.UseShellExecute = false;
             InterfaceProgram.StartInfo.RedirectStandardInput = true;
 
+            OwnSettingForm = new SettingForm(this, defaultDemoExeDirectory, defaultYourExeDirectory);
+            OwnNewOrEditTestDataForm = new NewOrEditTestDataForm(this);
+            OwnHashCalculatorForm = new HashCalculatorForm(this);
+
+            InitializeComponent();
+
+            lblSeperator.Location = new Point((btnOpenProjectDirectory.Location.X + btnOpenProjectDirectory.Width + cboTrimSelector.Location.X) / 2,
+                                              cboTrimSelector.Location.Y);
+            lblSeperator.Size = new Size(1, btnNewOrEditTestData.Location.Y + btnNewOrEditTestData.Height - cboTrimSelector.Location.Y);
+
             {
                 string[] form1_names = {
                     "校对工具", "高程，启动！",
@@ -167,10 +175,6 @@ namespace gaocheng_debug
                 };
                 Text = form1_names[RND.Next(0, form1_names.Length)];
             }
-
-            OwnSettingForm = new SettingForm(this, defaultDemoExeDirectory, defaultYourExeDirectory);
-            OwnNewOrEditTestDataForm = new NewOrEditTestDataForm(this);
-            OwnHashCalculatorForm = new HashCalculatorForm(this);
 
             RefreshProjectList();
             cboProjectSelector.SelectedIndex = 0;
@@ -296,10 +300,10 @@ namespace gaocheng_debug
             }
             else
             {
-                MutSync.ShowMessageToWarn($"原demo默认浏览目录：\n{defaultDemoExeDirectory}\n不存在，建议点击“设置”进行更改");
+                MutSync.ShowMessageToWarn($"原课程demo默认浏览目录：\n{defaultDemoExeDirectory}\n不存在，建议点击“设置”进行更改");
                 ofdDemoAndYourExeSelector.InitialDirectory = Global.DefaultDirectory;
             }
-            ofdDemoAndYourExeSelector.Title = "选择官方demo文件";
+            ofdDemoAndYourExeSelector.Title = "选择课程demo文件";
             if (ofdDemoAndYourExeSelector.ShowDialog() == DialogResult.OK)
             {
                 txtDemoExePath.Text = ofdDemoAndYourExeSelector.FileName;
