@@ -14,6 +14,9 @@ namespace gaocheng_debug
         private const char DataIDFlag   = '[';
         private const char LF           = '\n';
 
+        private const string SaveTip = "已保存";
+        private const string CopyTip = "已复制";
+
         private static readonly string DataGroupTruncationWarning = $"数据组数大于{MaxDataGroupNum}，将舍弃第{MaxDataGroupNum + 1}组及之后的数据";
 
         // 私有只读成员
@@ -60,7 +63,7 @@ namespace gaocheng_debug
             if (e.Control && e.KeyCode == Keys.S)
             {
                 e.SuppressKeyPress = true;
-                WriteTestDataWithTip();
+                WriteTestDataWithTip(SaveTip);
             }
         }
 
@@ -130,12 +133,20 @@ namespace gaocheng_debug
             Master.DoWhileEdited(cnt);
         }
 
+        private void BtnCopyClick(object sender, EventArgs e)
+        {
+            Clipboard.SetText(rtxTestDataEditor.Text);
+            lblTip.Text = CopyTip;
+            lblTip.Visible = true;
+            tmrSaveTipController.Enabled = true;
+        }
+
         private void BtnSaveClick(object sender, EventArgs e) =>
-            WriteTestDataWithTip();
+            WriteTestDataWithTip(SaveTip);
 
         private void TmrSaveTipControllerTick(object sender, EventArgs e)
         {
-            lblSaveTip.Visible = false;
+            lblTip.Visible = false;
             tmrSaveTipController.Enabled = false;
         }
 
@@ -143,10 +154,11 @@ namespace gaocheng_debug
         private void WriteTestData(in string content) =>
             MutSync.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
 
-        private void WriteTestDataWithTip()
+        private void WriteTestDataWithTip(in string tip)
         {
             WriteTestData(rtxTestDataEditor.Text.Replace("\n", Global.NewLine));
-            lblSaveTip.Visible = true;
+            lblTip.Text = tip;
+            lblTip.Visible = true;
             tmrSaveTipController.Enabled = true;
         }
 

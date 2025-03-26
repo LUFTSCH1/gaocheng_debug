@@ -33,9 +33,10 @@
             this.lblDataInputTip = new System.Windows.Forms.Label();
             this.btnGenerateOrModifyThenTest = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
-            this.lblSaveTip = new System.Windows.Forms.Label();
+            this.lblTip = new System.Windows.Forms.Label();
             this.tmrSaveTipController = new System.Windows.Forms.Timer(this.components);
             this.rtxTestDataEditor = new System.Windows.Forms.RichTextBox();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblDataInputTip
@@ -66,7 +67,7 @@
             // 
             this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(114)))), ((int)(((byte)(61)))));
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location = new System.Drawing.Point(342, 10);
+            this.btnSave.Location = new System.Drawing.Point(348, 10);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(115, 33);
             this.btnSave.TabIndex = 3;
@@ -74,17 +75,17 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.BtnSaveClick);
             // 
-            // lblSaveTip
+            // lblTip
             // 
-            this.lblSaveTip.AutoSize = true;
-            this.lblSaveTip.Font = new System.Drawing.Font("等线", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblSaveTip.ForeColor = System.Drawing.Color.DarkCyan;
-            this.lblSaveTip.Location = new System.Drawing.Point(271, 17);
-            this.lblSaveTip.Name = "lblSaveTip";
-            this.lblSaveTip.Size = new System.Drawing.Size(65, 19);
-            this.lblSaveTip.TabIndex = 4;
-            this.lblSaveTip.Text = "SAVED";
-            this.lblSaveTip.Visible = false;
+            this.lblTip.AutoSize = true;
+            this.lblTip.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTip.ForeColor = System.Drawing.Color.DarkCyan;
+            this.lblTip.Location = new System.Drawing.Point(183, 15);
+            this.lblTip.Name = "lblTip";
+            this.lblTip.Size = new System.Drawing.Size(66, 25);
+            this.lblTip.TabIndex = 4;
+            this.lblTip.Text = "已保存";
+            this.lblTip.Visible = false;
             // 
             // tmrSaveTipController
             // 
@@ -102,14 +103,27 @@
             this.rtxTestDataEditor.Text = "";
             this.rtxTestDataEditor.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RtxTestDataEditorKeyDown);
             // 
+            // btnCopy
+            // 
+            this.btnCopy.BackColor = System.Drawing.Color.White;
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCopy.Location = new System.Drawing.Point(255, 10);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(87, 33);
+            this.btnCopy.TabIndex = 6;
+            this.btnCopy.Text = "一键复制";
+            this.btnCopy.UseVisualStyleBackColor = false;
+            this.btnCopy.Click += new System.EventHandler(this.BtnCopyClick);
+            // 
             // NewOrEditTestDataForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
             this.ClientSize = new System.Drawing.Size(650, 646);
+            this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.rtxTestDataEditor);
-            this.Controls.Add(this.lblSaveTip);
+            this.Controls.Add(this.lblTip);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnGenerateOrModifyThenTest);
             this.Controls.Add(this.lblDataInputTip);
@@ -131,8 +145,9 @@
         private System.Windows.Forms.Label lblDataInputTip;
         private System.Windows.Forms.Button btnGenerateOrModifyThenTest;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Label lblSaveTip;
+        private System.Windows.Forms.Label lblTip;
         private System.Windows.Forms.Timer tmrSaveTipController;
         private System.Windows.Forms.RichTextBox rtxTestDataEditor;
+        private System.Windows.Forms.Button btnCopy;
     }
 }

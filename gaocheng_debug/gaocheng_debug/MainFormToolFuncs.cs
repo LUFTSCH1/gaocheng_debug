@@ -210,9 +210,11 @@ namespace gaocheng_debug
 
         private void PrintResultInfo(in string resultFile)
         {
-            string time_info = $"{Global.CompareResult}文件创建/修改时间：{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}";
-            rtxResultViewer.Text = $"{time_info}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
-            rtxResultViewer.Select(0, time_info.Length);
+            string info =   $"{Global.CompareResult}文件创建/修改时间："
+                          + $"{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
+                          + $"已测试 {dataGroupNum} 组数据";
+            rtxResultViewer.Text = $"{info}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
+            rtxResultViewer.Select(0, info.Length);
             rtxResultViewer.SelectionColor = TimeInfoColor;
             rtxResultViewer.DeselectAll();
         }

@@ -54,6 +54,7 @@
             this.btnOpenProjectDirectory = new System.Windows.Forms.Button();
             this.btnDeleteProject = new System.Windows.Forms.Button();
             this.chkIsInterfaceProgramPause = new System.Windows.Forms.CheckBox();
+            this.lblSeperator = new System.Windows.Forms.Label();
             this.mnsAdditionalFunctions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,14 +63,14 @@
             this.cboProjectSelector.BackColor = System.Drawing.SystemColors.Window;
             this.cboProjectSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboProjectSelector.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cboProjectSelector.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboProjectSelector.Font = new System.Drawing.Font("Consolas", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboProjectSelector.FormattingEnabled = true;
             this.cboProjectSelector.Items.AddRange(new object[] {
             "blank"});
-            this.cboProjectSelector.Location = new System.Drawing.Point(96, 31);
+            this.cboProjectSelector.Location = new System.Drawing.Point(96, 30);
             this.cboProjectSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboProjectSelector.Name = "cboProjectSelector";
-            this.cboProjectSelector.Size = new System.Drawing.Size(284, 26);
+            this.cboProjectSelector.Size = new System.Drawing.Size(310, 28);
             this.cboProjectSelector.TabIndex = 0;
             this.cboProjectSelector.TabStop = false;
             this.cboProjectSelector.SelectedIndexChanged += new System.EventHandler(this.CboProjectSelectorSelectedIndexChanged);
@@ -97,35 +98,35 @@
             this.mnsAdditionalFunctions.Location = new System.Drawing.Point(0, 0);
             this.mnsAdditionalFunctions.Name = "mnsAdditionalFunctions";
             this.mnsAdditionalFunctions.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(915, 28);
+            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(955, 30);
             this.mnsAdditionalFunctions.TabIndex = 2;
             this.mnsAdditionalFunctions.Text = "menuStrip1";
             // 
             // tsmiSettings
             // 
             this.tsmiSettings.Name = "tsmiSettings";
-            this.tsmiSettings.Size = new System.Drawing.Size(53, 24);
+            this.tsmiSettings.Size = new System.Drawing.Size(53, 26);
             this.tsmiSettings.Text = "设置";
             this.tsmiSettings.Click += new System.EventHandler(this.TsmiSettingsClick);
             // 
             // tsmiHashCalculator
             // 
             this.tsmiHashCalculator.Name = "tsmiHashCalculator";
-            this.tsmiHashCalculator.Size = new System.Drawing.Size(128, 24);
+            this.tsmiHashCalculator.Size = new System.Drawing.Size(128, 26);
             this.tsmiHashCalculator.Text = "计算文件哈希值";
             this.tsmiHashCalculator.Click += new System.EventHandler(this.TsmiHashCalculatorClick);
             // 
             // tsmiHelp
             // 
             this.tsmiHelp.Name = "tsmiHelp";
-            this.tsmiHelp.Size = new System.Drawing.Size(83, 24);
+            this.tsmiHelp.Size = new System.Drawing.Size(83, 26);
             this.tsmiHelp.Text = "使用说明";
             this.tsmiHelp.Click += new System.EventHandler(this.TsmiHelpClick);
             // 
             // tsmiRepositoryAddress
             // 
             this.tsmiRepositoryAddress.Name = "tsmiRepositoryAddress";
-            this.tsmiRepositoryAddress.Size = new System.Drawing.Size(83, 24);
+            this.tsmiRepositoryAddress.Size = new System.Drawing.Size(83, 26);
             this.tsmiRepositoryAddress.Text = "仓库地址";
             this.tsmiRepositoryAddress.Click += new System.EventHandler(this.TsmiRepositoryAddressClick);
             // 
@@ -133,7 +134,7 @@
             // 
             this.btnNewProject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
             this.btnNewProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewProject.Location = new System.Drawing.Point(384, 28);
+            this.btnNewProject.Location = new System.Drawing.Point(410, 28);
             this.btnNewProject.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewProject.Name = "btnNewProject";
             this.btnNewProject.Size = new System.Drawing.Size(52, 30);
@@ -151,7 +152,7 @@
             this.txtDemoExePath.Margin = new System.Windows.Forms.Padding(2);
             this.txtDemoExePath.Name = "txtDemoExePath";
             this.txtDemoExePath.ReadOnly = true;
-            this.txtDemoExePath.Size = new System.Drawing.Size(455, 25);
+            this.txtDemoExePath.Size = new System.Drawing.Size(481, 25);
             this.txtDemoExePath.TabIndex = 4;
             this.txtDemoExePath.TabStop = false;
             this.txtDemoExePath.TextChanged += new System.EventHandler(this.TxtDemoExePathOrTxtYourExePathTextChanged);
@@ -171,7 +172,7 @@
             this.btnBrowseDemoExe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(187)))), ((int)(((byte)(208)))));
             this.btnBrowseDemoExe.Enabled = false;
             this.btnBrowseDemoExe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBrowseDemoExe.Location = new System.Drawing.Point(555, 63);
+            this.btnBrowseDemoExe.Location = new System.Drawing.Point(581, 63);
             this.btnBrowseDemoExe.Margin = new System.Windows.Forms.Padding(2);
             this.btnBrowseDemoExe.Name = "btnBrowseDemoExe";
             this.btnBrowseDemoExe.Size = new System.Drawing.Size(52, 30);
@@ -186,7 +187,7 @@
             this.btnBrowseYourExe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(99)))), ((int)(((byte)(187)))), ((int)(((byte)(208)))));
             this.btnBrowseYourExe.Enabled = false;
             this.btnBrowseYourExe.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnBrowseYourExe.Location = new System.Drawing.Point(555, 100);
+            this.btnBrowseYourExe.Location = new System.Drawing.Point(581, 100);
             this.btnBrowseYourExe.Margin = new System.Windows.Forms.Padding(2);
             this.btnBrowseYourExe.Name = "btnBrowseYourExe";
             this.btnBrowseYourExe.Size = new System.Drawing.Size(52, 30);
@@ -204,7 +205,7 @@
             this.txtYourExePath.Margin = new System.Windows.Forms.Padding(2);
             this.txtYourExePath.Name = "txtYourExePath";
             this.txtYourExePath.ReadOnly = true;
-            this.txtYourExePath.Size = new System.Drawing.Size(455, 25);
+            this.txtYourExePath.Size = new System.Drawing.Size(481, 25);
             this.txtYourExePath.TabIndex = 8;
             this.txtYourExePath.TabStop = false;
             this.txtYourExePath.TextChanged += new System.EventHandler(this.TxtDemoExePathOrTxtYourExePathTextChanged);
@@ -224,7 +225,7 @@
             this.btnRetest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.btnRetest.Enabled = false;
             this.btnRetest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRetest.Location = new System.Drawing.Point(791, 100);
+            this.btnRetest.Location = new System.Drawing.Point(831, 100);
             this.btnRetest.Margin = new System.Windows.Forms.Padding(2);
             this.btnRetest.Name = "btnRetest";
             this.btnRetest.Size = new System.Drawing.Size(113, 30);
@@ -244,7 +245,7 @@
             "--display none",
             "--display normal",
             "--display detailed"});
-            this.cboDisplaySelector.Location = new System.Drawing.Point(741, 28);
+            this.cboDisplaySelector.Location = new System.Drawing.Point(781, 28);
             this.cboDisplaySelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboDisplaySelector.Name = "cboDisplaySelector";
             this.cboDisplaySelector.Size = new System.Drawing.Size(163, 28);
@@ -263,7 +264,7 @@
             "--trim right",
             "--trim left",
             "--trim all"});
-            this.cboTrimSelector.Location = new System.Drawing.Point(619, 28);
+            this.cboTrimSelector.Location = new System.Drawing.Point(659, 28);
             this.cboTrimSelector.Margin = new System.Windows.Forms.Padding(2);
             this.cboTrimSelector.Name = "cboTrimSelector";
             this.cboTrimSelector.Size = new System.Drawing.Size(118, 28);
@@ -276,7 +277,7 @@
             this.btnNewOrEditTestData.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(190)))), ((int)(((byte)(138)))));
             this.btnNewOrEditTestData.Enabled = false;
             this.btnNewOrEditTestData.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNewOrEditTestData.Location = new System.Drawing.Point(619, 100);
+            this.btnNewOrEditTestData.Location = new System.Drawing.Point(659, 100);
             this.btnNewOrEditTestData.Margin = new System.Windows.Forms.Padding(2);
             this.btnNewOrEditTestData.Name = "btnNewOrEditTestData";
             this.btnNewOrEditTestData.Size = new System.Drawing.Size(168, 30);
@@ -296,7 +297,7 @@
             this.rtxResultViewer.Margin = new System.Windows.Forms.Padding(2);
             this.rtxResultViewer.Name = "rtxResultViewer";
             this.rtxResultViewer.ReadOnly = true;
-            this.rtxResultViewer.Size = new System.Drawing.Size(893, 323);
+            this.rtxResultViewer.Size = new System.Drawing.Size(933, 345);
             this.rtxResultViewer.TabIndex = 14;
             this.rtxResultViewer.TabStop = false;
             this.rtxResultViewer.Text = "";
@@ -317,7 +318,7 @@
             this.btnOpenProjectDirectory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(114)))), ((int)(((byte)(61)))));
             this.btnOpenProjectDirectory.Enabled = false;
             this.btnOpenProjectDirectory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenProjectDirectory.Location = new System.Drawing.Point(496, 28);
+            this.btnOpenProjectDirectory.Location = new System.Drawing.Point(522, 28);
             this.btnOpenProjectDirectory.Margin = new System.Windows.Forms.Padding(2);
             this.btnOpenProjectDirectory.Name = "btnOpenProjectDirectory";
             this.btnOpenProjectDirectory.Size = new System.Drawing.Size(111, 30);
@@ -332,7 +333,7 @@
             this.btnDeleteProject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(28)))), ((int)(((byte)(49)))));
             this.btnDeleteProject.Enabled = false;
             this.btnDeleteProject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteProject.Location = new System.Drawing.Point(440, 28);
+            this.btnDeleteProject.Location = new System.Drawing.Point(466, 28);
             this.btnDeleteProject.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteProject.Name = "btnDeleteProject";
             this.btnDeleteProject.Size = new System.Drawing.Size(52, 30);
@@ -346,19 +347,29 @@
             // 
             this.chkIsInterfaceProgramPause.AutoSize = true;
             this.chkIsInterfaceProgramPause.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.chkIsInterfaceProgramPause.Location = new System.Drawing.Point(619, 65);
+            this.chkIsInterfaceProgramPause.Location = new System.Drawing.Point(659, 65);
             this.chkIsInterfaceProgramPause.Name = "chkIsInterfaceProgramPause";
             this.chkIsInterfaceProgramPause.Size = new System.Drawing.Size(226, 25);
             this.chkIsInterfaceProgramPause.TabIndex = 17;
             this.chkIsInterfaceProgramPause.Text = "在CMD窗口中查看高亮结果";
             this.chkIsInterfaceProgramPause.UseVisualStyleBackColor = true;
             // 
+            // lblSeperator
+            // 
+            this.lblSeperator.BackColor = System.Drawing.Color.Silver;
+            this.lblSeperator.ForeColor = System.Drawing.Color.Black;
+            this.lblSeperator.Location = new System.Drawing.Point(646, 29);
+            this.lblSeperator.Name = "lblSeperator";
+            this.lblSeperator.Size = new System.Drawing.Size(1, 101);
+            this.lblSeperator.TabIndex = 18;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(239)))));
-            this.ClientSize = new System.Drawing.Size(915, 478);
+            this.ClientSize = new System.Drawing.Size(955, 500);
+            this.Controls.Add(this.lblSeperator);
             this.Controls.Add(this.chkIsInterfaceProgramPause);
             this.Controls.Add(this.cboDisplaySelector);
             this.Controls.Add(this.btnDeleteProject);
@@ -420,6 +431,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiHashCalculator;
         private System.Windows.Forms.CheckBox chkIsInterfaceProgramPause;
         private System.Windows.Forms.ToolStripMenuItem tsmiRepositoryAddress;
+        private System.Windows.Forms.Label lblSeperator;
     }
 }
 
