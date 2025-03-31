@@ -5,8 +5,11 @@ namespace gaocheng_debug
 {
     public partial class NewProjectForm : Form
     {
+        // 私有只读成员
+
         private readonly MainForm Master;
 
+        // 构造函数
         public NewProjectForm(in MainForm master)
         {
             Master = master ?? throw new ArgumentNullException(nameof(master));
@@ -17,6 +20,8 @@ namespace gaocheng_debug
             cboProblem.SelectedIndex = 0;
             cboQuestion.SelectedIndex = 0;
         }
+
+        // Button事件处理
 
         private void BtnNewProjectClick(object sender, EventArgs e)
         {
@@ -29,6 +34,8 @@ namespace gaocheng_debug
             DialogResult = DialogResult.OK;
             Close();
         }
+
+        // Checkbox事件处理
 
         private void ChkIsLastEnabledCheckedChanged(object sender, EventArgs e)
         {

@@ -13,6 +13,7 @@ namespace gaocheng_debug
     public partial class MainForm : Form
     {
         // 私有常量
+
         private const char ProjectSplitChar = ' ';
 
         private const string ProjectNameFormatStr = "yyyy-MM-dd-HH-mm-ss";
@@ -23,6 +24,7 @@ namespace gaocheng_debug
         private const string YourExePathTxtDefaultStr = "Your Exe File Path";
 
         // 私有静态只读成员
+
         private static readonly Color TimeInfoColor  = Color.FromArgb(144, 238, 144);
         private static readonly Color ErrorInfoColor = Color.FromArgb(255, 99, 71);
         private static readonly Color TipColor       = Color.FromArgb(255, 165, 0);
@@ -65,6 +67,7 @@ namespace gaocheng_debug
         private static readonly Regex ProjectRegex = new Regex(@"^[1-9]\d?-b[1-9]\d?(-[1-9]\d?)?$", RegexOptions.Compiled);
 
         // 私有只读成员，在构造函数中初始化
+
         private readonly string AbsoluteProjectDirectoryPath;
 
         private readonly string AbsoluteGetInputDataPath;
@@ -77,6 +80,7 @@ namespace gaocheng_debug
         private readonly HashCalculatorForm OwnHashCalculatorForm;
 
         // 私有成员变量
+
         private bool isModeChanged, isPathChanged;
 
         private int dataGroupNum;
@@ -101,6 +105,7 @@ namespace gaocheng_debug
         private FileStream projectGaochengLock;
 
         // 属性
+
         public string DefaultDemoExeDirectory
         {
             set { defaultDemoExeDirectory = value; }
@@ -207,6 +212,7 @@ namespace gaocheng_debug
             isPathChanged = (txtDemoExePath.Text != projectDemoExePath || txtYourExePath.Text != projectYourExePath);
 
         // ToolStripMenuItem事件处理函数
+
         private void TsmiSettingsClick(object sender, EventArgs e) =>
             OwnSettingForm.ShowDialog();
 
@@ -231,6 +237,7 @@ namespace gaocheng_debug
         }
 
         // Button事件处理函数
+
         private void BtnNewProjectClick(object sender, EventArgs e)
         {
             NewProjectForm npf = new NewProjectForm(this);
@@ -375,6 +382,7 @@ namespace gaocheng_debug
         }
 
         // ComboBox事件处理函数
+
         private void CboProjectSelectorSelectedIndexChanged(object sender, EventArgs e)
         {
             DisposeProjectGaochengLock();
@@ -401,6 +409,7 @@ namespace gaocheng_debug
         }
 
         // Timer事件处理函数
+
         private void TmrWarrantyOfProjectUniquenessTick(object sender, EventArgs e)
         {
             tmrWarrantyOfProjectUniqueness.Enabled = false;

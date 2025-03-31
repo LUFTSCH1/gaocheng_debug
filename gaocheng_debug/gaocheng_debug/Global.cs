@@ -16,6 +16,7 @@ namespace gaocheng_debug
     internal static class Global
     {
         // 静态常量
+
         public const int DefaultSettingsLines = 2;
         public const int ProjectGaochengLines = 7;
 
@@ -26,15 +27,18 @@ namespace gaocheng_debug
         public const string ErrorTitle = "错误";
 
         // 自建文件
+
         public const string ReadMeHtml           = "README.html";
         public const string DefaultSettings      = "default.settings";
         public const string ProjectDirectoryLock = "protector.lock";
 
         // 资源和项目目录名
+
         public const string ResourceDirectory = "rsc";
         public const string ProjectDirectory  = "test_log";
 
         // 项目文件
+
         public const string ProjectGaocheng = "_project.gaocheng";
         public const string TestData        = "_test_data.txt";
         public const string CompareResult   = "compare_result.txt";
@@ -42,10 +46,12 @@ namespace gaocheng_debug
         public const string YourExeResult   = "your_exe_result.txt";
 
         // 渣哥的小工具
+
         public const string GetInputData = "get_input_data.exe";
         public const string TxtCompare   = "txt_compare.exe";
 
         // 动态常量
+
         public static readonly string NewLine = Environment.NewLine;
 
         public static readonly string ProjectDirectoryRelativePath = $".\\{ProjectDirectory}";

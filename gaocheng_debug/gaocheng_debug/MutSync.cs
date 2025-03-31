@@ -13,6 +13,7 @@ namespace gaocheng_debug
     internal static class MutSync
     {
         // 私有类声明
+
         private class FileListItem
         {
             public readonly string FileName;
@@ -26,6 +27,7 @@ namespace gaocheng_debug
         }
 
         // 私有常量
+
         private const int MD5HashStringLength = 32;
         private const int SHA256HashStringLength = 64;
 
@@ -42,6 +44,7 @@ namespace gaocheng_debug
         private const string WriteFileErrorStr = "写入文件失败，是否重试？\n错误信息：";
 
         // 私有静态只读成员-顺序调用，不得冲突
+
         private static readonly MD5 MD5 = MD5.Create();
         private static readonly StringBuilder MD5StringBuilder = new StringBuilder(MD5HashStringLength);
 
@@ -51,6 +54,7 @@ namespace gaocheng_debug
         private static readonly StringBuilder HashStringBuilder = new StringBuilder(SHA256HashStringLength);
 
         // 私有成员-检查完整性与加文件锁后释放，故不加readonly
+
         private static FileListItem[] FileList = {
             new FileListItem(@".\gaocheng_debug.exe.config"                         , "d18c574c943a73b85361040965c28e13"),
             new FileListItem(@".\System.Buffers.dll"                                , "ecdfe8ede869d2ccc6bf99981ea96400"),
@@ -66,6 +70,7 @@ namespace gaocheng_debug
         };
 
         // 公有静态方法
+
         public static void OpenFolder(in string fileFullName) =>
             ShellExecute(IntPtr.Zero, "open", fileFullName);
 
@@ -258,6 +263,7 @@ namespace gaocheng_debug
         }
 
         // 文件哈希，以下三个方法不可同时调用
+
         public static string GetMD5HashFromFile(in string fileName)
         {
             FileStream file = NewReadOnlyFileHandle(fileName);
@@ -371,6 +377,7 @@ namespace gaocheng_debug
         }
 
         // 私有静态外部方法
+
         [System.Runtime.InteropServices.DllImport("shell32.dll")]
         private static extern IntPtr ShellExecute(IntPtr hwnd, string lpOperation,
                                                   string lpFile, string lpParameters = "",
@@ -383,6 +390,7 @@ namespace gaocheng_debug
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         // 私有静态方法
+
         // 此方法及调用此方法的其它方法都不得被异步/并行方法调用
         private static string ConvertBytesToMD5(in byte[] bytes)
         {

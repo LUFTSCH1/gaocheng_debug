@@ -10,6 +10,7 @@ namespace gaocheng_debug
     public partial class HashCalculatorForm : Form
     {
         // 类定义
+
         public class HashAlgorithm
         {
             public delegate string HashAlgo(in string fileName);
@@ -30,9 +31,11 @@ namespace gaocheng_debug
         }
 
         // 私有常量
+
         private const double BinaryFileSize = 1024.0;
 
         // 私有只读成员
+
         private readonly MainForm Master;
 
         private readonly List<HashAlgorithm> HashAlgotithmList = new List<HashAlgorithm> {
@@ -42,6 +45,7 @@ namespace gaocheng_debug
         };
 
         // 构造函数
+
         public HashCalculatorForm(in MainForm master)
         {
             Master = master ?? throw new ArgumentNullException(nameof(master));
@@ -52,6 +56,7 @@ namespace gaocheng_debug
         }
 
         // 私有静态方法
+
         private static string GetFileSize(in string fileName)
         {
             double file_size = Convert.ToDouble(new FileInfo(fileName).Length);

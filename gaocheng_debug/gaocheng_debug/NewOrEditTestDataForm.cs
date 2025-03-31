@@ -9,6 +9,7 @@ namespace gaocheng_debug
     public partial class NewOrEditTestDataForm : Form
     {
         // 私有常量
+
         private const int MaxDataGroupNum = 256;
 
         private const char DataIDFlag   = '[';
@@ -20,6 +21,7 @@ namespace gaocheng_debug
         private static readonly string DataGroupTruncationWarning = $"数据组数大于{MaxDataGroupNum}，将舍弃第{MaxDataGroupNum + 1}组及之后的数据";
 
         // 私有只读成员
+
         private readonly MainForm Master;
 
         private readonly StringBuilder TestDataBuilder;
@@ -35,6 +37,7 @@ namespace gaocheng_debug
         }
 
         // 公有方法
+
         public void LoadTestDataContent()
         {
             Text = $"创建/修改测试数据 <{Master.ProjectDirName}>";
@@ -68,6 +71,7 @@ namespace gaocheng_debug
         }
 
         // Button事件处理
+
         private void BtnGenerateOrModifyThenTestClick(object sender, EventArgs e)
         {
             string data_content = rtxTestDataEditor.Text;
@@ -150,7 +154,8 @@ namespace gaocheng_debug
             tmrSaveTipController.Enabled = false;
         }
 
-        // 私有工具函数
+        // 私有方法
+
         private void WriteTestData(in string content) =>
             MutSync.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
 

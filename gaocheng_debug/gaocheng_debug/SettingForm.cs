@@ -7,6 +7,7 @@ namespace gaocheng_debug
     public partial class SettingForm : Form
     {
         // 私有只读成员
+
         private readonly MainForm Master;
 
         // 构造函数
@@ -21,6 +22,7 @@ namespace gaocheng_debug
         }
 
         // Button事件处理
+
         private void BtnSelectDemoExeDefaultPathClick(object sender, EventArgs e)
         {
             fbdDemoAndYourExeDefaultPathSelector.Description = "选取课程demo默认浏览目录";

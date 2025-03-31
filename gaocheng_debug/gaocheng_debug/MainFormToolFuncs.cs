@@ -8,6 +8,8 @@ namespace gaocheng_debug
 {
     public partial class MainForm : Form
     {
+        // 公共方法
+
         public void DoWhileEditCanceled()
         {
             rtxResultViewer.Rtf = tempContainerForResultViewer;
@@ -24,7 +26,9 @@ namespace gaocheng_debug
             EnableComponentAfterEdit();
         }
 
-        // 私有工具函数
+        // 私有方法
+
+
         private void LockProjectGaocheng() =>
             projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
 
@@ -212,6 +216,7 @@ namespace gaocheng_debug
         {
             string info =   $"{Global.CompareResult}文件创建/修改时间："
                           + $"{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
+                          + $"在 {cboTrimSelector.SelectedItem} 和 {cboDisplaySelector.SelectedItem} 条件下，"
                           + $"已测试 {dataGroupNum} 组数据";
             rtxResultViewer.Text = $"{info}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
             rtxResultViewer.Select(0, info.Length);
