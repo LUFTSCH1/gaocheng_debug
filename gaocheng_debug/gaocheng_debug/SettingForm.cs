@@ -43,7 +43,7 @@ namespace gaocheng_debug
 
         private void BtnSaveClick(object sender, EventArgs e)
         {
-            MutSync.WriteAllText(Global.DefaultSettingsRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}", Encoding.UTF8);
+            StaticTools.WriteAllText(Global.DefaultSettingsRelativePath, $"{txtDemoExeDefaultDirectory.Text}\n{txtYourExeDefaultDirectory.Text}", Encoding.UTF8);
 
             Master.DefaultDemoExeDirectory = txtDemoExeDefaultDirectory.Text;
             Master.DefaultYourExeDirectory = txtYourExeDefaultDirectory.Text;

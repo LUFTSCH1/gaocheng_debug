@@ -43,7 +43,7 @@ namespace gaocheng_debug
             Text = $"创建/修改测试数据 <{Master.ProjectDirName}>";
             if (File.Exists(Master.AbsoluteTestDataPath))
             {
-                rtxTestDataEditor.Text = MutSync.ReadAllText(Master.AbsoluteTestDataPath, Global.GB18030);
+                rtxTestDataEditor.Text = StaticTools.ReadAllText(Master.AbsoluteTestDataPath, Global.GB18030);
             }
             else
             {
@@ -105,7 +105,7 @@ namespace gaocheng_debug
                     {
                         if (cnt >= MaxDataGroupNum)
                         {
-                            MutSync.ShowMessageToWarn(DataGroupTruncationWarning);
+                            StaticTools.ShowMessageToWarn(DataGroupTruncationWarning);
                             reach_limit = true;
                             break;
                         }
@@ -157,7 +157,7 @@ namespace gaocheng_debug
         // 私有方法
 
         private void WriteTestData(in string content) =>
-            MutSync.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
+            StaticTools.WriteAllText(Master.AbsoluteTestDataPath, content, Global.GB18030);
 
         private void WriteTestDataWithTip(in string tip)
         {

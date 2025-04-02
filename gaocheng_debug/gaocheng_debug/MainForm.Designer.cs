@@ -1,4 +1,6 @@
-﻿namespace gaocheng_debug
+﻿using System.Drawing;
+
+namespace gaocheng_debug
 {
     partial class MainForm
     {
@@ -358,7 +360,7 @@
             // 
             this.lblSeperator.BackColor = System.Drawing.Color.Silver;
             this.lblSeperator.ForeColor = System.Drawing.Color.Black;
-            this.lblSeperator.Location = new System.Drawing.Point(646, 29);
+            this.lblSeperator.Location = new System.Drawing.Point(646, 28);
             this.lblSeperator.Name = "lblSeperator";
             this.lblSeperator.Size = new System.Drawing.Size(1, 101);
             this.lblSeperator.TabIndex = 18;

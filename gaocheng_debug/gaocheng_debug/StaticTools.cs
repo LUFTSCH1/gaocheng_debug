@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 
 namespace gaocheng_debug
 {
-    internal static class MutSync
+    internal static class StaticTools
     {
         // 私有类声明
 

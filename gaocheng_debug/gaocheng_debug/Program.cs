@@ -15,25 +15,25 @@ namespace gaocheng_debug
         public static void Main()
         {
             // 阻止多开
-            MutSync.HandleRunningInstance();
+            StaticTools.HandleRunningInstance();
 
             // 完整性检查
-            MutSync.CheckIntegrality();
+            StaticTools.CheckIntegrality();
             if (!Directory.Exists(Global.ProjectDirectoryRelativePath))
             {
                 Directory.CreateDirectory(Global.ProjectDirectoryRelativePath);
             }
             if (!File.Exists(Global.DefaultSettingsRelativePath))
             {
-                MutSync.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}", Encoding.UTF8);
+                StaticTools.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}", Encoding.UTF8);
             }
             if (!File.Exists(Global.ProjectDirectoryLockRelativePath))
             {
-                MutSync.WriteAllText(Global.ProjectDirectoryLockRelativePath, string.Empty, Encoding.UTF8);
+                StaticTools.WriteAllText(Global.ProjectDirectoryLockRelativePath, string.Empty, Encoding.UTF8);
             }
 
             // 完整则创建文件锁以锁定文件
-            List<FileStream> file_locks = MutSync.LockFilesAndDisposeFileList();
+            List<FileStream> file_locks = StaticTools.LockFilesAndDisposeFileList();
 
             // 设置DPI感知
             if (Environment.OSVersion.Version.Major >= 6)

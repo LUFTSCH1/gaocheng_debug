@@ -137,12 +137,12 @@ namespace gaocheng_debug
             {
                 string app_path = Directory.GetCurrentDirectory();
                 AbsoluteProjectDirectoryPath = $"{app_path}\\{Global.ProjectDirectory}\\";
-                AbsoluteGetInputDataPath     = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.GetInputData}\"";
-                AbsoluteTxtComparePath       = $"\"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}\"";
+                AbsoluteGetInputDataPath     = $"{app_path}\\{Global.ResourceDirectory}\\{Global.GetInputData}";
+                AbsoluteTxtComparePath       = $"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}";
             }
 
             {
-                string[] defaults = MutSync.ReadAllLines(Global.DefaultSettingsRelativePath);
+                string[] defaults = StaticTools.ReadAllLines(Global.DefaultSettingsRelativePath);
                 if (defaults.Length == Global.DefaultSettingsLines)
                 {
                     defaultDemoExeDirectory = defaults[0];
@@ -152,8 +152,8 @@ namespace gaocheng_debug
                 {
                     defaultDemoExeDirectory = Global.DefaultDirectory;
                     defaultYourExeDirectory = Global.DefaultDirectory;
-                    MutSync.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}", Encoding.UTF8);
-                    MutSync.ShowMessageToWarn($"由于{Global.DefaultSettings}非法，已重置设置");
+                    StaticTools.WriteAllText(Global.DefaultSettingsRelativePath, $"{Global.DefaultDirectory}\n{Global.DefaultDirectory}", Encoding.UTF8);
+                    StaticTools.ShowMessageToWarn($"由于{Global.DefaultSettings}非法，已重置设置");
                 }
             }
 
@@ -189,7 +189,7 @@ namespace gaocheng_debug
         private void MainFormClosing(object sender, FormClosingEventArgs e)
         {
             if ((OwnNewOrEditTestDataForm.Visible || OwnHashCalculatorForm.Visible) &&
-                !MutSync.CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
+                !StaticTools.CheckOperation("有其他窗口还在开启状态，你要现在退出应用吗？", MessageBoxIcon.Warning))
             {
                 e.Cancel = true;
             }
@@ -217,7 +217,7 @@ namespace gaocheng_debug
             OwnSettingForm.ShowDialog();
 
         private void TsmiHashCalculatorClick(object sender, EventArgs e) =>
-            MutSync.BringToFrontAndFocus(OwnHashCalculatorForm);
+            StaticTools.BringToFrontAndFocus(OwnHashCalculatorForm);
 
         private void TsmiHelpClick(object sender, EventArgs e)
         {
@@ -227,7 +227,7 @@ namespace gaocheng_debug
             }
             else
             {
-                MutSync.ShowMessageToWarn($"说明文件\n{Global.ReadMeHtml}\n已被删除");
+                StaticTools.ShowMessageToWarn($"说明文件\n{Global.ReadMeHtml}\n已被删除");
             }
         }
 
@@ -251,7 +251,7 @@ namespace gaocheng_debug
                 Directory.CreateDirectory(new_path);
             }
 
-            MutSync.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}",
+            StaticTools.WriteAllText($"{new_path}\\{Global.ProjectGaocheng}",
                                  $"awa\nQAQ\nTAT\nOvO\n0\n0\n0",
                                  Encoding.UTF8);
 
@@ -264,7 +264,7 @@ namespace gaocheng_debug
 
         private void BtnDeleteProjectClick(object sender, EventArgs e)
         {
-            if (MutSync.CheckOperation($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}",
+            if (StaticTools.CheckOperation($"注意：本操作为永久删除，无法撤销\n是否要删除项目：{projectDirName}",
                                        MessageBoxIcon.Warning))
             {
                 if (Directory.Exists(absoluteDirPath))
@@ -276,7 +276,7 @@ namespace gaocheng_debug
                     }
                     catch (Exception ex)
                     {
-                        MutSync.ShowMessageToWarn(ex.Message);
+                        StaticTools.ShowMessageToWarn(ex.Message);
                     }
                 }
 
@@ -289,11 +289,11 @@ namespace gaocheng_debug
         {
             if (Directory.Exists(absoluteDirPath))
             {
-                MutSync.OpenFolder(absoluteDirPath);
+                StaticTools.OpenFolder(absoluteDirPath);
             }
             else
             {
-                MutSync.ShowMessageToWarn($"项目\n{projectDirName}\n已被删除，即将刷新项目列表");
+                StaticTools.ShowMessageToWarn($"项目\n{projectDirName}\n已被删除，即将刷新项目列表");
                 RefreshProjectList();
                 cboProjectSelector.SelectedIndex = 0;
             }
@@ -307,7 +307,7 @@ namespace gaocheng_debug
             }
             else
             {
-                MutSync.ShowMessageToWarn($"原课程demo默认浏览目录：\n{defaultDemoExeDirectory}\n不存在，建议点击“设置”进行更改");
+                StaticTools.ShowMessageToWarn($"原课程demo默认浏览目录：\n{defaultDemoExeDirectory}\n不存在，建议点击“设置”进行更改");
                 ofdDemoAndYourExeSelector.InitialDirectory = Global.DefaultDirectory;
             }
             ofdDemoAndYourExeSelector.Title = "选择课程demo文件";
@@ -325,7 +325,7 @@ namespace gaocheng_debug
             }
             else
             {
-                MutSync.ShowMessageToWarn($"原作业exe默认浏览目录：\n{defaultYourExeDirectory}\n不存在，建议点击“设置”进行更改");
+                StaticTools.ShowMessageToWarn($"原作业exe默认浏览目录：\n{defaultYourExeDirectory}\n不存在，建议点击“设置”进行更改");
                 ofdDemoAndYourExeSelector.InitialDirectory = Global.DefaultDirectory;
             }
             ofdDemoAndYourExeSelector.Title = "选择作业exe文件";
@@ -355,7 +355,7 @@ namespace gaocheng_debug
                 OwnNewOrEditTestDataForm.LoadTestDataContent();
             }
 
-            MutSync.BringToFrontAndFocus(OwnNewOrEditTestDataForm);
+            StaticTools.BringToFrontAndFocus(OwnNewOrEditTestDataForm);
         }
 
         private void BtnRetestClick(object sender, EventArgs e)
@@ -367,14 +367,14 @@ namespace gaocheng_debug
 
             if (!File.Exists(absoluteTestDataPath))
             {
-                MutSync.ShowMessageToWarn("测试数据文件未生成\n请先完成创建/修改测试数据");
+                StaticTools.ShowMessageToWarn("测试数据文件未生成\n请先完成创建/修改测试数据");
             }
-            else if (dataHash != MutSync.MD5Hash(absoluteTestDataPath))
+            else if (dataHash != StaticTools.MD5Hash(absoluteTestDataPath))
             {
-                MutSync.ShowMessageToWarn("测试数据文件被更改\n请进入 创建/修改测试数据 读取该文件并再次生成以保证合法");
+                StaticTools.ShowMessageToWarn("测试数据文件被更改\n请进入 创建/修改测试数据 读取该文件并再次生成以保证合法");
             }
             else if (!isPathChanged ||
-                     MutSync.CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认"))
+                     StaticTools.CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认"))
             {
                 EditProjectGaochengWhileNecessary();
                 GenerateAndCompare();
@@ -401,7 +401,7 @@ namespace gaocheng_debug
                 }
                 else
                 {
-                    MutSync.ShowMessageToWarn($"项目\n{projectDirName}\n已被删除，即将刷新项目列表");
+                    StaticTools.ShowMessageToWarn($"项目\n{projectDirName}\n已被删除，即将刷新项目列表");
                     RefreshProjectList();
                     cboProjectSelector.SelectedIndex = 0;
                 }

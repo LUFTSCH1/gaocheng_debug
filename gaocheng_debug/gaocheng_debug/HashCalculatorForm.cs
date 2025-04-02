@@ -39,9 +39,9 @@ namespace gaocheng_debug
         private readonly MainForm Master;
 
         private readonly List<HashAlgorithm> HashAlgotithmList = new List<HashAlgorithm> {
-            new HashAlgorithm("MD5   ", MutSync.GetMD5HashFromFile),
-            new HashAlgorithm("SHA1  ", MutSync.GetSHA1HashFromFile),
-            new HashAlgorithm("SHA256", MutSync.GetSHA256HashFromFile)
+            new HashAlgorithm("MD5   ", StaticTools.GetMD5HashFromFile),
+            new HashAlgorithm("SHA1  ", StaticTools.GetSHA1HashFromFile),
+            new HashAlgorithm("SHA256", StaticTools.GetSHA256HashFromFile)
         };
 
         // 构造函数
@@ -82,7 +82,7 @@ namespace gaocheng_debug
         {
             e.Cancel = true;
             Hide();
-            MutSync.BringToFrontAndFocus(Master);
+            StaticTools.BringToFrontAndFocus(Master);
         }
 
         // Button事件异步处理

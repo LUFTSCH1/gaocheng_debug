@@ -14,13 +14,13 @@ namespace gaocheng_debug
         {
             rtxResultViewer.Rtf = tempContainerForResultViewer;
             EnableComponentAfterEdit();
-            MutSync.BringToFrontAndFocus(this);
+            StaticTools.BringToFrontAndFocus(this);
         }
 
         public void DoWhileEdited(in int groupNum)
         {
             dataGroupNum = groupNum;
-            dataHash = MutSync.MD5Hash(absoluteTestDataPath);
+            dataHash = StaticTools.MD5Hash(absoluteTestDataPath);
             EditProjectGaocheng();
             GenerateAndCompare();
             EnableComponentAfterEdit();
@@ -30,7 +30,7 @@ namespace gaocheng_debug
 
 
         private void LockProjectGaocheng() =>
-            projectGaochengLock = MutSync.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
+            projectGaochengLock = StaticTools.NewReadOnlyFileHandle(absoluteProjectGaochengPath);
 
         private void DisposeProjectGaochengLock()
         {
@@ -142,15 +142,15 @@ namespace gaocheng_debug
             {
                 if (!is_demo_exe_exist && !is_your_exe_exist)
                 {
-                    MutSync.ShowMessageToWarn("demo和作业exe文件均不存在");
+                    StaticTools.ShowMessageToWarn("demo和作业exe文件均不存在");
                 }
                 else if (is_demo_exe_exist)
                 {
-                    MutSync.ShowMessageToWarn("作业exe文件不存在");
+                    StaticTools.ShowMessageToWarn("作业exe文件不存在");
                 }
                 else
                 {
-                    MutSync.ShowMessageToWarn("demo文件不存在");
+                    StaticTools.ShowMessageToWarn("demo文件不存在");
                 }
 
                 return false;
@@ -161,7 +161,7 @@ namespace gaocheng_debug
         {
             if (txtDemoExePath.Text == DemoExePathTxtDefaultStr || txtYourExePath.Text == YourExePathTxtDefaultStr)
             {
-                MutSync.ShowMessageToWarn("官方demo或作业exe路径为空");
+                StaticTools.ShowMessageToWarn("官方demo或作业exe路径为空");
                 return true;
             }
             else if (!ExeErrorFilter())
@@ -170,7 +170,7 @@ namespace gaocheng_debug
             }
             else if (txtDemoExePath.Text == txtYourExePath.Text)
             {
-                return !MutSync.CheckOperation("官方demo路径和作业exe路径相同\n你真的要测试同一程序对同一数据的两次输出吗？\n如需继续测试，请按确认");
+                return !StaticTools.CheckOperation("官方demo路径和作业exe路径相同\n你真的要测试同一程序对同一数据的两次输出吗？\n如需继续测试，请按确认");
             }
             else
             {
@@ -201,7 +201,7 @@ namespace gaocheng_debug
                 }
                 catch (Exception ex)
                 {
-                    if (!MutSync.CheckOperation($"项目 {projectDirName} 中文件测试需要的权限不满足，是否重试？\n错误信息：{ex.Message}",
+                    if (!StaticTools.CheckOperation($"项目 {projectDirName} 中文件测试需要的权限不满足，是否重试？\n错误信息：{ex.Message}",
                                                 MessageBoxIcon.Error,
                                                 Global.ErrorTitle,
                                                 MessageBoxDefaultButton.Button1))
@@ -218,7 +218,7 @@ namespace gaocheng_debug
                           + $"{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
                           + $"在 {cboTrimSelector.SelectedItem} 和 {cboDisplaySelector.SelectedItem} 条件下，"
                           + $"已测试 {dataGroupNum} 组数据";
-            rtxResultViewer.Text = $"{info}{Global.NewLine}{MutSync.ReadAllText(resultFile, Global.GB18030)}";
+            rtxResultViewer.Text = $"{info}{Global.NewLine}{StaticTools.ReadAllText(resultFile, Global.GB18030)}";
             rtxResultViewer.Select(0, info.Length);
             rtxResultViewer.SelectionColor = TimeInfoColor;
             rtxResultViewer.DeselectAll();
@@ -237,7 +237,7 @@ namespace gaocheng_debug
             absoluteProjectGaochengPath = $"{absoluteDirPath}\\{Global.ProjectGaocheng}";
             if (File.Exists(absoluteProjectGaochengPath))
             {
-                string[] project_info = MutSync.ReadAllLines(absoluteProjectGaochengPath);
+                string[] project_info = StaticTools.ReadAllLines(absoluteProjectGaochengPath);
                 if (project_info.Length == Global.ProjectGaochengLines)
                 {
                     LockProjectGaocheng();
@@ -247,7 +247,7 @@ namespace gaocheng_debug
                     absoluteDemoExeResultPath = $"{absoluteDirPath}\\{Global.DemoExeResult}";
                     absoluteYourExeResultPath = $"{absoluteDirPath}\\{Global.YourExeResult}";
 
-                    if (project_info[0] == MutSync.MD5HashWithSalt($"{project_info[1]}\n{project_info[2]}\n{project_info[3]}\n{project_info[4]}\n{project_info[5]}\n{project_info[6]}"))
+                    if (project_info[0] == StaticTools.MD5HashWithSalt($"{project_info[1]}\n{project_info[2]}\n{project_info[3]}\n{project_info[4]}\n{project_info[5]}\n{project_info[6]}"))
                     {
                         txtDemoExePath.Text = projectDemoExePath = project_info[1];
                         txtYourExePath.Text = projectYourExePath = project_info[2];
@@ -286,7 +286,7 @@ namespace gaocheng_debug
             }
 
             DisableComponent();
-            MutSync.ShowMessageToWarn($"项目{projectDirName}的\n{Global.ProjectGaocheng}\n文件不存在或不合法");
+            StaticTools.ShowMessageToWarn($"项目{projectDirName}的\n{Global.ProjectGaocheng}\n文件不存在或不合法");
             PrintErrorInfo($"项目 {projectDirName} 的{ProjectGaochengExceptionStr}");
             btnDeleteProject.Enabled = true;
             btnOpenProjectDirectory.Enabled = true;
@@ -294,7 +294,9 @@ namespace gaocheng_debug
 
         private void OpenCmdAndTest()
         {
-            string compare_cmd = $"{AbsoluteTxtComparePath} --file1 {Global.DemoExeResult} --file2 {Global.YourExeResult} {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
+            InterfaceProgram.StartInfo.WorkingDirectory = absoluteDirPath;
+
+            string compare_cmd = $"\"{AbsoluteTxtComparePath}\" --file1 \".\\{Global.DemoExeResult}\" --file2 \".\\{Global.YourExeResult}\" {cboTrimSelector.SelectedItem} {cboDisplaySelector.SelectedItem}";
 
             while (true)
             {
@@ -305,7 +307,7 @@ namespace gaocheng_debug
                 }
                 catch
                 {
-                    if (!MutSync.CheckOperation("启动CMD失败，是否重试？", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
+                    if (!StaticTools.CheckOperation("启动CMD失败，是否重试？", MessageBoxIcon.Error, Global.ErrorTitle, MessageBoxDefaultButton.Button1))
                     {
                         return;
                     }
@@ -313,18 +315,16 @@ namespace gaocheng_debug
             }
 
             InterfaceProgram.StandardInput.WriteLine(
-                  $"cd /d \"{absoluteDirPath}\"\n"
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} 1 | \"{txtDemoExePath.Text}\" 1>{Global.DemoExeResult}\n"
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} 1 | \"{txtYourExePath.Text}\" 1>{Global.YourExeResult}\n"
+                  $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtDemoExePath.Text}\" 1> \".\\{Global.DemoExeResult}\"\n"
+                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtYourExePath.Text}\" 1> \".\\{Global.YourExeResult}\"\n"
                 + $"for /l %v in (2, 1, {dataGroupNum}) do "
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} %v | \"{txtDemoExePath.Text}\" 1>>{Global.DemoExeResult} & "
-                + $"{AbsoluteGetInputDataPath} {Global.TestData} %v | \"{txtYourExePath.Text}\" 1>>{Global.YourExeResult}\n"
+                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtDemoExePath.Text}\" 1>> \".\\{Global.DemoExeResult}\" & "
+                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtYourExePath.Text}\" 1>> \".\\{Global.YourExeResult}\"\n"
                 + $"{compare_cmd} 1>{Global.CompareResult} 2>>&1"
             );
             if (chkIsInterfaceProgramPause.Checked)
             {
-                InterfaceProgram.StandardInput.WriteLine("cls");
-                InterfaceProgram.StandardInput.WriteLine(compare_cmd);
+                InterfaceProgram.StandardInput.WriteLine($"cls\n{compare_cmd}");
             }
             else
             {
@@ -345,7 +345,7 @@ namespace gaocheng_debug
             isPathChanged = false;
             string prj_info = $"{projectDemoExePath}\n{projectYourExePath}\n{dataHash}\n{dataGroupNum}\n{cboTrimSelector.SelectedIndex}\n{cboDisplaySelector.SelectedIndex}";
             DisposeProjectGaochengLock();
-            MutSync.WriteAllText(absoluteProjectGaochengPath, $"{MutSync.MD5HashWithSalt(prj_info)}\n{prj_info}", Encoding.UTF8);
+            StaticTools.WriteAllText(absoluteProjectGaochengPath, $"{StaticTools.MD5HashWithSalt(prj_info)}\n{prj_info}", Encoding.UTF8);
             LockProjectGaocheng();
         }
 
@@ -366,8 +366,8 @@ namespace gaocheng_debug
         private void GenerateAndCompare()
         {
             CheckProjectFileAccess();
-            FileStream demo_exe_lock = MutSync.NewReadOnlyFileHandle(txtDemoExePath.Text);
-            FileStream your_exe_lock = MutSync.NewReadOnlyFileHandle(txtYourExePath.Text);
+            FileStream demo_exe_lock = StaticTools.NewReadOnlyFileHandle(txtDemoExePath.Text);
+            FileStream your_exe_lock = StaticTools.NewReadOnlyFileHandle(txtYourExePath.Text);
 
             if (OwnHashCalculatorForm.Visible)
             {
@@ -396,7 +396,7 @@ namespace gaocheng_debug
             }
 
             Enabled = true;
-            MutSync.BringToFrontAndFocus(this);
+            StaticTools.BringToFrontAndFocus(this);
         }
     }
 }
