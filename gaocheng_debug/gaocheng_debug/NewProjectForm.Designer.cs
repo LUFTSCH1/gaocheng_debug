@@ -197,7 +197,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NewProjectForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "命名新测试项目";
             this.ResumeLayout(false);
             this.PerformLayout();
