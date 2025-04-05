@@ -315,10 +315,15 @@ namespace gaocheng_debug
             }
 
             InterfaceProgram.StandardInput.WriteLine(
-                  $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtDemoExePath.Text}\" 1> \".\\{Global.DemoExeResult}\"\n"
-                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtYourExePath.Text}\" 1> \".\\{Global.YourExeResult}\"\n"
+                  $"\"{AbsoluteOutputGroupPath}\" 1 1> \".\\{Global.DemoExeResult}\"\n"
+                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtDemoExePath.Text}\" 1>> \".\\{Global.DemoExeResult}\"\n"
                 + $"for /l %v in (2, 1, {dataGroupNum}) do "
-                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtDemoExePath.Text}\" 1>> \".\\{Global.DemoExeResult}\" & "
+                + $"\"{AbsoluteOutputGroupPath}\" %v 1>> \".\\{Global.DemoExeResult}\" & "
+                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtDemoExePath.Text}\" 1>> \".\\{Global.DemoExeResult}\"\n"
+                + $"\"{AbsoluteOutputGroupPath}\" 1 1> \".\\{Global.YourExeResult}\"\n"
+                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtYourExePath.Text}\" 1>> \".\\{Global.YourExeResult}\"\n"
+                + $"for /l %v in (2, 1, {dataGroupNum}) do "
+                + $"\"{AbsoluteOutputGroupPath}\" %v 1>> \".\\{Global.YourExeResult}\" & "
                 + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtYourExePath.Text}\" 1>> \".\\{Global.YourExeResult}\"\n"
                 + $"{compare_cmd} 1>{Global.CompareResult} 2>>&1"
             );
@@ -376,6 +381,14 @@ namespace gaocheng_debug
             Hide();
             Enabled = false;
 
+            if (File.Exists(absoluteDemoExeResultPath))
+            {
+                File.Delete(absoluteDemoExeResultPath);
+            }
+            if (File.Exists(absoluteYourExeResultPath))
+            {
+                File.Delete(absoluteYourExeResultPath);
+            }
             if (File.Exists(absoluteCompareResultPath))
             {
                 File.Delete(absoluteCompareResultPath);

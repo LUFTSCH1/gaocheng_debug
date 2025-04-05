@@ -50,6 +50,10 @@ namespace gaocheng_debug
         public const string GetInputData = "get_input_data.exe";
         public const string TxtCompare   = "txt_compare.exe";
 
+        // 我的小工具
+
+        public const string OutputGroup = "output_group.exe";
+
         // 动态常量
 
         public static readonly string NewLine = Environment.NewLine;

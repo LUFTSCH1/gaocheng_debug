@@ -64,6 +64,7 @@ namespace gaocheng_debug
             new FileListItem(@".\System.Text.Encoding.CodePages.dll"                , "2c9e9cd5c6f31ebfdc8155efdc20f4f7"),
             new FileListItem($".\\{Global.ResourceDirectory}\\{Global.GetInputData}", "89f356fa5854ba3a0dbdd69835decf86"),
             new FileListItem($".\\{Global.ResourceDirectory}\\{Global.TxtCompare}"  , "d7a6a869781090b13ffeb05e849b0e74"),
+            new FileListItem($".\\{Global.ResourceDirectory}\\{Global.OutputGroup}" , "166a16de44ccb57cfcdf33dc84912a2c"),
             new FileListItem($".\\{Global.ResourceDirectory}\\msvcp140d.dll"        , "a66eaf437d3d8c53a127f77b2a896f0d"),
             new FileListItem($".\\{Global.ResourceDirectory}\\ucrtbased.dll"        , "4d98940874d14692b02ece8f5b591362"),
             new FileListItem($".\\{Global.ResourceDirectory}\\vcruntime140d.dll"    , "b907335a3619259f8aaf22c445de15ce")

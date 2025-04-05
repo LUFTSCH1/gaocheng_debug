@@ -72,6 +72,7 @@ namespace gaocheng_debug
 
         private readonly string AbsoluteGetInputDataPath;
         private readonly string AbsoluteTxtComparePath;
+        private readonly string AbsoluteOutputGroupPath;
 
         private readonly Process InterfaceProgram;
 
@@ -139,6 +140,7 @@ namespace gaocheng_debug
                 AbsoluteProjectDirectoryPath = $"{app_path}\\{Global.ProjectDirectory}\\";
                 AbsoluteGetInputDataPath     = $"{app_path}\\{Global.ResourceDirectory}\\{Global.GetInputData}";
                 AbsoluteTxtComparePath       = $"{app_path}\\{Global.ResourceDirectory}\\{Global.TxtCompare}";
+                AbsoluteOutputGroupPath      = $"{app_path}\\{Global.ResourceDirectory}\\{Global.OutputGroup}";
             }
 
             {
@@ -161,6 +163,7 @@ namespace gaocheng_debug
             InterfaceProgram.StartInfo.FileName = "cmd.exe";
             InterfaceProgram.StartInfo.UseShellExecute = false;
             InterfaceProgram.StartInfo.RedirectStandardInput = true;
+            InterfaceProgram.StartInfo.Arguments = "/k chcp 936";
 
             OwnSettingForm = new SettingForm(this, defaultDemoExeDirectory, defaultYourExeDirectory);
             OwnNewOrEditTestDataForm = new NewOrEditTestDataForm(this);
