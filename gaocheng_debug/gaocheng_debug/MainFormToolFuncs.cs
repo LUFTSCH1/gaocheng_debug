@@ -315,14 +315,12 @@ namespace gaocheng_debug
             }
 
             InterfaceProgram.StandardInput.WriteLine(
-                  $"\"{AbsoluteOutputGroupPath}\" 1 1> \".\\{Global.DemoExeResult}\"\n"
-                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtDemoExePath.Text}\" 1>> \".\\{Global.DemoExeResult}\"\n"
-                + $"for /l %v in (2, 1, {dataGroupNum}) do "
+                  $"echo 测试数据输出：> \".\\{Global.DemoExeResult}\"\n"
+                + $"for /l %v in (1, 1, {dataGroupNum}) do "
                 + $"\"{AbsoluteOutputGroupPath}\" %v 1>> \".\\{Global.DemoExeResult}\" & "
                 + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtDemoExePath.Text}\" 1>> \".\\{Global.DemoExeResult}\"\n"
-                + $"\"{AbsoluteOutputGroupPath}\" 1 1> \".\\{Global.YourExeResult}\"\n"
-                + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" 1 | \"{txtYourExePath.Text}\" 1>> \".\\{Global.YourExeResult}\"\n"
-                + $"for /l %v in (2, 1, {dataGroupNum}) do "
+                + $"echo 测试数据输出：> \".\\{Global.YourExeResult}\"\n"
+                + $"for /l %v in (1, 1, {dataGroupNum}) do "
                 + $"\"{AbsoluteOutputGroupPath}\" %v 1>> \".\\{Global.YourExeResult}\" & "
                 + $"\"{AbsoluteGetInputDataPath}\" \".\\{Global.TestData}\" %v | \"{txtYourExePath.Text}\" 1>> \".\\{Global.YourExeResult}\"\n"
                 + $"{compare_cmd} 1>{Global.CompareResult} 2>>&1"
