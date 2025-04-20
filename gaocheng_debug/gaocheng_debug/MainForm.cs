@@ -163,7 +163,7 @@ namespace gaocheng_debug
             InterfaceProgram.StartInfo.FileName = "cmd.exe";
             InterfaceProgram.StartInfo.UseShellExecute = false;
             InterfaceProgram.StartInfo.RedirectStandardInput = true;
-            InterfaceProgram.StartInfo.Arguments = "/k chcp 936";
+            InterfaceProgram.StartInfo.Arguments = "/k \"chcp 936\"";
 
             OwnSettingForm = new SettingForm(this, defaultDemoExeDirectory, defaultYourExeDirectory);
             OwnNewOrEditTestDataForm = new NewOrEditTestDataForm(this);
