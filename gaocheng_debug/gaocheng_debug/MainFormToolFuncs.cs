@@ -44,56 +44,56 @@ namespace gaocheng_debug
 
         private void DisableComponentWhileEditing()
         {
-            btnNewProject.Enabled = false;
-            tsmiSettings.Enabled = false;
-            cboProjectSelector.Enabled = false;
-            btnDeleteProject.Enabled = false;
+            btnNewProject.Enabled           = false;
+            tsmiSettings.Enabled            = false;
+            cboProjectSelector.Enabled      = false;
+            btnDeleteProject.Enabled        = false;
             btnOpenProjectDirectory.Enabled = false;
-            btnBrowseDemoExe.Enabled = false;
-            btnBrowseYourExe.Enabled = false;
-            btnRetest.Enabled = false;
+            btnBrowseDemoExe.Enabled        = false;
+            btnBrowseYourExe.Enabled        = false;
+            btnRetest.Enabled               = false;
         }
 
         private void EnableComponentAfterEdit()
         {
-            tsmiSettings.Enabled = true;
-            cboProjectSelector.Enabled = true;
-            btnDeleteProject.Enabled = true;
+            tsmiSettings.Enabled            = true;
+            cboProjectSelector.Enabled      = true;
+            btnDeleteProject.Enabled        = true;
             btnOpenProjectDirectory.Enabled = true;
-            btnBrowseDemoExe.Enabled = true;
-            btnBrowseYourExe.Enabled = true;
-            btnRetest.Enabled = true;
-            btnNewProject.Enabled = true;
+            btnBrowseDemoExe.Enabled        = true;
+            btnBrowseYourExe.Enabled        = true;
+            btnRetest.Enabled               = true;
+            btnNewProject.Enabled           = true;
         }
 
         private void DisableComponent()
         {
-            btnBrowseDemoExe.Enabled = false;
-            btnBrowseYourExe.Enabled = false;
-            btnRetest.Enabled = false;
-            btnNewOrEditTestData.Enabled = false;
-            btnOpenProjectDirectory.Enabled = false;
-            btnDeleteProject.Enabled = false;
-            txtDemoExePath.Text = string.Empty;
-            txtYourExePath.Text = string.Empty;
-            rtxResultViewer.Text = string.Empty;
-            cboTrimSelector.SelectedIndex = 0;
-            cboDisplaySelector.SelectedIndex = 0;
-            cboTrimSelector.Enabled = false;
-            cboDisplaySelector.Enabled = false;
+            btnBrowseDemoExe.Enabled           = false;
+            btnBrowseYourExe.Enabled           = false;
+            btnRetest.Enabled                  = false;
+            btnNewOrEditTestData.Enabled       = false;
+            btnOpenProjectDirectory.Enabled    = false;
+            btnDeleteProject.Enabled           = false;
+            cboTrimSelector.Enabled            = false;
+            cboDisplaySelector.Enabled         = false;
             chkIsInterfaceProgramPause.Enabled = false;
+            cboTrimSelector.SelectedIndex    = 0;
+            cboDisplaySelector.SelectedIndex = 0;
+            txtDemoExePath.Text  = string.Empty;
+            txtYourExePath.Text  = string.Empty;
+            rtxResultViewer.Text = string.Empty;
         }
 
         private void EnableComponent()
         {
-            btnBrowseDemoExe.Enabled = true;
-            btnBrowseYourExe.Enabled = true;
-            btnRetest.Enabled = true;
-            btnNewOrEditTestData.Enabled = true;
-            btnOpenProjectDirectory.Enabled = true;
-            btnDeleteProject.Enabled = true;
-            cboTrimSelector.Enabled = true;
-            cboDisplaySelector.Enabled = true;
+            btnBrowseDemoExe.Enabled           = true;
+            btnBrowseYourExe.Enabled           = true;
+            btnRetest.Enabled                  = true;
+            btnNewOrEditTestData.Enabled       = true;
+            btnOpenProjectDirectory.Enabled    = true;
+            btnDeleteProject.Enabled           = true;
+            cboTrimSelector.Enabled            = true;
+            cboDisplaySelector.Enabled         = true;
             chkIsInterfaceProgramPause.Enabled = true;
         }
 
@@ -203,9 +203,9 @@ namespace gaocheng_debug
                 catch (Exception ex)
                 {
                     if (!StaticTools.CheckOperation($"项目 {projectDirName} 中文件测试需要的权限不满足，是否重试？\n错误信息：{ex.Message}",
-                                                MessageBoxIcon.Error,
-                                                Global.ErrorTitle,
-                                                MessageBoxDefaultButton.Button1))
+                                                    MessageBoxIcon.Error,
+                                                    Global.ErrorTitle,
+                                                    MessageBoxDefaultButton.Button1))
                     {
                         Environment.Exit((int)ErrorCode.FileAccessError);
                     }
@@ -215,11 +215,11 @@ namespace gaocheng_debug
 
         private async Task PrintResultInfo(string resultFile)
         {
-            cboProjectSelector.Enabled = false;
-            btnNewProject.Enabled = false;
-            btnDeleteProject.Enabled = false;
+            cboProjectSelector.Enabled   = false;
+            btnNewProject.Enabled        = false;
+            btnDeleteProject.Enabled     = false;
             btnNewOrEditTestData.Enabled = false;
-            btnRetest.Enabled = false;
+            btnRetest.Enabled            = false;
             rtxResultViewer.Text = "读取中...";
             string info =   $"{Global.CompareResult}文件创建/修改时间："
                           + $"{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
@@ -228,17 +228,16 @@ namespace gaocheng_debug
             Task<string> info_task = Task.Run(() => {
                 return StaticTools.ReadAllText(resultFile, Global.GB18030);
             });
-            await info_task.ContinueWith(t =>
-            {
+            await info_task.ContinueWith(t => {
                 rtxResultViewer.Text = $"{info}{Global.NewLine}{t.Result}";
                 rtxResultViewer.Select(0, info.Length);
                 rtxResultViewer.SelectionColor = TimeInfoColor;
                 rtxResultViewer.DeselectAll();
-                cboProjectSelector.Enabled = true;
-                btnNewProject.Enabled = true;
-                btnDeleteProject.Enabled = true;
+                cboProjectSelector.Enabled   = true;
+                btnNewProject.Enabled        = true;
+                btnDeleteProject.Enabled     = true;
                 btnNewOrEditTestData.Enabled = true;
-                btnRetest.Enabled = true;
+                btnRetest.Enabled            = true;
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
