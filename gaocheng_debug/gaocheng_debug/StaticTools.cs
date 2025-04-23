@@ -35,7 +35,7 @@ namespace gaocheng_debug
 
         private const string HashConvertFormatStr = "x2";
 
-        private const string HashSalt = "到底是什么呢？";
+        private const string HashSalt = "会是什么呢？";
 
         private const string ConfirmTitle = "操作确认";
 
@@ -95,6 +95,9 @@ namespace gaocheng_debug
 
         public static void ShowMessageToWarn(in string msg) =>
             MessageBox.Show(msg, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+        public static void ShowError(in string msg) =>
+            MessageBox.Show(msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
         public static bool CheckOperation(in string msg, in MessageBoxIcon icon = MessageBoxIcon.Information,
                                           in string title = ConfirmTitle,
@@ -313,66 +316,47 @@ namespace gaocheng_debug
 
             if (!Directory.Exists($".\\{Global.ResourceDirectory}"))
             {
-                ShowMessageToWarn($"缺少{Global.ResourceDirectory}文件夹，请考虑重新下载应用");
+                ShowError($"缺少{Global.ResourceDirectory}文件夹，请检查回收站或重新下载应用");
                 Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
             }
 
             foreach (FileListItem file in FileList)
             {
-                while (!File.Exists(file.FileName))
+                if (!File.Exists(file.FileName))
                 {
-                    if (!CheckOperation($"应用程序相对路径下必要的\n{file.FileName}\n文件缺失，请检查回收站或考虑重新下载应用。\n是否重试检查？",
-                                        MessageBoxIcon.Error,
-                                        Global.ErrorTitle,
-                                        MessageBoxDefaultButton.Button1))
-                    {
-                        Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
-                    }
+                    ShowError($"应用程序相对路径下必要的\n{file.FileName}\n文件缺失，请检查回收站或重新下载应用。");
+                    Environment.Exit((int)ErrorCode.NecessaryFileNotFound);
                 }
 
-                while (new FileInfo(file.FileName).Length > MaxFileSize)
+                if (new FileInfo(file.FileName).Length > MaxFileSize)
                 {
-                    if (!CheckOperation($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换\n是否重试检查？",
-                                        MessageBoxIcon.Error,
-                                        Global.ErrorTitle,
-                                        MessageBoxDefaultButton.Button1))
-                    {
-                        Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
-                    }
+                    ShowError($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换");
+                    Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
                 }
 
+                string hash;
                 while (true)
                 {
-                    string hash;
-                    while (true)
+                    try
                     {
-                        try
-                        {
-                            hash = GetMD5HashFromFile(file.FileName);
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
-                                                MessageBoxIcon.Error,
-                                                Global.ErrorTitle,
-                                                MessageBoxDefaultButton.Button1))
-                            {
-                                Environment.Exit((int)ErrorCode.HashComputeError);
-                            }
-                        }
-                    }
-                    if (hash == file.MD5Hash)
-                    {
+                        hash = GetMD5HashFromFile(file.FileName);
                         break;
                     }
-                    else if (!CheckOperation($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换\n是否重试检查？",
-                                             MessageBoxIcon.Error,
-                                             Global.ErrorTitle,
-                                             MessageBoxDefaultButton.Button1))
+                    catch (Exception ex)
                     {
-                        Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
+                        if (!CheckOperation($"{GetMD5ErrorStr}{ex.Message}",
+                                            MessageBoxIcon.Error,
+                                            Global.ErrorTitle,
+                                            MessageBoxDefaultButton.Button1))
+                        {
+                            Environment.Exit((int)ErrorCode.HashComputeError);
+                        }
                     }
+                }
+                if (hash != file.MD5Hash)
+                {
+                    ShowError($"应用程序相对路径下必要的\n{file.FileName}\n文件被替换");
+                    Environment.Exit((int)ErrorCode.NecessaryFileReplaced);
                 }
             }
         }

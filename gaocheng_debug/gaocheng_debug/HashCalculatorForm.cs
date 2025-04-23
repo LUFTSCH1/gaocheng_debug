@@ -99,7 +99,7 @@ namespace gaocheng_debug
                                        + $"文件：{path}{Global.NewLine}"
                                        + $"大小：{file_size}{Global.NewLine}计算中...";
 
-                Task<string> hashTask = Task.Run(() =>
+                Task<string> hash_task = Task.Run(() =>
                 {
                     string file_info =   $"目录  ：{Path.GetDirectoryName(path)}{Global.NewLine}"
                                        + $"文件名：{Path.GetFileName(path)}{Global.NewLine}"
@@ -125,7 +125,7 @@ namespace gaocheng_debug
                                + $"错误  ：{ex.Message}";
                     }
                 });
-                await hashTask.ContinueWith(t =>
+                await hash_task.ContinueWith(t =>
                 {
                     txtResultViewer.Text = t.Result;
                     btnSelectFileAndCalculateMD5.Visible = true;

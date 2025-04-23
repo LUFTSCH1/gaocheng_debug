@@ -1,0 +1,8 @@
+.vs/
+bin/
+obj/
+
+*.snk
+*.obj
+*.pdb
+*.exe

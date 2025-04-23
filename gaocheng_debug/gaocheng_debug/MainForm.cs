@@ -361,7 +361,7 @@ namespace gaocheng_debug
             StaticTools.BringToFrontAndFocus(OwnNewOrEditTestDataForm);
         }
 
-        private void BtnRetestClick(object sender, EventArgs e)
+        private async void BtnRetestClickAsync(object sender, EventArgs e)
         {
             if (IsHaveCommonError())
             {
@@ -380,14 +380,15 @@ namespace gaocheng_debug
                      StaticTools.CheckOperation("官方demo路径或作业exe路径已变更\n请确认本项目的测试数据适用于对应的exe\n如需继续测试，请按确认"))
             {
                 EditProjectGaochengWhileNecessary();
-                GenerateAndCompare();
+                await GenerateAndCompare();
             }
         }
 
         // ComboBox事件处理函数
 
-        private void CboProjectSelectorSelectedIndexChanged(object sender, EventArgs e)
+        private async void CboProjectSelectorSelectedIndexChangedAsync(object sender, EventArgs e)
         {
+            GC.Collect();
             DisposeProjectGaochengLock();
             chkIsInterfaceProgramPause.Checked = false;
 
@@ -400,7 +401,7 @@ namespace gaocheng_debug
                 absoluteDirPath = $"{AbsoluteProjectDirectoryPath}{projectDirName}";
                 if (Directory.Exists(absoluteDirPath))
                 {
-                    TryToGetProjectGaochengInfo();
+                    await TryToGetProjectGaochengInfo();
                 }
                 else
                 {

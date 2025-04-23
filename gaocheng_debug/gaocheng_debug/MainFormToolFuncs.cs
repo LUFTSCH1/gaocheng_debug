@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Globalization;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace gaocheng_debug
 {
@@ -17,12 +18,12 @@ namespace gaocheng_debug
             StaticTools.BringToFrontAndFocus(this);
         }
 
-        public void DoWhileEdited(in int groupNum)
+        public async Task DoWhileEdited(int groupNum)
         {
             dataGroupNum = groupNum;
             dataHash = StaticTools.MD5Hash(absoluteTestDataPath);
             EditProjectGaocheng();
-            GenerateAndCompare();
+            await GenerateAndCompare();
             EnableComponentAfterEdit();
         }
 
@@ -212,16 +213,33 @@ namespace gaocheng_debug
             }
         }
 
-        private void PrintResultInfo(in string resultFile)
+        private async Task PrintResultInfo(string resultFile)
         {
+            cboProjectSelector.Enabled = false;
+            btnNewProject.Enabled = false;
+            btnDeleteProject.Enabled = false;
+            btnNewOrEditTestData.Enabled = false;
+            btnRetest.Enabled = false;
+            rtxResultViewer.Text = "读取中...";
             string info =   $"{Global.CompareResult}文件创建/修改时间："
                           + $"{File.GetLastWriteTime(resultFile).ToString(Global.OperationTimeFormatStr)}{Global.NewLine}"
                           + $"在 {cboTrimSelector.SelectedItem} 和 {cboDisplaySelector.SelectedItem} 条件下，"
                           + $"已测试 {dataGroupNum} 组数据";
-            rtxResultViewer.Text = $"{info}{Global.NewLine}{StaticTools.ReadAllText(resultFile, Global.GB18030)}";
-            rtxResultViewer.Select(0, info.Length);
-            rtxResultViewer.SelectionColor = TimeInfoColor;
-            rtxResultViewer.DeselectAll();
+            Task<string> info_task = Task.Run(() => {
+                return StaticTools.ReadAllText(resultFile, Global.GB18030);
+            });
+            await info_task.ContinueWith(t =>
+            {
+                rtxResultViewer.Text = $"{info}{Global.NewLine}{t.Result}";
+                rtxResultViewer.Select(0, info.Length);
+                rtxResultViewer.SelectionColor = TimeInfoColor;
+                rtxResultViewer.DeselectAll();
+                cboProjectSelector.Enabled = true;
+                btnNewProject.Enabled = true;
+                btnDeleteProject.Enabled = true;
+                btnNewOrEditTestData.Enabled = true;
+                btnRetest.Enabled = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void PrintErrorInfo(in string errorStr)
@@ -232,11 +250,14 @@ namespace gaocheng_debug
             rtxResultViewer.DeselectAll();
         }
 
-        private void TryToGetProjectGaochengInfo()
+        private async Task TryToGetProjectGaochengInfo()
         {
             absoluteProjectGaochengPath = $"{absoluteDirPath}\\{Global.ProjectGaocheng}";
-            if (File.Exists(absoluteProjectGaochengPath))
-            {
+            do {
+                if (!File.Exists(absoluteProjectGaochengPath) || new FileInfo(absoluteProjectGaochengPath).Length > 1024)
+                {
+                    break;
+                }
                 string[] project_info = StaticTools.ReadAllLines(absoluteProjectGaochengPath);
                 if (project_info.Length == Global.ProjectGaochengLines)
                 {
@@ -258,7 +279,7 @@ namespace gaocheng_debug
 
                         if (File.Exists(absoluteCompareResultPath))
                         {
-                            PrintResultInfo(absoluteCompareResultPath);
+                            await PrintResultInfo(absoluteCompareResultPath);
                         }
                         else
                         {
@@ -276,14 +297,14 @@ namespace gaocheng_debug
                         txtYourExePath.Text = YourExePathTxtDefaultStr;
                     }
 
-                    if (!btnNewOrEditTestData.Enabled)
+                    if (!btnBrowseDemoExe.Enabled)
                     {
                         EnableComponent();
                     }
 
                     return;
                 }
-            }
+            } while (false);
 
             DisableComponent();
             StaticTools.ShowMessageToWarn($"项目{projectDirName}的\n{Global.ProjectGaocheng}\n文件不存在或不合法");
@@ -366,7 +387,7 @@ namespace gaocheng_debug
             }
         }
 
-        private void GenerateAndCompare()
+        private async Task GenerateAndCompare()
         {
             CheckProjectFileAccess();
             FileStream demo_exe_lock = StaticTools.NewReadOnlyFileHandle(txtDemoExePath.Text);
@@ -377,7 +398,6 @@ namespace gaocheng_debug
                 OwnHashCalculatorForm.Hide();
             }
             Hide();
-            Enabled = false;
 
             if (File.Exists(absoluteDemoExeResultPath))
             {
@@ -397,17 +417,15 @@ namespace gaocheng_debug
             demo_exe_lock.Close();
             your_exe_lock.Close();
 
+            StaticTools.BringToFrontAndFocus(this);
             if (File.Exists(absoluteCompareResultPath))
             {
-                PrintResultInfo(absoluteCompareResultPath);
+                await PrintResultInfo(absoluteCompareResultPath);
             }
             else
             {
                 PrintErrorInfo($"{TestProcessExceptionStr}{DateTime.Now.ToString(Global.OperationTimeFormatStr)}");
             }
-
-            Enabled = true;
-            StaticTools.BringToFrontAndFocus(this);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace gaocheng_debug
             this.cboProjectSelector.Size = new System.Drawing.Size(310, 28);
             this.cboProjectSelector.TabIndex = 0;
             this.cboProjectSelector.TabStop = false;
-            this.cboProjectSelector.SelectedIndexChanged += new System.EventHandler(this.CboProjectSelectorSelectedIndexChanged);
+            this.cboProjectSelector.SelectedIndexChanged += new System.EventHandler(this.CboProjectSelectorSelectedIndexChangedAsync);
             // 
             // lblProjectTip
             // 
@@ -100,35 +100,35 @@ namespace gaocheng_debug
             this.mnsAdditionalFunctions.Location = new System.Drawing.Point(0, 0);
             this.mnsAdditionalFunctions.Name = "mnsAdditionalFunctions";
             this.mnsAdditionalFunctions.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(955, 30);
+            this.mnsAdditionalFunctions.Size = new System.Drawing.Size(955, 28);
             this.mnsAdditionalFunctions.TabIndex = 2;
             this.mnsAdditionalFunctions.Text = "menuStrip1";
             // 
             // tsmiSettings
             // 
             this.tsmiSettings.Name = "tsmiSettings";
-            this.tsmiSettings.Size = new System.Drawing.Size(53, 26);
+            this.tsmiSettings.Size = new System.Drawing.Size(53, 24);
             this.tsmiSettings.Text = "设置";
             this.tsmiSettings.Click += new System.EventHandler(this.TsmiSettingsClick);
             // 
             // tsmiHashCalculator
             // 
             this.tsmiHashCalculator.Name = "tsmiHashCalculator";
-            this.tsmiHashCalculator.Size = new System.Drawing.Size(128, 26);
+            this.tsmiHashCalculator.Size = new System.Drawing.Size(128, 24);
             this.tsmiHashCalculator.Text = "计算文件哈希值";
             this.tsmiHashCalculator.Click += new System.EventHandler(this.TsmiHashCalculatorClick);
             // 
             // tsmiHelp
             // 
             this.tsmiHelp.Name = "tsmiHelp";
-            this.tsmiHelp.Size = new System.Drawing.Size(83, 26);
+            this.tsmiHelp.Size = new System.Drawing.Size(83, 24);
             this.tsmiHelp.Text = "使用说明";
             this.tsmiHelp.Click += new System.EventHandler(this.TsmiHelpClick);
             // 
             // tsmiRepositoryAddress
             // 
             this.tsmiRepositoryAddress.Name = "tsmiRepositoryAddress";
-            this.tsmiRepositoryAddress.Size = new System.Drawing.Size(83, 26);
+            this.tsmiRepositoryAddress.Size = new System.Drawing.Size(83, 24);
             this.tsmiRepositoryAddress.Text = "仓库地址";
             this.tsmiRepositoryAddress.Click += new System.EventHandler(this.TsmiRepositoryAddressClick);
             // 
@@ -235,7 +235,7 @@ namespace gaocheng_debug
             this.btnRetest.TabStop = false;
             this.btnRetest.Text = "重复测试";
             this.btnRetest.UseVisualStyleBackColor = false;
-            this.btnRetest.Click += new System.EventHandler(this.BtnRetestClick);
+            this.btnRetest.Click += new System.EventHandler(this.BtnRetestClickAsync);
             // 
             // cboDisplaySelector
             // 
@@ -398,7 +398,7 @@ namespace gaocheng_debug
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "tst";
+            this.Text = "test";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.mnsAdditionalFunctions.ResumeLayout(false);
             this.mnsAdditionalFunctions.PerformLayout();

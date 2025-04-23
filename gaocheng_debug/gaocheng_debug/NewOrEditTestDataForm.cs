@@ -72,7 +72,7 @@ namespace gaocheng_debug
 
         // Button事件处理
 
-        private void BtnGenerateOrModifyThenTestClick(object sender, EventArgs e)
+        private async void BtnGenerateOrModifyThenTestClickAsync(object sender, EventArgs e)
         {
             string data_content = rtxTestDataEditor.Text;
 
@@ -134,7 +134,7 @@ namespace gaocheng_debug
             TestDataBuilder.Clear();
 
             Hide();
-            Master.DoWhileEdited(cnt);
+            await Master.DoWhileEdited(cnt);
         }
 
         private void BtnCopyClick(object sender, EventArgs e)

@@ -61,7 +61,7 @@
             this.btnGenerateOrModifyThenTest.TabStop = false;
             this.btnGenerateOrModifyThenTest.Text = "生成/修改并开始测试";
             this.btnGenerateOrModifyThenTest.UseVisualStyleBackColor = false;
-            this.btnGenerateOrModifyThenTest.Click += new System.EventHandler(this.BtnGenerateOrModifyThenTestClick);
+            this.btnGenerateOrModifyThenTest.Click += new System.EventHandler(this.BtnGenerateOrModifyThenTestClickAsync);
             // 
             // btnSave
             // 
